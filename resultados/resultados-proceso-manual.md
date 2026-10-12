@@ -40,13 +40,16 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 ### 3.1 Preparación {ref=f0:F0}
 
 - [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#f0)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
+- [x] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
+- [x] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
 - [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "fase 0: entorno y configuración"`
+- [x] Commit: `git commit -m "fase 0: entorno y configuración"`
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Punto de control superado (2026-10-12): `import anthropic, dotenv` imprime ok con anthropic 1.13.0 y Python 3.12.10; `.env` existe y Git lo ignora.
+> Tropiezos, para no repetirlos: la clave se pegó por error en `.env.example` (la plantilla que sí se sube a Git); se detectó antes de subirla y se restauró la plantilla. El `pip install` falló porque la terminal estaba en la raíz del proyecto y no en `chat-consola`, y porque se escribió «Grpip».
+> La clave es exclusiva de este proyecto, creada en la consola de Anthropic con vencimiento.
+> _Falta tu parte: leer el apartado y anotar con tus palabras qué hace cada archivo._
 
 ### 3.2 Primera llamada a la API {ref=e1:E1}
 
@@ -682,3 +685,9 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 **Qué se hizo:** se escribió el objetivo del proyecto, se creó el repositorio privado en GitHub, se configuró Git y se separó la documentación de los resultados.
 
 **A qué nos conduce:** ya hay un lugar ordenado donde cada avance queda guardado y fechado. Desde ahora, todo lo que se construya deja rastro, y ese rastro es el portafolio.
+
+#### 3.1 · Preparación (2026-10-12)
+
+**Qué se hizo:** se creó un entorno de Python aislado para el proyecto (así sus bibliotecas no se mezclan con las de otros), se instaló el SDK de Anthropic, que es el programa que permite hablar con Claude desde código, y se guardó la clave de acceso en un archivo `.env` que Git no sube. La clave es exclusiva de este proyecto y vence sola.
+
+**A qué nos conduce:** es el piso sobre el que se apoya todo lo demás. Sin entorno aislado, los proyectos se estorban entre sí; sin la clave protegida, un descuido la publicaría y alguien podría gastar tu dinero. Con esto listo, el siguiente paso es el primero emocionante: hacer que un programa nuestro le haga una pregunta a Claude y reciba la respuesta.
