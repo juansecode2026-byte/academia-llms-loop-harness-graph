@@ -67,14 +67,18 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.3 Ver cómo el modelo predice tokens {ref=e2:E2}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Archivo: `chat-consola/etapas/e2_ver_predecir_tokens.py` (2026-10-12, `claude-haiku-5-5`, API real).
+> Qué hace: usa `client.messages.stream(...)` en vez de `create`, así los eventos llegan a medida que el modelo los genera. Imprime cada pedazo de texto seguido de `|` para ver dónde corta el servidor, y al final `get_final_message()` entrega el mensaje completo con el conteo de tokens. El parámetro `thinking={"type": "adaptive", "display": "summarized"}` pide un resumen del razonamiento, que por defecto viene oculto.
+> Lo observado con la frase del café: 40 pedazos de texto para 172 tokens de salida; los pedazos cortan en medio de palabras («Reconoc|ido m|undialmente»), porque el modelo trabaja con tokens, no con palabras. Razonamiento: 0 tokens, el modelo decidió no pensar en una pregunta tan simple.
+> Prueba extra, no guardada como archivo, con el acertijo de las tres cajas con etiquetas equivocadas: sí razonó. 385 tokens de salida, de los cuales 287 fueron de razonamiento (75 %); el texto visible fue de unos 100 tokens. El resumen del razonamiento llegó en inglés aunque la respuesta salió en español.
+> Para pensar, «¿por qué el razonamiento cuesta aunque solo veas un resumen?»: porque se cobran los tokens que el modelo genera, no los que se te muestran. El resumen es una versión corta de un razonamiento mucho más largo. «¿Qué pasa con `max_tokens` si razona mucho?»: razonamiento y respuesta salen del mismo tope; si el razonamiento lo consume, la respuesta puede cortarse o no llegar. Por eso los scripts de la guía usan 2048 o más.
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
@@ -700,3 +704,9 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 **Qué se hizo:** se escribió un programa de 25 líneas que le hace una pregunta a Claude y muestra todo lo que devuelve: la respuesta, por qué terminó y cuántos tokens usó. Se ejecutó tres veces con la API real.
 
 **A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
+
+#### 3.3 · Ver cómo el modelo predice tokens (2026-10-12)
+
+**Qué se hizo:** se recibió la respuesta de Claude «en vivo», pedazo por pedazo, como cuando ChatGPT va escribiendo en pantalla. Cada pedazo se separó con una barra para ver cómo llegan. También se pidió ver el razonamiento resumido del modelo.
+
+**A qué nos conduce:** se ve con los ojos lo que significa que un modelo «predice el siguiente token»: va armando el texto por trozos pequeños, sin saber de antemano cómo terminará, y los trozos cortan en mitad de palabras. Esto sirve para dos decisiones prácticas: el streaming permite que un chat se sienta rápido (el usuario lee mientras se genera), y el razonamiento es una parte invisible del costo: en la prueba del acertijo, tres de cada cuatro tokens de salida se fueron en pensar. Esa cuenta decide cuándo conviene activar el razonamiento y cuándo apagarlo para ahorrar.
