@@ -46,10 +46,39 @@ Un tema no se agentiza hasta que su versión manual está cerrada y documentada.
 | `Documentación para la construcción del proyecto/` | Material de referencia: el pensum y la guía v7. Es solo lectura; no se edita. |
 | `resultados/` | Lo que produce el proyecto: los dos documentos de seguimiento. |
 
-Documentos en `resultados/`:
+Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
 
-- `resultados-proceso-manual.html`
-- `resultados-proceso-agentizando.html`
+- `resultados-proceso-manual.md` / `.html`
+- `resultados-proceso-agentizando.md` / `.html`
+
+## Fuente de verdad: los .md
+
+El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas:
+
+- **Resultados:** el `.md` manda. Para cualquier cambio (marcar una casilla `- [x]`,
+  agregar notas, evidencias, una fila de bitácora) se edita el `.md` y luego se
+  regenera el HTML con `python scripts/md_a_html.py`. Nunca se edita el HTML a mano:
+  se pisaría en la siguiente regeneración. Siempre se commitean los dos archivos.
+- **Documentación** (pensum y guía v7): el HTML manda y es de solo lectura. Su `.md`
+  se genera con `python scripts/html_a_md.py`, solo para leerlo con poco contexto.
+  Si se agrega un HTML nuevo a esa carpeta, se corre el script para crear su `.md`.
+- Al leer la guía o el pensum, leer el `.md`, no el HTML.
+- Las casillas que el usuario marca en el navegador viven solo en su navegador.
+  Cuando el usuario confirma que algo está hecho, se marca en el `.md`.
+- **Al marcar un tema como hecho** en el manual, agregar una entrada en su sección 10
+  «Análisis de resultados» → «Lo que vamos logrando»: `#### N.M · Tema (fecha)`, con
+  «Qué se hizo» y «A qué nos conduce», en palabras simples para alguien que empieza.
+
+### Formato de los .md de resultados
+
+Bloque inicial `---` con `doc`, `titulo`, `fecha`, `gemelo` y `lead`. Luego:
+`# título`; `## N. Sección` (con `{nivel=K}` para los niveles); `### N.M Tema`
+(con `{ref=idguia:E1 etiqueta="..."}` o `{proyecto}`); `#### subtítulo`; listas
+`- [ ]` / `- [x]`; `1.` listas numeradas; tablas con `|`; notas con `> **Título**`
+y `> _texto_`; `⏱` línea de duración y herramientas; `🛠` línea del proyecto. La
+marca `<!-- parte: n | Título | Subtítulo | pN -->` antes de un tema agrupa el
+índice de la guía. Los números de sección y de tema se escriben a mano y deben
+seguir la secuencia; los ids de los enlaces salen de ellos (`s3-2`, `s3-proyecto`).
 
 Misma numeración en ambos (secciones 1–9; niveles = secciones 3–6), con índice
 numerado al inicio y checklist por tema. Cada tema del agentizando enlaza a su
@@ -59,10 +88,10 @@ en la carpeta de documentación.
 ## Convenciones
 
 - Idioma: español, en documentos, commits y comentarios.
-- Los documentos de resultados son HTML autocontenidos (sin dependencias
+- Los HTML de resultados son autocontenidos (sin dependencias
   externas) con modo claro y oscuro.
-- Las casillas del checklist se guardan en el navegador; para que cuenten como
-  prueba se agrega `checked` en el HTML y se hace commit.
+- Las casillas del checklist se marcan en el `.md` (`- [x]`) y se commitea; es lo que
+  cuenta como prueba.
 - Cada documento tiene una bitácora de cambios (sección 9): toda modificación
   agrega una fila con fecha.
 - Si sale una versión nueva del pensum o de la guía, se agrega como archivo nuevo

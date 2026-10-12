@@ -1,0 +1,7 @@
+.venv/
+.env
+historial.json
+historial.tmp
+__pycache__/
+.pytest_cache/
+laboratorio.db
