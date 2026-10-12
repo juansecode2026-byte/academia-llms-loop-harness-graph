@@ -63,11 +63,15 @@ en la carpeta de documentación.
 - "Artefacto" es una página publicada en claude.ai. La vitrina «Chat y Laboratorio
   Terminados» vive solo como artefacto: https://claude.ai/artifact/1gdPaiwxYXdoMyPe43rX1W
 
+## Repositorio
+
+https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph (privado, rama `main`).
+El Nivel 1 de ambos documentos de `resultados/` sigue las etapas de la guía v7
+(manual: F0, E1–E10, D0–D14; agentizando: AG0–AG9, DA0–DA6). Los niveles 2 a 4
+todavía usan los temas genéricos del pensum.
+
 ## Pendiente
 
-- Rehacer el Nivel 1 de ambos documentos de `resultados/` con las etapas reales de
-  la guía v7 (hoy tiene los 6 temas genéricos del pensum).
 - Este proyecto aún no tiene la estructura completa de la plantilla del
   laboratorio (`NOTAS.md`, `DECISIONES.md`, `.mcp.json`, `scripts/`,
   `agentes-sdk/`, `.claude/`). Decidir con el usuario cuáles se crean.
-- Repositorio git sin inicializar.
