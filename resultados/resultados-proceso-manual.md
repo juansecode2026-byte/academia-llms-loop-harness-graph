@@ -82,14 +82,20 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 3: tokens y costos"`
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 3: tokens y costos"`
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Archivo: `chat-consola/etapas/e3_tokens_costos.py` (2026-10-12, `claude-haiku-5-5`, API real para la parte A; las partes B y C son aritmética).
+> Qué hace: la parte A usa `client.messages.count_tokens(...)`, que cuenta tokens sin generar respuesta (no cobra generación), y resta el conteo de un «.» para quitar el formato del mensaje. La parte B simula 20 turnos de un chat con memoria: en cada turno se suma el mensaje del usuario, se reenvía todo el historial y se suma la respuesta. La parte C pasa esos totales a dólares con los precios de cada modelo.
+> Parte A, lo observado: español 64 caracteres → 21 tokens; inglés 57 caracteres → 14 tokens; código 32 caracteres → 13; números 29 caracteres → 13; emoji 4 caracteres → 9. El mismo contenido en español ocupa cerca de 1,5 veces más tokens que en inglés, y cuatro emojis ocupan más tokens que una frase corta de código.
+> Parte B: sin memoria la entrada total de 20 turnos sería de unos 2.000 tokens; con memoria es 47.600 (casi 24 veces). La entrada de una sola llamada pasa de 100 tokens en el turno 1 a 4.660 en el turno 20.
+> Parte C, costo de esa conversación de 20 turnos: Haiku 0,0068 USD, Sonnet 0,1352 USD, Opus 0,2704 USD.
+> Experimento sugerido, `TOK_RESPUESTA = 500` (calculado, no es una llamada): entrada acumulada 104.600 tokens; Haiku 0,0155 USD, Sonnet 0,3092 USD, Opus 0,6184 USD. Respuestas 2,5 veces más largas encarecen el chat unas 2,3 veces, porque cada respuesta se vuelve a pagar como entrada en los turnos siguientes.
+> Para pensar, «¿qué estrategias hay para recordar sin reenviar todo?»: (1) ventana deslizante, conservar solo los últimos N turnos; con la misma simulación, 10 turnos → 34.400 tokens de entrada y 5 turnos → 18.800, frente a 47.600 sin recorte (es el recorte de la etapa 8); (2) resumir lo viejo en pocas líneas y reenviar solo el resumen; (3) caché de prompts, que abarata la parte repetida del historial; (4) guardar los hechos importantes aparte y buscarlos cuando hagan falta (idea que reaparece en RAG).
 
 ### 3.5 Parámetros de generación {ref=e4:E4}
 
@@ -725,4 +731,14 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 > **Ejemplo**
 > Recibir la respuesta en streaming es como ver a alguien escribir en un tablero en vez de esperar a que te entregue la hoja terminada: la frase del café llegó en 40 pedazos y se podía leer desde el primero.
 > El costo del razonamiento, con números de hoy: el acertijo de las cajas gastó 385 tokens de salida, 287 de ellos pensando. Si un bot de posventa respondiera 1.000 preguntas así, pagaría unos 0,19 USD; sin razonar (unos 100 tokens por respuesta) serían unos 0,05 USD. Casi cuatro veces menos, a cambio de respuestas que pueden equivocarse más en preguntas difíciles.
+
+#### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
+
+**Qué se hizo:** se contaron los tokens de distintos tipos de texto y se simuló una conversación de 20 turnos para ver cuánto crece lo que se envía en cada mensaje, y cuánto costaría esa conversación con cada modelo.
+
+**A qué nos conduce:** a entender de dónde sale la factura. Un modelo no recuerda nada entre llamadas: para que «recuerde», hay que reenviarle toda la conversación cada vez, y todo lo que se reenvía se cobra de nuevo. Por eso una conversación de 20 turnos cuesta casi 24 veces más que 20 mensajes sueltos. También se ve que el idioma importa (el español usa más tokens que el inglés) y que la elección del modelo mueve el costo muchísimo: el mismo chat cuesta 0,0068 USD con Haiku y 0,2704 USD con Opus. Esas cuentas son las que permiten cotizar un proyecto antes de construirlo.
+
+> **Ejemplo**
+> Un asistente de ventas atiende 1.000 conversaciones al mes, de 20 turnos cada una. Con Haiku cuesta unos 6,8 USD al mes; con Sonnet, unos 135; con Opus, unos 270. Es el mismo servicio: cambiar de modelo lo multiplica por 40.
+> Y cuánto pesa la memoria: si el asistente solo recordara los últimos 5 turnos en vez de los 20, la entrada baja de 47.600 a 18.800 tokens por conversación (un 60 % menos) y las conversaciones largas dejan de encarecerse sin freno. Es como un vendedor que, antes de cada respuesta, no relee la libreta completa del cliente sino solo las últimas cinco notas.
 | 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
