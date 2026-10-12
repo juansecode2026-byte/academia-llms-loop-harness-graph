@@ -27,11 +27,13 @@ sección; el código solo aparece como referencia «ver guía».
 
 Cada tema se hace dos veces, en este orden:
 
-1. **Manual (guiado con Claude):** Claude escribe el código y explica cada parte; el
-   usuario ejecuta, revisa y no avanza sin entender qué pasa y por qué. No es
-   programar sin ayuda, es no delegar sin entender. Al trabajar en este modo:
-   explicar cada bloque antes o después de escribirlo, ir etapa por etapa y
-   dejar que el usuario ejecute y observe.
+1. **Manual (guiado con Claude):** Claude escribe el código, lo ejecuta, lo explica y
+   documenta lo que pasa (notas, análisis de resultados, casillas); el usuario supervisa
+   y revisa en los documentos. No es programar sin ayuda: es no delegar sin entender, con
+   el aprendizaje escrito. El usuario **no escribe notas ni resúmenes con sus palabras**:
+   todo lo documental lo hace Claude. Al trabajar en este modo: ir etapa por etapa,
+   explicar cada bloque, ejecutar los comandos (salvo los que exigen la clave o una
+   decisión del usuario) y dejar el avance marcado en el `.md`.
 2. **Agentizado:** el proceso se delega a agentes (loops, scripts con el SDK) que
    ejecutan con autonomía, partiendo del proceso manual ya entendido; el usuario
    define el objetivo, pone los límites y revisa. Se mide qué cambia en tiempo,

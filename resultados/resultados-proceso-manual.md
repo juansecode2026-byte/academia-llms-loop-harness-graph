@@ -11,7 +11,7 @@ lead: Academia LLMs — módulo LLMs del Pensum AI Engineer. Aquí se documenta,
 
 ## 1. Cómo usar este documento
 
-1. **Qué significa «manual» aquí:** el proceso se hace paso a paso con Claude, que escribe el código y lo explica; yo reviso, ejecuto y no avanzo hasta entender qué pasa y por qué. No es programar sin ayuda: es no delegar sin entender.
+1. **Qué significa «manual» aquí:** el proceso se hace paso a paso con Claude, que escribe el código, lo ejecuta, lo explica y documenta lo que pasa; yo superviso y reviso en este documento. No es programar sin ayuda: es no delegar sin entender, con el aprendizaje escrito para poder revisarlo.
 2. Avanzar en orden: no se pasa de nivel sin terminar el proyecto del nivel anterior — el proyecto es la prueba.
 3. Cada tema tiene el mismo checklist de 5 pasos y un bloque de **Notas del proceso** que se reemplaza por lo aprendido.
 4. Las casillas se guardan en este navegador. Para que el avance quede como prueba en GitHub, al cerrar un tema se marcan sus casillas en el `.md` (`- [x]`), se regenera el HTML y se hace commit.
@@ -39,35 +39,38 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.1 Preparación {ref=f0:F0}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#f0)
-- [x] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [x] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#f0) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [x] Commit: `git commit -m "fase 0: entorno y configuración"`
 
 > **Notas del proceso**
 > Punto de control superado (2026-10-12): `import anthropic, dotenv` imprime ok con anthropic 1.13.0 y Python 3.12.10; `.env` existe y Git lo ignora.
 > Tropiezos, para no repetirlos: la clave se pegó por error en `.env.example` (la plantilla que sí se sube a Git); se detectó antes de subirla y se restauró la plantilla. El `pip install` falló porque la terminal estaba en la raíz del proyecto y no en `chat-consola`, y porque se escribió «Grpip».
 > La clave es exclusiva de este proyecto, creada en la consola de Anthropic con vencimiento.
-> _Falta tu parte: leer el apartado y anotar con tus palabras qué hace cada archivo._
+> Qué hace cada archivo: `requirements.txt` lista las tres bibliotecas; `.env.example` es la plantilla pública sin clave; `.env` guarda la clave y Git lo ignora; `.gitignore` le dice a Git qué no subir; `etapas/` guardará los scripts de las etapas.
 
 ### 3.2 Primera llamada a la API {ref=e1:E1}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 1: primera llamada a la API"`
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 1: primera llamada a la API"`
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Archivo: `chat-consola/etapas/e1_primera_llamada.py`. Se ejecutó 3 veces con `claude-haiku-5-5` y la API real (2026-10-12). Las tres terminaron con `end_turn`.
+> Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente que habla con la API; `client.messages.create(...)` envía el mensaje con tres datos obligatorios (modelo, tope de salida `max_tokens` y la lista de mensajes); luego el script recorre `respuesta.content`, que es una lista de bloques, y une los de tipo `text`.
+> Lo observado: la respuesta trae una lista de bloques, no un texto suelto. En estas ejecuciones vino solo el bloque `text`: el modelo decidió no razonar para una pregunta tan simple. Tokens: 34 de entrada y 116, 108 y 113 de salida. Costo de las tres llamadas juntas: unos 0,0002 USD.
+> Para pensar, «¿la respuesta es idéntica?»: no. Las tres versiones dicen lo mismo con palabras distintas («patrones estadísticos y semánticos», «patrones, estructuras y relaciones»). El modelo elige cada token con algo de azar; lo controlaremos en la etapa de parámetros.
 
 ### 3.3 Ver cómo el modelo predice tokens {ref=e2:E2}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
 
 > **Notas del proceso**
@@ -75,10 +78,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 3: tokens y costos"`
 
 > **Notas del proceso**
@@ -86,10 +89,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.5 Parámetros de generación {ref=e4:E4}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e4)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e4) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 4: parámetros de generación"`
 
 > **Notas del proceso**
@@ -97,10 +100,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.6 Panorama de modelos de Anthropic {ref=e5:E5}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e5)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e5) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 5: panorama de modelos"`
 
 > **Notas del proceso**
@@ -108,10 +111,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.7 Primer chat con memoria {ref=e6:E6}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e6)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e6) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
 
 > **Notas del proceso**
@@ -119,10 +122,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.8 Limitaciones de los LLM {ref=e7:E7}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e7)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e7) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 7: pruebas de limitaciones"`
 
 > **Notas del proceso**
@@ -130,10 +133,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.9 Ensamblar el chat final {ref=e8:E8}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e8)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e8) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 8: chat final ensamblado"`
 
 > **Notas del proceso**
@@ -141,10 +144,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.10 Pruebas automáticas sin gastar tokens {ref=e9:E9}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e9)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e9) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 9: pruebas automáticas"`
 
 > **Notas del proceso**
@@ -152,10 +155,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.11 Cierre del nivel {ref=e10:E10}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e10)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e10) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -165,10 +168,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.12 Qué vas a construir (laboratorio) {ref=d0:D0}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d0)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d0) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -176,10 +179,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.13 Qué controlamos y qué medimos {ref=d1:D1}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d1)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d1) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -187,10 +190,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.14 Preparación del laboratorio {ref=d2:D2}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d2)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d2) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D2: preparación del laboratorio"`
 
 > **Notas del proceso**
@@ -198,10 +201,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.15 Motor de medición {ref=d3:D3}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d3)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d3) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D3: motor de medición"`
 
 > **Notas del proceso**
@@ -209,10 +212,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.16 Registro de experimentos (SQLite) {ref=d4:D4}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d4)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d4) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D4: registro en SQLite"`
 
 > **Notas del proceso**
@@ -220,10 +223,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.17 Batería de preguntas y modelo juez {ref=d5:D5}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d5)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d5) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D5: batería y juez"`
 
 > **Notas del proceso**
@@ -231,10 +234,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.18 Estructura de la app {ref=d6:D6}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d6)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d6) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D6: estructura de la app"`
 
 > **Notas del proceso**
@@ -242,10 +245,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.19 Controles {ref=d7:D7}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d7)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d7) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -253,10 +256,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.20 Vista Playground {ref=d8:D8}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d8)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d8) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -264,10 +267,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.21 Vista Comparador {ref=d9:D9}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d9)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d9) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -275,10 +278,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.22 Vista Batería de alucinaciones {ref=d10:D10}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d10)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d10) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -286,10 +289,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.23 Vista Métricas {ref=d11:D11}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d11)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d11) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -297,10 +300,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.24 Pruebas del laboratorio {ref=d12:D12}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d12)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d12) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D12: pruebas del laboratorio"`
 
 > **Notas del proceso**
@@ -308,10 +311,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.25 Experimentos y cierre {ref=d13:D13}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d13)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d13) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -319,10 +322,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.26 Tablero de decisiones {ref=d14:D14 etiqueta="En plan en la guía"}
 
-- [ ] Leer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d14)
-- [ ] Construirlo con Claude siguiendo «Construcción»: que escriba el código y explique cada parte; no avanzar sin entender qué hace
-- [ ] Ejecutarlo y comparar con «Ejecuta y observa» o el punto de control
-- [ ] Anotar con tus palabras qué hace el código y qué observaste; responder «Para pensar» si el apartado lo trae
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d14) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D14: tablero de decisiones"`
 
 > **Notas del proceso**
@@ -348,10 +351,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.1 SDKs a fondo: mensajes, roles, system prompt
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -359,10 +362,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.2 Streaming de respuestas
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -370,10 +373,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.3 Salidas estructuradas (JSON / esquemas)
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -381,10 +384,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.4 Tool use / function calling
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -392,10 +395,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.5 Embeddings y similitud semántica
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -403,10 +406,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.6 Modelos multimodales (imagen, PDF, audio)
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -414,10 +417,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 4.7 Rate limits, reintentos y control de costos
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -443,10 +446,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.1 Arquitectura Transformer: atención, embeddings posicionales
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -454,10 +457,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.2 Tokenización BPE
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -465,10 +468,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.3 Hugging Face Transformers
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -476,10 +479,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.4 Modelos open-weights: Llama, Qwen, Mistral, Gemma
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -487,10 +490,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.5 Fine-tuning eficiente: LoRA y QLoRA
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -498,10 +501,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.6 Cuantización (GGUF, AWQ) e inferencia local
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -509,10 +512,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 5.7 Servir modelos con Ollama y vLLM
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -538,10 +541,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.1 Entrenar un GPT pequeño desde cero (nanoGPT)
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -549,10 +552,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.2 Alineamiento: RLHF, DPO y variantes
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -560,10 +563,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.3 Evaluaciones propias y benchmarks
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -571,10 +574,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.4 Inferencia a escala: KV cache, batching, speculative decoding
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -582,10 +585,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.5 Seguridad: prompt injection, jailbreaks, fuga de datos
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -593,10 +596,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.6 Interpretabilidad básica
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -604,10 +607,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 6.7 Optimización costo/latencia y routing entre modelos
 
-- [ ] Estudiar el concepto en la fuente oficial y escribir un resumen propio de 3–5 líneas
-- [ ] Construirlo con Claude paso a paso: que escriba el código y explique cada parte; no avanzar hasta poder explicar con tus palabras qué hace
+- [ ] Claude estudia el concepto en la fuente oficial y escribe un resumen de 3–5 líneas
+- [ ] Claude lo construye paso a paso: escribe el código y explica cada parte
 - [ ] Ubicar el código según el CLAUDE.md del laboratorio: `scripts/` si no llama a un LLM, `agentes-sdk/` si sí
-- [ ] Documentar aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
+- [ ] Claude documenta aquí: pasos seguidos, comandos, errores encontrados y cómo se resolvieron
 - [ ] Commit en GitHub con mensaje convencional y registrar el hash en la sección 7
 
 > **Notas del proceso**
@@ -691,3 +694,9 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 **Qué se hizo:** se creó un entorno de Python aislado para el proyecto (así sus bibliotecas no se mezclan con las de otros), se instaló el SDK de Anthropic, que es el programa que permite hablar con Claude desde código, y se guardó la clave de acceso en un archivo `.env` que Git no sube. La clave es exclusiva de este proyecto y vence sola.
 
 **A qué nos conduce:** es el piso sobre el que se apoya todo lo demás. Sin entorno aislado, los proyectos se estorban entre sí; sin la clave protegida, un descuido la publicaría y alguien podría gastar tu dinero. Con esto listo, el siguiente paso es el primero emocionante: hacer que un programa nuestro le haga una pregunta a Claude y reciba la respuesta.
+
+#### 3.2 · Primera llamada a la API (2026-10-12)
+
+**Qué se hizo:** se escribió un programa de 25 líneas que le hace una pregunta a Claude y muestra todo lo que devuelve: la respuesta, por qué terminó y cuántos tokens usó. Se ejecutó tres veces con la API real.
+
+**A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
