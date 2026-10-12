@@ -50,6 +50,8 @@ Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
 
 - `resultados-proceso-manual.md` / `.html`
 - `resultados-proceso-agentizando.md` / `.html`
+- `transferencia-crm-ventas.md` / `.html` — cómo se lleva lo aprendido al CRM de ventas
+  (candyCRM). Se revisó ese repo a pedido del usuario; nunca se modifica desde aquí.
 
 ## Fuente de verdad: los .md
 
