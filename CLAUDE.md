@@ -22,10 +22,15 @@ de Anthropic.
 
 Cada tema se hace dos veces, en este orden:
 
-1. **Manual:** el usuario escribe el código para aprender el proceso. La IA solo
-   resuelve dudas puntuales; no entrega el código ya hecho.
-2. **Agentizado:** se repite con apoyo de agentes, partiendo del proceso manual ya
-   entendido, y se mide qué cambia en tiempo, costo y calidad.
+1. **Manual (guiado con Claude):** Claude escribe el código y explica cada parte; el
+   usuario ejecuta, revisa y no avanza sin entender qué pasa y por qué. No es
+   programar sin ayuda, es no delegar sin entender. Al trabajar en este modo:
+   explicar cada bloque antes o después de escribirlo, ir etapa por etapa y
+   dejar que el usuario ejecute y observe.
+2. **Agentizado:** el proceso se delega a agentes (loops, scripts con el SDK) que
+   ejecutan con autonomía, partiendo del proceso manual ya entendido; el usuario
+   define el objetivo, pone los límites y revisa. Se mide qué cambia en tiempo,
+   costo y calidad.
 
 Un tema no se agentiza hasta que su versión manual está cerrada y documentada.
 
