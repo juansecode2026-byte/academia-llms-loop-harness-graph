@@ -50,8 +50,16 @@ Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
 
 - `resultados-proceso-manual.md` / `.html`
 - `resultados-proceso-agentizando.md` / `.html`
-- `transferencia-crm-ventas.md` / `.html` — cómo se lleva lo aprendido al CRM de ventas
-  (candyCRM). Se revisó ese repo a pedido del usuario; nunca se modifica desde aquí.
+
+## Documentación para otros proyectos
+
+`Documentación para otros proyectos/` guarda lo que se extrae de este proyecto para
+usarlo en otros (hoy: `transferencia-crm-ventas`, cómo se lleva lo aprendido a candyCRM).
+Es **solo local: no se sube a git** (está en `.gitignore`; no se hace `git init` ahí ni
+se hacen commits de esa carpeta). Sirve para que el usuario sepa que existe y de qué
+proyecto salió. Los repos de los otros proyectos (por ejemplo `CRM VENTAS`) nunca se
+modifican desde aquí. Sigue la misma regla de `.md` fuente + HTML regenerado
+(`python scripts/md_a_html.py "Documentación para otros proyectos/<archivo>.md"`).
 
 ## Fuente de verdad: los .md
 
