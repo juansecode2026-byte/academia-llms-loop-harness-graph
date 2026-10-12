@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pensum AI Engineer · v1.1 · 2026-10-09</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6fb; --surface:#ffffff; --surface-2:#efedf7; --border:#dcd8ea;
+  --text:#1c1830; --muted:#5e5878; --accent:#6a4cf0; --accent-2:#5a3fd6; --gold:#a87a00;
+  --l1:#1f9e6e; --l2:#2b7fd6; --l3:#8a4ae0; --l4:#e0466a;
+  --glow:#e6defc; --nav-bg:rgba(247,246,251,.92); --g-from:#ece6ff; --g-to:#ffffff;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f0d1a; --surface:#1a1729; --surface-2:#231f37; --border:#2f2a48;
+  --text:#ece9f7; --muted:#a49fbf; --accent:#8b6cff; --accent-2:#b59cff; --gold:#f5c518;
+  --l1:#3ec28f; --l2:#4aa3ff; --l3:#b072ff; --l4:#ff6b8a;
+  --glow:#2b2160; --nav-bg:rgba(15,13,26,.92); --g-from:#2b2160; --g-to:#1a1729; color-scheme:dark;}}
+:root[data-theme="dark"]{--bg:#0f0d1a; --surface:#1a1729; --surface-2:#231f37; --border:#2f2a48;
+  --text:#ece9f7; --muted:#a49fbf; --accent:#8b6cff; --accent-2:#b59cff; --gold:#f5c518;
+  --l1:#3ec28f; --l2:#4aa3ff; --l3:#b072ff; --l4:#ff6b8a;
+  --glow:#2b2160; --nav-bg:rgba(15,13,26,.92); --g-from:#2b2160; --g-to:#1a1729; color-scheme:dark;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.55;font-size:15px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:48px 0 32px;border-bottom:1px solid var(--border);background:radial-gradient(ellipse at top left,var(--glow) 0%,transparent 60%)}
+.version{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-2);letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.1;margin:10px 0 12px}
+h1 span{color:var(--gold)}
+.lead{color:var(--muted);max-width:760px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface)}
+.pill i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--nav-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.toc a{flex:none;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface)}
+nav.toc a:hover{color:var(--text);border-color:var(--accent)}
+nav.toc a b{font-family:'JetBrains Mono',monospace;color:var(--accent-2);margin-right:4px}
+.guide{margin:32px 0;padding:20px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
+.guide h2{font-size:18px;margin-bottom:10px}
+.guide ol{padding-left:20px;color:var(--muted)}
+.guide li{margin:4px 0}
+.guide strong{color:var(--text)}
+.group{margin:56px 0 0;padding:22px;border-radius:14px;background:linear-gradient(135deg,var(--g-from),var(--g-to));border:1px solid var(--accent)}
+.group span{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em}
+.group h2{font-size:clamp(24px,4vw,34px);font-weight:800;margin:4px 0}
+.group p{color:var(--muted)}
+nav.toc .sep{flex:none;color:var(--border);align-self:center}
+section.skill{margin:44px 0;padding-top:12px;border-top:2px solid var(--border);scroll-margin-top:70px}
+.skill-head{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.num{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:var(--accent);line-height:1}
+.skill-title{flex:1;min-width:220px}
+.skill-title h2{font-size:clamp(22px,3.5vw,30px);font-weight:800}
+.skill-title p{color:var(--muted);margin-top:4px}
+.demand{min-width:200px;flex:0 0 220px}
+.demand small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bar{height:8px;border-radius:99px;background:var(--surface-2);margin:6px 0 2px;overflow:hidden}
+.bar div{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.bar.top div{background:var(--gold)}
+.demand b{font-family:'JetBrains Mono',monospace;font-size:18px}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1000px){.levels{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.levels{grid-template-columns:1fr}.demand{flex:1 1 100%}}
+.level{background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--c);border-radius:12px;padding:16px;display:flex;flex-direction:column}
+.level h3{font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.level h3 span{font-size:11px;font-weight:600;color:var(--c);text-transform:uppercase;letter-spacing:.06em}
+.level .time{font-size:12px;color:var(--muted);margin:2px 0 10px}
+.level ol{padding-left:18px;font-size:14px}
+.level li{margin:5px 0}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.tags code{font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--surface-2);color:var(--accent-2);border:1px solid var(--border)}
+.project{margin-top:auto;padding:10px;border-radius:8px;background:var(--surface-2);font-size:13px}
+.project b{color:var(--c);display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+footer{border-top:1px solid var(--border);padding:24px 0 40px;color:var(--muted);font-size:13px;text-align:center}
+@media print{nav.toc{display:none}body{background:#fff;color:#111}.level,.guide{break-inside:avoid}}
+.index{margin:32px 0 0;padding:22px;border:1px solid var(--accent);border-radius:14px;background:var(--surface);scroll-margin-top:70px}
+.index h2{font-size:clamp(22px,3.5vw,28px);font-weight:800}
+.index>p{color:var(--muted);margin:4px 0 16px}
+.index h3{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 8px}
+.idx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px}
+@media(max-width:700px){.idx-grid{grid-template-columns:1fr}}
+.idx-item{padding:10px 0;border-bottom:1px solid var(--border);min-width:0}
+.idx-item>a{display:flex;gap:10px;align-items:baseline;font-weight:700;color:var(--text);text-decoration:none;font-size:15.5px}
+.idx-item>a b{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:13px;flex:none}
+.idx-item>a em{font-style:normal;margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.idx-item ol{list-style:none;display:flex;flex-wrap:wrap;gap:4px 6px;margin:6px 0 0 30px}
+.idx-item li a{font-size:12.5px;color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px;border:1px solid var(--border);display:inline-block}
+.index a:hover,.index a:focus-visible{color:var(--accent-2);border-color:var(--accent);outline:none}
+.idx-extra{display:flex;flex-wrap:wrap;gap:8px}
+.idx-extra a{font-size:13px;font-weight:600;color:var(--text);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2)}
+.top-link{font-size:12px;font-weight:600;color:var(--accent-2);text-decoration:none;white-space:nowrap}
+.level{scroll-margin-top:70px}
+.guide{scroll-margin-top:70px}
+@media print{.index{break-after:page}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="version">Versión 1.1 · 09 de octubre de 2026</div>
+  <h1>Pensum <span>AI Engineer</span>: de cero a experto</h1>
+  <p class="lead">Ruta de estudio para las habilidades más pedidas en ofertas de AI Engineer (análisis de 40.000 vacantes): 10 habilidades de IA y 6 lenguajes de programación. Cada habilidad se divide en 4 niveles — Fundamentos, Intermedio, Avanzado y Experto — con temas numerados, herramientas clave y un proyecto que demuestra el nivel.</p>
+  <div class="legend">
+    <span class="pill"><i style="background:var(--l1)"></i>Nivel 1 · Fundamentos</span>
+    <span class="pill"><i style="background:var(--l2)"></i>Nivel 2 · Intermedio</span>
+    <span class="pill"><i style="background:var(--l3)"></i>Nivel 3 · Avanzado</span>
+    <span class="pill"><i style="background:var(--l4)"></i>Nivel 4 · Experto</span>
+  </div>
+</div></header>
+
+<nav class="toc"><div class="wrap" id="toc"><a href="#indice"><b>≡</b>Índice</a></div></nav>
+
+<main class="wrap">
+  <section class="index" id="indice">
+    <h2>Índice</h2>
+    <p>Toca una habilidad para ir a su sección, o un nivel para ir directo a ese nivel.</p>
+    <div class="idx-extra"><a href="#como-usar">Cómo usar este pensum</a></div>
+    <div id="idx"></div>
+  </section>
+  <div class="guide" id="como-usar">
+    <h2>Cómo usar este pensum</h2>
+    <ol>
+      <li><strong>Orden sugerido:</strong> Python + SQL → APIs → LLMs → Prompt Engineering → RAG → AI Agents → JavaScript → TypeScript → GenAI → Machine Learning → AWS / Azure (escoge una nube primero). Java, Go y R solo si tu trabajo o clientes lo exigen.</li>
+      <li><strong>No avances de nivel</strong> sin terminar el proyecto del nivel anterior: el proyecto es la prueba, no el curso.</li>
+      <li><strong>Combina habilidades:</strong> a partir del Nivel 2, cada proyecto debería usar al menos dos habilidades del pensum.</li>
+      <li><strong>Publica todo en GitHub</strong> con README claro: es tu portafolio y alimenta tu hoja de vida.</li>
+      <li>Los tiempos son estimados para ~10 horas de estudio por semana.</li>
+    </ol>
+  </div>
+  <div id="skills"></div>
+</main>
+
+<footer>Pensum AI Engineer · v1.1 · 2026-10-09 · Cambios: índice navegable · Basado en el ranking "Top Skills" de Data with Baraa</footer>
+
+<script>
+const L = [
+  {n:"Fundamentos",c:"var(--l1)"},{n:"Intermedio",c:"var(--l2)"},
+  {n:"Avanzado",c:"var(--l3)"},{n:"Experto",c:"var(--l4)"}
+];
+const skills = [
+{id:"python",name:"Python",icon:"🐍",pct:74.4,desc:"El lenguaje base de toda la IA: datos, modelos, APIs y automatización.",levels:[
+ {t:"4–6 semanas",items:["Sintaxis, variables y tipos de datos","Control de flujo: if, for, while","Funciones, argumentos y alcance","Estructuras: listas, diccionarios, tuplas, sets","Lectura y escritura de archivos (txt, CSV, JSON)","Manejo de errores con try/except","Entornos virtuales e instalación de paquetes"],tools:["VS Code","uv / venv","pip","Jupyter"],proj:"Script que lee un CSV de ventas y genera un resumen en consola y en JSON."},
+ {t:"6–8 semanas",items:["Programación orientada a objetos (clases, herencia, dataclasses)","Módulos y paquetes propios","Comprehensions, generadores e iteradores","Decoradores y context managers","Type hints y mypy","pandas y NumPy para análisis de datos","Consumo de APIs con requests / httpx","Testing con pytest y control de versiones con Git"],tools:["pandas","NumPy","httpx","pytest","Git"],proj:"Limpieza y análisis de un dataset real con pandas + reporte con gráficos (matplotlib/plotly)."},
+ {t:"8–10 semanas",items:["Programación asíncrona: asyncio, async/await","Concurrencia: threading vs multiprocessing","APIs con FastAPI y validación con Pydantic","Bases de datos con SQLAlchemy y Alembic","Logging estructurado y configuración por entorno","Empaquetado con pyproject.toml","Polars y procesamiento de datos grandes","Profiling y optimización (cProfile, line_profiler)"],tools:["FastAPI","Pydantic","SQLAlchemy","Polars","Docker"],proj:"API REST con FastAPI + PostgreSQL, tests, Docker y despliegue en la nube."},
+ {t:"Continuo",items:["Internals de CPython: GIL, memoria, bytecode","Python free-threaded (3.13+) y su impacto","Metaprogramación: metaclases, descriptores","Rendimiento extremo: Numba, Cython, Rust con PyO3","Arquitectura limpia y patrones de diseño","CI/CD, linters y calidad (ruff, pre-commit)","Diseño y publicación de librerías open source"],tools:["ruff","PyO3","Numba","GitHub Actions"],proj:"Librería propia publicada en PyPI con documentación, tests y CI."}
+]},
+{id:"llms",name:"LLMs",icon:"🧠",pct:60.0,desc:"Entender, usar, adaptar y servir grandes modelos de lenguaje.",levels:[
+ {t:"2–3 semanas",items:["Qué es un LLM y cómo predice tokens","Tokens, ventana de contexto y costos","Parámetros: temperatura, top-p, max tokens","Panorama de proveedores: Anthropic, OpenAI, Google, open-weights","Limitaciones: alucinaciones, sesgos, fecha de corte","Primera llamada a una API desde Python"],tools:["Anthropic API","OpenAI API","Gemini API"],proj:"Chatbot de consola con memoria de conversación usando un SDK oficial."},
+ {t:"4–6 semanas",items:["SDKs a fondo: mensajes, roles, system prompt","Streaming de respuestas","Salidas estructuradas (JSON / esquemas)","Tool use / function calling","Embeddings y similitud semántica","Modelos multimodales (imagen, PDF, audio)","Rate limits, reintentos y control de costos"],tools:["SDK Python","Pydantic","tiktoken"],proj:"Extractor que convierte facturas en PDF a JSON validado."},
+ {t:"6–8 semanas",items:["Arquitectura Transformer: atención, embeddings posicionales","Tokenización BPE","Hugging Face Transformers","Modelos open-weights: Llama, Qwen, Mistral, Gemma","Fine-tuning eficiente: LoRA y QLoRA","Cuantización (GGUF, AWQ) e inferencia local","Servir modelos con Ollama y vLLM"],tools:["Hugging Face","PEFT","Ollama","vLLM"],proj:"Fine-tuning LoRA de un modelo pequeño para un dominio (ej. contratos inmobiliarios) y comparación vs modelo base."},
+ {t:"Continuo",items:["Entrenar un GPT pequeño desde cero (nanoGPT)","Alineamiento: RLHF, DPO y variantes","Evaluaciones propias y benchmarks","Inferencia a escala: KV cache, batching, speculative decoding","Seguridad: prompt injection, jailbreaks, fuga de datos","Interpretabilidad básica","Optimización costo/latencia y routing entre modelos"],tools:["PyTorch","TRL","lm-eval-harness"],proj:"Servicio de inferencia propio con métricas de latencia, costo y calidad, con routing entre modelos."}
+]},
+{id:"agents",name:"AI Agents",icon:"🤖",pct:44.6,desc:"Sistemas donde el LLM decide, usa herramientas y actúa en ciclos.",levels:[
+ {t:"2–3 semanas",items:["Qué es un agente: LLM + herramientas + bucle","Patrón ReAct (razonar → actuar → observar)","Tool calling desde cero sin frameworks","Diferencia entre workflow y agente","Cuándo NO usar un agente"],tools:["SDK Python","Function calling"],proj:"Agente de consola que consulta clima y calcula con 2–3 herramientas propias."},
+ {t:"4–6 semanas",items:["Frameworks: LangGraph, Claude Agent SDK, OpenAI Agents SDK, CrewAI","Model Context Protocol (MCP): clientes y servidores","Memoria de corto y largo plazo","Planificación y descomposición de tareas","Estado y grafos de ejecución","Manejo de errores y reintentos de herramientas"],tools:["LangGraph","MCP","Claude Agent SDK"],proj:"Agente que lee correos, clasifica solicitudes y crea registros en un CRM."},
+ {t:"6–8 semanas",items:["Sistemas multi-agente y orquestación","Human-in-the-loop y aprobaciones","Ejecución durable y tareas largas","Evaluación de trayectorias de agentes","Guardrails y validación de acciones","Observabilidad: trazas, costos, pasos","Construir servidores MCP propios"],tools:["Langfuse","LangSmith","Temporal"],proj:"Agente sobre un ERP (vía API) que genera órdenes de compra con aprobación humana."},
+ {t:"Continuo",items:["Arquitectura de agentes en producción a escala","Seguridad: permisos mínimos, sandboxing, inyección indirecta","Agentes de código y computer use","Benchmarks: SWE-bench, τ-bench, GAIA","Optimización de costo por tarea","Diseño de producto: UX y confianza del usuario"],tools:["Docker sandbox","OpenTelemetry"],proj:"Plataforma multi-cliente de agentes con trazabilidad, permisos y métricas de negocio."}
+]},
+{id:"rag",name:"RAG",icon:"📚",pct:42.0,desc:"Retrieval-Augmented Generation: respuestas basadas en tus propios documentos.",levels:[
+ {t:"2–3 semanas",items:["Por qué RAG: conocimiento privado y actualizado","Embeddings y similitud coseno","Chunking básico de documentos","Pipeline: indexar → buscar → generar","Citar fuentes en la respuesta"],tools:["Embeddings API","NumPy","FAISS"],proj:"Q&A sobre 10 PDFs con búsqueda en memoria y citas."},
+ {t:"4–5 semanas",items:["Bases vectoriales: pgvector, Qdrant, Chroma, Pinecone","Estrategias de chunking (semántico, por estructura)","Filtros por metadatos","LlamaIndex y LangChain","Parsing de documentos complejos (tablas, escaneos)"],tools:["pgvector","Qdrant","LlamaIndex","Docling"],proj:"Asistente de documentación interna con Postgres + pgvector y API."},
+ {t:"6–8 semanas",items:["Búsqueda híbrida (BM25 + vectores)","Reranking con cross-encoders","Reescritura de consultas y HyDE","Contextual retrieval","Evaluación: precisión de recuperación y fidelidad","Datasets de prueba propios"],tools:["Cohere Rerank","RAGAS","Elasticsearch"],proj:"RAG con métricas antes/después de reranking y búsqueda híbrida."},
+ {t:"Continuo",items:["Agentic RAG y multi-hop","GraphRAG y grafos de conocimiento","RAG multimodal (imágenes, planos, tablas)","Fine-tuning de modelos de embeddings","Escala: índices HNSW/IVF, millones de documentos","Permisos por documento y multi-tenancy","Caché semántica"],tools:["Neo4j","HNSW","Sentence Transformers"],proj:"RAG empresarial multi-cliente con control de acceso por documento."}
+]},
+{id:"prompt",name:"Prompt Engineering",icon:"📝",pct:24.1,desc:"Diseñar instrucciones y contexto para obtener resultados fiables.",levels:[
+ {t:"1–2 semanas",items:["Instrucciones claras y específicas","Dar rol y contexto","Few-shot: ejemplos positivos y negativos","Definir formato de salida","Iterar y comparar respuestas"],tools:["Consola de Anthropic","Playground"],proj:"Biblioteca de 10 prompts para tareas de tu negocio con antes/después."},
+ {t:"2–3 semanas",items:["Chain-of-thought y razonamiento paso a paso","Etiquetas XML para estructurar","System prompts robustos","Encadenamiento de prompts","Plantillas con variables"],tools:["Jinja2","SDK Python"],proj:"Pipeline de 3 prompts encadenados que resume, clasifica y redacta respuesta."},
+ {t:"3–4 semanas",items:["Evaluación sistemática con datasets de prueba","Versionado de prompts","Context engineering para agentes","Descripción efectiva de herramientas","Prompt caching para reducir costos","LLM-as-judge"],tools:["promptfoo","Langfuse"],proj:"Suite de evaluación automática que puntúa versiones de un prompt."},
+ {t:"Continuo",items:["Optimización automática con DSPy","Defensas contra prompt injection","Prompts portables entre modelos","Gestión de prompts en producción","Investigación de técnicas nuevas"],tools:["DSPy"],proj:"Prompt optimizado automáticamente con mejora medible sobre baseline."}
+]},
+{id:"apis",name:"APIs",icon:"🔌",pct:23.1,desc:"Consumir y construir las interfaces que conectan sistemas e IA.",levels:[
+ {t:"2–3 semanas",items:["HTTP: métodos, headers, status codes","JSON y REST","Probar APIs con curl, Postman o Bruno","Autenticación con API keys","Leer documentación de APIs"],tools:["curl","Postman","httpx"],proj:"Script que integra dos APIs públicas y combina sus datos."},
+ {t:"4–5 semanas",items:["Diseñar APIs REST con FastAPI","OpenAPI / Swagger","OAuth2 y JWT","Paginación, filtros y versionado","Webhooks","Manejo de errores consistente"],tools:["FastAPI","OAuth2","Swagger"],proj:"API con autenticación JWT y webhooks hacia otro servicio."},
+ {t:"5–7 semanas",items:["GraphQL y gRPC","WebSockets y Server-Sent Events (streaming de LLMs)","Rate limiting, caché e idempotencia","Colas y tareas en segundo plano","Integración con ERPs (OData, SOAP, APIs propietarias)"],tools:["Redis","Celery","RabbitMQ","GraphQL"],proj:"Middleware que sincroniza un ERP con un CRM usando colas y reintentos."},
+ {t:"Continuo",items:["API gateways y microservicios","Arquitectura orientada a eventos (Kafka)","Seguridad: OWASP API Top 10","Observabilidad con OpenTelemetry","Diseño API-first y contratos","SLAs y gestión de versiones"],tools:["Kafka","Kong","OpenTelemetry"],proj:"Plataforma de integración con gateway, eventos y monitoreo."}
+]},
+{id:"aws",name:"AWS",icon:"☁️",pct:21.5,desc:"Desplegar y escalar soluciones de IA en la nube más usada.",levels:[
+ {t:"3–4 semanas",items:["Cuenta, regiones y zonas de disponibilidad","IAM: usuarios, roles, políticas","EC2 y S3","Alertas de facturación","AWS CLI","Certificación: Cloud Practitioner"],tools:["AWS CLI","IAM","S3","EC2"],proj:"Sitio estático en S3 + una API simple en EC2."},
+ {t:"5–6 semanas",items:["Lambda y API Gateway (serverless)","RDS y DynamoDB","VPC y redes básicas","CloudWatch: logs y métricas","Secrets Manager","Certificación: AI Practitioner / Solutions Architect Associate"],tools:["Lambda","DynamoDB","RDS","CloudWatch"],proj:"API serverless de un chatbot con Lambda + DynamoDB."},
+ {t:"6–8 semanas",items:["Amazon Bedrock (modelos, agentes, knowledge bases)","SageMaker","ECS / Fargate para contenedores","Step Functions, SQS y SNS","Infraestructura como código: CDK o Terraform","CI/CD con GitHub Actions"],tools:["Bedrock","SageMaker","CDK","Terraform"],proj:"RAG en Bedrock desplegado 100% con infraestructura como código."},
+ {t:"Continuo",items:["Arquitectura multi-cuenta y Well-Architected","Seguridad: KMS, GuardDuty, Security Hub","FinOps: optimización de costos","MLOps en SageMaker","Alta disponibilidad y recuperación ante desastres","Certificación: ML Engineer Associate / Solutions Architect Professional"],tools:["Organizations","KMS","Cost Explorer"],proj:"Arquitectura de referencia de IA para un cliente enterprise documentada."}
+]},
+{id:"ml",name:"Machine Learning",icon:"📈",pct:21.0,desc:"Los fundamentos matemáticos y técnicos detrás de todos los modelos.",levels:[
+ {t:"6–8 semanas",items:["Álgebra lineal, cálculo y probabilidad aplicados","Estadística descriptiva e inferencial","Tipos de aprendizaje: supervisado, no supervisado, refuerzo","Regresión lineal y logística","scikit-learn: train/test split","Métricas: accuracy, precision, recall, F1, RMSE"],tools:["scikit-learn","pandas","matplotlib"],proj:"Modelo que predice el precio de inmuebles con regresión."},
+ {t:"6–8 semanas",items:["Árboles, Random Forest","Gradient boosting: XGBoost, LightGBM","Feature engineering","Validación cruzada y tuning de hiperparámetros","Clustering y PCA","Overfitting y regularización"],tools:["XGBoost","LightGBM","Optuna"],proj:"Modelo de predicción de abandono de clientes con explicación de variables (SHAP)."},
+ {t:"8–10 semanas",items:["Redes neuronales y backpropagation","PyTorch a fondo","CNN para visión","RNN y Transformers","Optimizadores y entrenamiento en GPU","Series de tiempo y forecasting"],tools:["PyTorch","Colab / GPU","Lightning"],proj:"Clasificador de imágenes o forecasting de demanda con red neuronal."},
+ {t:"Continuo",items:["MLOps: MLflow, DVC, Weights & Biases","Despliegue y monitoreo de drift","Feature stores","Entrenamiento distribuido","JAX","Leer e implementar papers"],tools:["MLflow","W&B","JAX"],proj:"Pipeline MLOps completo: entrenamiento, registro, despliegue y monitoreo."}
+]},
+{id:"azure",name:"Azure",icon:"🔷",pct:18.5,desc:"La nube preferida por empresas con ecosistema Microsoft.",levels:[
+ {t:"3–4 semanas",items:["Portal, suscripciones y resource groups","Microsoft Entra ID (identidad)","Storage Accounts y VMs","Azure CLI","Certificación: AZ-900"],tools:["Azure CLI","Entra ID","Storage"],proj:"Despliegue de una app simple en una VM con almacenamiento."},
+ {t:"5–6 semanas",items:["App Service y Azure Functions","Azure SQL y Cosmos DB","Key Vault","Azure Monitor","Certificación: AZ-204"],tools:["Functions","Cosmos DB","Key Vault"],proj:"API serverless con Functions + Cosmos DB."},
+ {t:"6–8 semanas",items:["Azure OpenAI y Azure AI Foundry","Azure AI Search para RAG","Document Intelligence","AKS (Kubernetes)","Bicep o Terraform","Certificación: AI-102"],tools:["Azure OpenAI","AI Search","Bicep"],proj:"RAG empresarial con AI Search + Azure OpenAI."},
+ {t:"Continuo",items:["Landing Zones y arquitectura enterprise","Gobernanza con Azure Policy","Seguridad: Defender, redes privadas","Integración con Microsoft 365 y Copilot Studio","Certificación: AZ-305"],tools:["Azure Policy","Defender","Copilot Studio"],proj:"Agente integrado en Teams conectado a datos corporativos."}
+]},
+{id:"genai",name:"GenAI",icon:"✨",pct:18.0,desc:"IA generativa más allá del texto: imagen, audio, video y producto.",levels:[
+ {t:"1–2 semanas",items:["Panorama: texto, imagen, audio, video, código","Casos de uso por industria","Ética, derechos de autor y uso responsable","Herramientas no-code para prototipar"],tools:["Claude","Midjourney","ElevenLabs"],proj:"Mapa de 10 casos de uso de GenAI para un sector (ej. construcción)."},
+ {t:"3–4 semanas",items:["Modelos de difusión a alto nivel","APIs de generación de imagen","Voz: speech-to-text y text-to-speech","Aplicaciones multimodales","Moderación de contenido"],tools:["Whisper","FLUX","Diffusers"],proj:"Asistente de voz: audio → transcripción → LLM → respuesta hablada."},
+ {t:"5–6 semanas",items:["Difusión a fondo: ruido, scheduler, guidance","Fine-tuning LoRA de imágenes","ComfyUI y pipelines","Evaluación de calidad generativa","UX de productos GenAI: latencia y expectativas"],tools:["ComfyUI","Diffusers","LoRA"],proj:"Generador de renders de inmuebles con estilo de marca propio."},
+ {t:"Continuo",items:["Arquitecturas: VAE, GAN, difusión, flow matching","Modelos de video","Entrenamiento de modelos propios","Regulación: EU AI Act y normativa local","Estrategia de producto y ROI de GenAI"],tools:["PyTorch","Hugging Face"],proj:"Producto GenAI con métricas de uso, costo y retorno para un cliente."}
+]}
+,
+{group:"Lenguajes de programación",gsub:"Ranking de lenguajes en las mismas vacantes. Python ya está cubierto en el bloque anterior (74.4%).",id:"typescript",name:"TypeScript",icon:"🟦",pct:13.1,desc:"JavaScript con tipos: el estándar para frontends y backends de productos de IA. Aprende JavaScript (14) primero.",levels:[
+ {t:"2–3 semanas",items:["Tipos básicos, interfaces y type aliases","Uniones, literales y narrowing","Funciones tipadas y genéricos simples","tsconfig y compilación","Node.js con TypeScript"],tools:["TypeScript","Node.js","tsx"],proj:"CLI en TypeScript que llama a la API de un LLM."},
+ {t:"4–5 semanas",items:["Genéricos avanzados y utility types","Validación en runtime con Zod","React + TypeScript","Next.js (App Router, server actions)","Testing con Vitest"],tools:["React","Next.js","Zod","Vitest"],proj:"Interfaz de chat con streaming en Next.js."},
+ {t:"5–6 semanas",items:["Vercel AI SDK y SDKs de LLM en TS","Backends con Hono / NestJS","ORMs: Prisma o Drizzle","Monorepos (Turborepo)","Servidores MCP en TypeScript"],tools:["AI SDK","Prisma","Hono","MCP SDK"],proj:"SaaS de agente con auth, base de datos y streaming."},
+ {t:"Continuo",items:["Tipos condicionales, mapped y template literal types","Diseño de librerías y tipos públicos","Rendimiento en el edge","Arquitectura full-stack a escala","Contribuir a open source"],tools:["tsup","Bun","Deno"],proj:"Librería npm tipada para integrar un ERP con agentes."}
+]},
+{id:"sql",name:"SQL",icon:"🗄️",pct:11.8,desc:"El idioma de los datos: indispensable para RAG, analítica y sistemas empresariales.",levels:[
+ {t:"2–3 semanas",items:["SELECT, WHERE, ORDER BY, LIMIT","Funciones de agregación y GROUP BY","JOINs (inner, left, right, full)","INSERT, UPDATE, DELETE","Tipos de datos y llaves primarias/foráneas"],tools:["PostgreSQL","DBeaver","SQLite"],proj:"Base de datos de un inventario con 20 consultas de negocio."},
+ {t:"3–4 semanas",items:["Subconsultas y CTEs","Funciones de ventana (ROW_NUMBER, LAG, SUM OVER)","Diseño y normalización","Índices y su impacto","Vistas y transacciones"],tools:["PostgreSQL","Supabase"],proj:"Modelo de datos de un CRM con reportes de ventas mensuales."},
+ {t:"4–5 semanas",items:["EXPLAIN y optimización de consultas","pgvector y búsqueda semántica en SQL","JSONB y datos semiestructurados","Row Level Security","Migraciones y versionado de esquemas","Text-to-SQL con LLMs"],tools:["pgvector","Alembic","EXPLAIN"],proj:"Agente text-to-SQL seguro sobre una base real con permisos de solo lectura."},
+ {t:"Continuo",items:["Data warehousing: modelado dimensional","dbt y transformación de datos","Particionamiento y replicación","Motores analíticos: BigQuery, Snowflake, DuckDB","Gobernanza y calidad de datos"],tools:["dbt","DuckDB","Snowflake"],proj:"Data warehouse con dbt alimentando dashboards y un agente analista."}
+]},
+{id:"java",name:"Java",icon:"☕",pct:8.7,desc:"Clave en grandes empresas, bancos y sistemas legados que deben integrarse con IA.",levels:[
+ {t:"3–4 semanas",items:["Sintaxis, tipos y control de flujo","Clases, objetos e interfaces","Colecciones (List, Map, Set)","Excepciones","Maven o Gradle"],tools:["JDK 21","IntelliJ","Maven"],proj:"Aplicación de consola de gestión de inventario."},
+ {t:"4–6 semanas",items:["Streams y lambdas","Genéricos","Records y pattern matching","Testing con JUnit","Spring Boot básico"],tools:["Spring Boot","JUnit"],proj:"API REST con Spring Boot y base de datos."},
+ {t:"5–6 semanas",items:["Spring Data, Security y JPA","Virtual threads (concurrencia moderna)","Spring AI y LangChain4j","Integración con mensajería (Kafka)","Docker y despliegue"],tools:["Spring AI","LangChain4j","Kafka"],proj:"Servicio Java que agrega un asistente LLM a un sistema empresarial existente."},
+ {t:"Continuo",items:["JVM internals y garbage collectors","Rendimiento y profiling","Microservicios a escala","GraalVM y compilación nativa","Modernización de sistemas legados"],tools:["GraalVM","JFR","Kubernetes"],proj:"Modernización de un módulo legado con capa de IA."}
+]},
+{id:"javascript",name:"JavaScript",icon:"🟨",pct:7.7,desc:"La base de la web. Apréndelo antes de TypeScript.",levels:[
+ {t:"3–4 semanas",items:["Variables, tipos y operadores","Funciones, arrays y objetos","DOM y eventos","Fetch y JSON","ES Modules"],tools:["Navegador","Node.js"],proj:"Página que consume una API pública y muestra resultados."},
+ {t:"3–4 semanas",items:["Promesas y async/await","Closures, this y prototipos","Destructuring, spread, métodos de arrays","Node.js y npm","Express básico"],tools:["Node.js","npm","Express"],proj:"Backend en Express que hace de proxy a una API de LLM."},
+ {t:"4–5 semanas",items:["Event loop a fondo","Streams y Server-Sent Events","Web APIs: WebSockets, Web Workers","Bundlers (Vite)","Seguridad web: XSS, CORS, CSP"],tools:["Vite","WebSockets"],proj:"Widget de chat embebible en cualquier sitio web."},
+ {t:"Continuo",items:["Rendimiento web y Core Web Vitals","Motores JS (V8) y memoria","Patrones de arquitectura frontend","Migración a TypeScript"],tools:["Chrome DevTools","Lighthouse"],proj:"Optimizar una app real con métricas antes/después."}
+]},
+{id:"go",name:"Go",icon:"🐹",pct:6.2,desc:"Servicios rápidos y concurrentes: infraestructura, gateways y backends de alto tráfico.",levels:[
+ {t:"2–3 semanas",items:["Sintaxis, tipos y structs","Slices y maps","Funciones e interfaces","Manejo de errores idiomático","Módulos de Go"],tools:["Go","go mod"],proj:"CLI que procesa archivos en lote."},
+ {t:"3–4 semanas",items:["Goroutines y channels","Paquete net/http","JSON y APIs REST","Testing y benchmarks","Context y cancelación"],tools:["net/http","testing"],proj:"API REST concurrente que consulta varios servicios en paralelo."},
+ {t:"4–5 semanas",items:["Patrones de concurrencia (worker pools, fan-out)","gRPC y Protocol Buffers","Bases de datos (pgx, sqlc)","Observabilidad","Docker multi-stage"],tools:["gRPC","sqlc","pgx"],proj:"Gateway de LLMs con rate limiting, caché y fallback entre proveedores."},
+ {t:"Continuo",items:["Runtime y scheduler de Go","Profiling con pprof","Operadores de Kubernetes","Sistemas distribuidos"],tools:["pprof","Kubernetes"],proj:"Servicio de alto rendimiento para servir embeddings."}
+]},
+{id:"r",name:"R",icon:"📊",pct:0.8,desc:"Baja demanda en AI Engineering; útil solo si trabajas en estadística o investigación. Prioridad mínima.",levels:[
+ {t:"2 semanas",items:["Vectores, data frames y funciones","RStudio","Importar datos"],tools:["R","RStudio"],proj:"Análisis exploratorio de un dataset."},
+ {t:"2–3 semanas",items:["tidyverse: dplyr, tidyr","Gráficos con ggplot2","R Markdown / Quarto"],tools:["tidyverse","ggplot2","Quarto"],proj:"Reporte estadístico reproducible."},
+ {t:"3–4 semanas",items:["Modelos estadísticos y pruebas de hipótesis","tidymodels","Shiny para apps"],tools:["tidymodels","Shiny"],proj:"Dashboard Shiny con un modelo predictivo."},
+ {t:"Continuo",items:["Estadística bayesiana","Creación de paquetes","Integración R + Python (reticulate)"],tools:["Stan","reticulate"],proj:"Paquete R publicado o análisis de investigación."}
+]}
+];
+
+const toc = document.getElementById('toc');
+const root = document.getElementById('skills');
+root.insertAdjacentHTML('beforeend',`<div class="group"><span>Bloque A</span><h2>Habilidades de IA</h2><p>Las 10 habilidades más pedidas en vacantes de AI Engineer.</p></div>`);
+skills.forEach((s,i)=>{
+  const n = String(i+1).padStart(2,'0');
+  if(s.group){
+    root.insertAdjacentHTML('beforeend',`<div class="group"><span>Bloque B</span><h2>${s.group}</h2><p>${s.gsub}</p></div>`);
+    toc.insertAdjacentHTML('beforeend',`<span class="sep">|</span>`);
+  }
+  toc.insertAdjacentHTML('beforeend',`<a href="#${s.id}"><b>${n}</b>${s.name}</a>`);
+  const lv = s.levels.map((l,j)=>`
+    <div class="level" id="${s.id}-${j+1}" style="--c:${L[j].c}">
+      <h3>${L[j].n}<span>Nivel ${j+1}</span></h3>
+      <div class="time">⏱ ${l.t}</div>
+      <ol>${l.items.map(x=>`<li>${x}</li>`).join('')}</ol>
+      <div class="tags">${l.tools.map(x=>`<code>${x}</code>`).join('')}</div>
+      <div class="project"><b>Proyecto</b>${l.proj}</div>
+    </div>`).join('');
+  root.insertAdjacentHTML('beforeend',`
+  <section class="skill" id="${s.id}">
+    <div class="skill-head">
+      <div class="num">${n}</div>
+      <div class="skill-title"><h2>${s.icon} ${s.name}</h2><p>${s.desc}</p><a class="top-link" href="#indice">↑ Volver al índice</a></div>
+      <div class="demand"><small>Demanda en vacantes</small>
+        <div class="bar ${i===0?'top':''}"><div style="width:${s.pct}%"></div></div>
+        <b>${s.pct.toFixed(1)}%</b></div>
+    </div>
+    <div class="levels">${lv}</div>
+  </section>`);
+});
+const idx=document.getElementById('idx');
+let idxHtml='';
+skills.forEach((s,i)=>{
+  const n=String(i+1).padStart(2,'0');
+  if(i===0) idxHtml+='<h3>Bloque A · Habilidades de IA</h3><div class="idx-grid">';
+  if(s.group) idxHtml+='</div><h3>Bloque B · '+s.group+'</h3><div class="idx-grid">';
+  idxHtml+=`<div class="idx-item"><a href="#${s.id}"><b>${n}</b>${s.icon} ${s.name}<em>${s.pct.toFixed(1)}%</em></a>
+    <ol>${s.levels.map((l,j)=>`<li><a href="#${s.id}-${j+1}">${n}.${j+1} ${L[j].n}</a></li>`).join('')}</ol></div>`;
+});
+idx.innerHTML=idxHtml+'</div>';
+</script>
+</body>
+</html>
