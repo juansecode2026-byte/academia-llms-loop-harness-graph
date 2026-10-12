@@ -46,7 +46,7 @@ Documentos en `resultados/`:
 - `resultados-proceso-manual.html`
 - `resultados-proceso-agentizando.html`
 
-Misma numeración en ambos (secciones 1–10; niveles = secciones 4–7), con índice
+Misma numeración en ambos (secciones 1–9; niveles = secciones 3–6), con índice
 numerado al inicio y checklist por tema. Cada tema del agentizando enlaza a su
 equivalente del manual. Los nuevos HTML de resultados van en `resultados/`, nunca
 en la carpeta de documentación.
@@ -58,7 +58,7 @@ en la carpeta de documentación.
   externas) con modo claro y oscuro.
 - Las casillas del checklist se guardan en el navegador; para que cuenten como
   prueba se agrega `checked` en el HTML y se hace commit.
-- Cada documento tiene una bitácora de cambios (sección 10): toda modificación
+- Cada documento tiene una bitácora de cambios (sección 9): toda modificación
   agrega una fila con fecha.
 - Si sale una versión nueva del pensum o de la guía, se agrega como archivo nuevo
   en la carpeta de documentación; no se reemplaza la anterior.
