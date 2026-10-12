@@ -83,7 +83,9 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
 - **Documentación** (pensum y guía v7): el HTML manda y es de solo lectura. Su `.md`
   se genera con `python scripts/html_a_md.py`, solo para leerlo con poco contexto.
   Si se agrega un HTML nuevo a esa carpeta, se corre el script para crear su `.md`.
-- Al leer la guía o el pensum, leer el `.md`, no el HTML.
+- **Claude lee siempre el `.md`, nunca el HTML**, en cualquier carpeta (guía, pensum,
+  ejercicio simulado, resultados). Los HTML son solo para que el usuario los lea; se
+  regeneran y se dejan como están.
 - Las casillas que el usuario marca en el navegador viven solo en su navegador.
   Cuando el usuario confirma que algo está hecho, se marca en el `.md`.
 - **Al marcar un tema como hecho** en el manual, agregar una entrada en su sección final
