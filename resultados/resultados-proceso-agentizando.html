@@ -123,6 +123,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:32px}
   var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
   boxes.forEach(function(b){ if (b.dataset.id in saved) b.checked = saved[b.dataset.id]; });
   function update(){
+    if (!boxes.length) { var g = document.querySelector('.global'); if (g) g.style.display = 'none'; }
     var done = boxes.filter(function(b){ return b.checked; }).length;
     var pct = boxes.length ? Math.round(done * 100 / boxes.length) : 0;
     document.getElementById('gtxt').textContent = 'Avance: ' + pct + '% (' + done + '/' + boxes.length + ' pasos)';

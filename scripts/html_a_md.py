@@ -223,6 +223,11 @@ def main():
     destinos = [Path(a) for a in sys.argv[1:]] or sorted(CARPETA.glob("*.html"))
     for h in destinos:
         salida = h.with_suffix(".md")
+        # Un documento escrito por nosotros tiene el .md como fuente (lo genera
+        # md_a_html.py): no se pisa con una conversión desde su HTML.
+        if salida.exists() and salida.read_text(encoding="utf-8").startswith("<!-- Fuente de verdad"):
+            print("se omite (su .md es la fuente):", h.name)
+            continue
         salida.write_text(convertir(h), encoding="utf-8")
         print("ok", salida.name, f"({salida.stat().st_size // 1024} KB)")
 

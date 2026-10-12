@@ -45,7 +45,7 @@ Un tema no se agentiza hasta que su versión manual está cerrada y documentada.
 
 | Carpeta | Contenido |
 |---|---|
-| `Documentación para la construcción del proyecto/` | Material de referencia: el pensum y la guía v7. Es solo lectura; no se edita. |
+| `Documentación para la construcción del proyecto/` | Material de referencia: el pensum y la guía v7 (solo lectura), y `ejercicio-simulado-chat-consola` (escrito aquí: su `.md` es la fuente y `html_a_md.py` lo omite). |
 | `resultados/` | Lo que produce el proyecto: los dos documentos de seguimiento. |
 
 Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
@@ -62,6 +62,15 @@ se hacen commits de esa carpeta). Sirve para que el usuario sepa que existe y de
 proyecto salió. Los repos de los otros proyectos (por ejemplo `CRM VENTAS`) nunca se
 modifican desde aquí. Sigue la misma regla de `.md` fuente + HTML regenerado
 (`python scripts/md_a_html.py "Documentación para otros proyectos/<archivo>.md"`).
+
+## Ejercicio simulado
+
+El Nivel 1 se construye sobre un caso simulado: un asesor de viajes («Turismo Colombia
+(simulada)») que atiende por WhatsApp a clientes ficticios, piloto de 10 clientes, con
+catálogo JSON y base SQLite (clientes, mensajes, ejecuciones). Explicación y fases en
+`Documentación para la construcción del proyecto/ejercicio-simulado-chat-consola.md`.
+Sus pasos son casillas «Ejercicio X.N» dentro de los temas del manual: se marcan allí.
+La infraestructura de WhatsApp y Supabase quedan para candyCRM.
 
 ## Fuente de verdad: los .md
 

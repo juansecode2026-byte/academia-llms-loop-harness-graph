@@ -16,6 +16,7 @@ lead: Academia LLMs — módulo LLMs del Pensum AI Engineer. Aquí se documenta,
 3. Cada tema tiene el mismo checklist de 5 pasos y un bloque de **Notas del proceso** que se reemplaza por lo aprendido.
 4. Las casillas se guardan en este navegador. Para que el avance quede como prueba en GitHub, al cerrar un tema se marcan sus casillas en el `.md` (`- [x]`), se regenera el HTML y se hace commit.
 5. Todo lo que se aprenda aquí alimenta el documento [agentizando](resultados-proceso-agentizando.html), que reutiliza la misma numeración.
+6. **Ejercicio práctico:** el Nivel 1 se construye sobre un caso simulado, un asesor de viajes que atiende por WhatsApp a 10 clientes ficticios. Su explicación y su paso a paso están en [Ejercicio simulado · Chat de consola](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html). Los pasos del ejercicio aparecen como casillas «Ejercicio» dentro de cada tema y se marcan aquí.
 
 ## 2. Objetivo, alcance y base del proyecto
 
@@ -104,6 +105,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 4: parámetros de generación"`
+- [ ] Ejercicio B.1: probar los parámetros con una pregunta del caso de viajes y confirmar qué se puede variar ([ver paso B.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -115,6 +117,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 5: panorama de modelos"`
+- [ ] Ejercicio B.2: comparar Haiku, Sonnet y Opus con una pregunta de un cliente del caso ([ver paso B.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -126,6 +129,11 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
+- [ ] Ejercicio C.1: crear el catálogo ficticio (JSON) ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [ ] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [ ] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones) ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [ ] Ejercicio C.4: construir el simulador que entrega los mensajes ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [ ] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -137,6 +145,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 7: pruebas de limitaciones"`
+- [ ] Ejercicio D.1: correr las trampas del catálogo y medir si el chat inventa ([ver paso D.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -148,6 +157,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 8: chat final ensamblado"`
+- [ ] Ejercicio D.2: atender a los 10 clientes con recorte de memoria y guardar cada llamada ([ver paso D.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -159,6 +169,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 9: pruebas automáticas"`
+- [ ] Ejercicio D.3: pruebas sin gastar tokens del simulador y de la memoria por cliente ([ver paso D.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -170,6 +181,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio D.4: informe del piloto: tokens, costo y alucinaciones por cliente ([ver paso D.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -238,6 +250,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D5: batería y juez"`
+- [ ] Ejercicio E.1: armar la batería y el modelo juez desde el caso de viajes ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -326,6 +339,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.2: correr la grilla del piloto: 10 clientes × 12 configuraciones ([ver paso E.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -337,6 +351,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D14: tablero de decisiones"`
+- [ ] Ejercicio E.3: decidir modelo, effort y ventana con los datos del piloto ([ver paso E.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -742,3 +757,4 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 > Un asistente de ventas atiende 1.000 conversaciones al mes, de 20 turnos cada una. Con Haiku cuesta unos 6,8 USD al mes; con Sonnet, unos 135; con Opus, unos 270. Es el mismo servicio: cambiar de modelo lo multiplica por 40.
 > Y cuánto pesa la memoria: si el asistente solo recordara los últimos 5 turnos en vez de los 20, la entrada baja de 47.600 a 18.800 tokens por conversación (un 60 % menos) y las conversaciones largas dejan de encarecerse sin freno. Es como un vendedor que, antes de cada respuesta, no relee la libreta completa del cliente sino solo las últimas cinco notas.
 | 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
+| 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
