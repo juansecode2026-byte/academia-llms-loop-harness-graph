@@ -650,9 +650,9 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 |---|---|
 | 2026-10-12 | Creación del documento con índice y checklist de los 4 niveles. Pensum v1.1 copiado a docs/ y enlazado. Documentos movidos a resultados/; Nivel 1 rehecho con las etapas de la guía v7; agregado el índice de la guía; índices con casilla de avance por tema; códigos de la guía (F0, E1…) reemplazados por nombres; secciones reordenadas (niveles = 3 a 6); «manual» redefinido como guiado con Claude; carpeta docs/ renombrada a «Documentación para la construcción del proyecto». |
 | 2026-10-12 | Los .md pasan a ser la fuente de verdad: se edita el .md y el HTML se regenera con scripts/md_a_html.py. |
-| 2026-10-12 | Nueva sección 10, «Análisis de resultados»: explicación para principiantes y registro de lo que se va logrando. |
+| 2026-10-12 | Nueva sección «Análisis de resultados» (al final, sin número, con título destacado): explicación para principiantes y registro de lo que se va logrando. |
 
-## 10. Análisis de resultados
+## Análisis de resultados {id=analisis}
 
 Esta sección explica, en palabras simples, para qué sirve todo lo que se construye aquí. Está pensada para alguien que empieza en el campo de la inteligencia artificial.
 

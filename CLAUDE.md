@@ -65,8 +65,8 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
 - Al leer la guía o el pensum, leer el `.md`, no el HTML.
 - Las casillas que el usuario marca en el navegador viven solo en su navegador.
   Cuando el usuario confirma que algo está hecho, se marca en el `.md`.
-- **Al marcar un tema como hecho** en el manual, agregar una entrada en su sección 10
-  «Análisis de resultados» → «Lo que vamos logrando»: `#### N.M · Tema (fecha)`, con
+- **Al marcar un tema como hecho** en el manual, agregar una entrada en su sección final
+  «Análisis de resultados» (sin número) → «Lo que vamos logrando»: `#### N.M · Tema (fecha)`, con
   «Qué se hizo» y «A qué nos conduce», en palabras simples para alguien que empieza.
 
 ### Formato de los .md de resultados
@@ -75,7 +75,8 @@ Bloque inicial `---` con `doc`, `titulo`, `fecha`, `gemelo` y `lead`. Luego:
 `# título`; `## N. Sección` (con `{nivel=K}` para los niveles); `### N.M Tema`
 (con `{ref=idguia:E1 etiqueta="..."}` o `{proyecto}`); `#### subtítulo`; listas
 `- [ ]` / `- [x]`; `1.` listas numeradas; tablas con `|`; notas con `> **Título**`
-y `> _texto_`; `⏱` línea de duración y herramientas; `🛠` línea del proyecto. La
+y `> _texto_`; `⏱` línea de duración y herramientas; `🛠` línea del proyecto. Una sección sin número
+(`## Título {id=x}`) se muestra destacada: título grande y otra tipografía. La
 marca `<!-- parte: n | Título | Subtítulo | pN -->` antes de un tema agrupa el
 índice de la guía. Los números de sección y de tema se escriben a mano y deben
 seguir la secuencia; los ids de los enlaces salen de ellos (`s3-2`, `s3-proyecto`).

@@ -131,7 +131,7 @@ def construir(md_path):
         if ln.startswith("# "):
             h1 = inline(ln[2:])
         elif ln.startswith("## "):
-            m = re.match(r"## (\d+)\. (.*?)\s*(\{.*\})?$", ln)
+            m = re.match(r"## (?:(\d+)\. )?(.*?)\s*(\{.*\})?$", ln)
             cur = {"num": m.group(1), "titulo": m.group(2), "attrs": attrs(m.group(3) or ""), "lineas": [], "temas": []}
             secciones.append(cur)
             tema = None
@@ -148,6 +148,13 @@ def construir(md_path):
 
     cuerpo, toc_items, nivel1 = [], [], None
     for s in secciones:
+        if not s["num"]:
+            # sección destacada, sin número: título grande, otra tipografía, al final
+            sid = s["attrs"].get("id", "destacada")
+            inner, _ = render_blocks(s["lineas"], sid)
+            cuerpo.append(f'<section id="{sid}" class="destacada"><h2 class="destacada-t">{s["titulo"]}</h2>{inner}</section>')
+            toc_items.append((sid, "✦", s["titulo"], []))
+            continue
         sid = f"s{s['num']}"
         nivel = s["attrs"].get("nivel")
         if not nivel:
@@ -194,7 +201,10 @@ def construir(md_path):
         fuera = [(sid, num, nom) for sid, num, nom, _ in toc_items if not any(sid == f"s{x['num']}" and x["attrs"].get("nivel") for x in secciones)]
         li_doc = "".join(f'<li class="nc"><a href="#{a}"><i class="ck" data-for="{a}"></i><span class="gi-num">{b}</span>'
                          f'<span class="gi-t">{c}</span></a></li>' for a, b, c in fuera)
-        rango = f"Secciones {fuera[0][1]}–{fuera[1][1]} y {fuera[2][1]}–{fuera[-1][1]}" if len(fuera) > 3 else "Secciones"
+        nums = [b for _, b, _ in fuera if b.isdigit()]
+        rango = f"Secciones {nums[0]}–{nums[1]} y {nums[2]}–{nums[-1]}" if len(nums) > 3 else "Secciones"
+        if len(nums) < len(fuera):
+            rango += " · Análisis"
         tarjetas.append('<section class="gi-card" style="--c:var(--text)"><header><span class="gi-n">§</span>'
                         f"<div><b>Documento</b><span>{rango}</span></div></header><ol>{li_doc}</ol></section>")
         marcas = nivel1.get("partes", [])
