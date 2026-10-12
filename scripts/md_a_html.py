@@ -90,7 +90,14 @@ def render_blocks(lines, prefix):
                 ps += f'<p class="vacio">{inline(v.group(1))}</p>' if v else f"<p>{inline(p)}</p>"
             out.append(f'<div class="nota"><b>{label.group(1) if label else "Notas"}</b>{ps}</div>')
         elif ln.startswith("#### "):
-            out.append(f"<h3>{inline(ln[5:])}</h3>")
+            txt = ln[5:]
+            m = re.match(r"(\d+)(?:\.(\d+))? · ", txt)
+            if m and prefix == "analisis":
+                # entrada del análisis de resultados: ancla propia y enlace de vuelta al tema
+                tid = f"s{m.group(1)}" + (f"-{m.group(2)}" if m.group(2) else "")
+                out.append(f'<h3 id="an-{tid}">{inline(txt)} <a class="volver" href="#{tid}">↑ ver el tema</a></h3>')
+            else:
+                out.append(f"<h3>{inline(txt)}</h3>")
             i += 1
         elif ln.startswith("<!--"):
             i += 1
@@ -124,6 +131,16 @@ def parse(texto):
 
 def construir(md_path):
     meta, lines = parse(md_path.read_text(encoding="utf-8"))
+    con_analisis = {f"s{a}" + (f"-{b}" if b else "")
+                    for a, b in (re.match(r"#### (\d+)(?:\.(\d+))? · ", l).groups()
+                                 for l in lines if re.match(r"#### \d+(?:\.\d+)? · ", l))}
+
+    def titular(tid, cuerpo):
+        """Envuelve número + título en un enlace a su análisis, si existe."""
+        if tid in con_analisis:
+            return (f'<a class="al-analisis" href="#an-{tid}" title="Ir al análisis de resultados">{cuerpo}'
+                    f'<span class="ir-analisis">análisis ↓</span></a>')
+        return cuerpo
     h1 = ""
     secciones = []  # {num, titulo, attrs, lineas, temas:[{num,titulo,attrs,lineas}], parte_marks}
     cur = tema = None
@@ -159,7 +176,8 @@ def construir(md_path):
         nivel = s["attrs"].get("nivel")
         if not nivel:
             inner, _ = render_blocks(s["lineas"], sid)
-            cuerpo.append(f'<section id="{sid}"><h2><span class="num">{s["num"]}</span>{s["titulo"]}</h2>{inner}</section>')
+            cab = titular(sid, f'<span class="num">{s["num"]}</span>{s["titulo"]}')
+            cuerpo.append(f'<section id="{sid}"><h2>{cab}</h2>{inner}</section>')
             toc_items.append((sid, s["num"], s["titulo"], []))
             continue
         nivel1 = nivel1 or (s if nivel == "1" else None)
@@ -177,8 +195,9 @@ def construir(md_path):
                 gid, cod = t["attrs"]["ref"].split(":")
                 chip += f'<span class="refwrap"><a class="ref" href="{GUIA}#{gid}">ver guía: {cod}</a></span>'
             inner, _ = render_blocks(t["lineas"], tid)
+            cab = titular(tid, f'<span class="num">{num}</span>{html.escape(t["titulo"])}')
             partes.append(f'<article class="topic{" proyecto" if es_proy else ""}" id="{tid}"><h3>'
-                          f'<span class="num">{num}</span>{html.escape(t["titulo"])}{chip}</h3>{inner}</article>')
+                          f'{cab}{chip}</h3>{inner}</article>')
         cuerpo.append(f'<section id="{sid}" class="level" style="--c:var(--l{nivel})"><h2><span class="num">{s["num"]}</span>'
                       f'{s["titulo"]}</h2>{"".join(partes)}</section>')
         toc_items.append((sid, s["num"], s["titulo"], subs))

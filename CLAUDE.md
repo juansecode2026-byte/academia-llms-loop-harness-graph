@@ -79,7 +79,9 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   Cuando el usuario confirma que algo está hecho, se marca en el `.md`.
 - **Al marcar un tema como hecho** en el manual, agregar una entrada en su sección final
   «Análisis de resultados» (sin número) → «Lo que vamos logrando»: `#### N.M · Tema (fecha)`, con
-  «Qué se hizo» y «A qué nos conduce», en palabras simples para alguien que empieza.
+  «Qué se hizo», «A qué nos conduce» y un `> **Ejemplo**` concreto (con números reales
+  cuando los haya), en palabras simples para alguien que empieza. El título del tema
+  enlaza solo a esa entrada: el formato `#### N.M · ` es lo que lo activa.
 
 ### Formato de los .md de resultados
 

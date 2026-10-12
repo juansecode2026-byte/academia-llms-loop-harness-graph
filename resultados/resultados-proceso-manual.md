@@ -685,7 +685,7 @@ Aprender a usar un modelo de lenguaje (un LLM, como Claude) desde un programa pr
 
 #### Lo que vamos logrando
 
-Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qué se hizo, en palabras simples, y a qué nos conduce.
+Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qué se hizo, en palabras simples, a qué nos conduce y un ejemplo concreto. El número y el título de cada tema, más arriba, llevan directo a su entrada.
 
 #### 2 · Base del proyecto (2026-10-12)
 
@@ -693,11 +693,18 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 **A qué nos conduce:** ya hay un lugar ordenado donde cada avance queda guardado y fechado. Desde ahora, todo lo que se construya deja rastro, y ese rastro es el portafolio.
 
+> **Ejemplo**
+> Funciona como la historia clínica de un paciente. Si dentro de seis meses alguien de un cliente de Minus pregunta «¿desde cuándo saben conectar sistemas a Claude?», no hace falta decir «hace un tiempo»: se abre GitHub y se ve el commit «etapa 1: primera llamada a la API», con fecha, código y resultado.
+
 #### 3.1 · Preparación (2026-10-12)
 
 **Qué se hizo:** se creó un entorno de Python aislado para el proyecto (así sus bibliotecas no se mezclan con las de otros), se instaló el SDK de Anthropic, que es el programa que permite hablar con Claude desde código, y se guardó la clave de acceso en un archivo `.env` que Git no sube. La clave es exclusiva de este proyecto y vence sola.
 
 **A qué nos conduce:** es el piso sobre el que se apoya todo lo demás. Sin entorno aislado, los proyectos se estorban entre sí; sin la clave protegida, un descuido la publicaría y alguien podría gastar tu dinero. Con esto listo, el siguiente paso es el primero emocionante: hacer que un programa nuestro le haga una pregunta a Claude y reciba la respuesta.
+
+> **Ejemplo**
+> El entorno virtual es como tener una caja de herramientas aparte para cada obra. Si el CRM necesita una versión de la biblioteca `anthropic` y esta Academia otra, cada uno usa la suya y ninguno rompe al otro.
+> La clave en `.env` es como la llave de la casa guardada en un cajón, no pegada en la puerta: el programa la usa, pero no queda a la vista. Cuando hoy la clave quedó escrita en `.env.example` (la plantilla que sí se sube a GitHub), fue como dejarla pegada en la puerta; por eso se cambió la cerradura: se revocó y se creó otra.
 
 #### 3.2 · Primera llamada a la API (2026-10-12)
 
@@ -705,8 +712,17 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 **A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
 
+> **Ejemplo**
+> La pregunta «¿Qué es un modelo de lenguaje?» usó 34 tokens de entrada y unos 112 de salida. Con los precios de Haiku 5.5 (0,10 USD por millón de tokens de entrada y 0,50 por millón de salida), cada respuesta cuesta unos 0,00006 USD. Un asistente que contestara 10.000 preguntas parecidas al mes gastaría unos 0,60 USD.
+> Y la variación: es como preguntarle lo mismo a una persona tres veces. Las tres respuestas dicen que un modelo de lenguaje «predice y genera palabras de forma coherente», pero cambian el final: «responder preguntas, traducir, resumir» en una, «redactar textos» en otra.
+
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-12)
 
 **Qué se hizo:** se recibió la respuesta de Claude «en vivo», pedazo por pedazo, como cuando ChatGPT va escribiendo en pantalla. Cada pedazo se separó con una barra para ver cómo llegan. También se pidió ver el razonamiento resumido del modelo.
 
 **A qué nos conduce:** se ve con los ojos lo que significa que un modelo «predice el siguiente token»: va armando el texto por trozos pequeños, sin saber de antemano cómo terminará, y los trozos cortan en mitad de palabras. Esto sirve para dos decisiones prácticas: el streaming permite que un chat se sienta rápido (el usuario lee mientras se genera), y el razonamiento es una parte invisible del costo: en la prueba del acertijo, tres de cada cuatro tokens de salida se fueron en pensar. Esa cuenta decide cuándo conviene activar el razonamiento y cuándo apagarlo para ahorrar.
+
+> **Ejemplo**
+> Recibir la respuesta en streaming es como ver a alguien escribir en un tablero en vez de esperar a que te entregue la hoja terminada: la frase del café llegó en 40 pedazos y se podía leer desde el primero.
+> El costo del razonamiento, con números de hoy: el acertijo de las cajas gastó 385 tokens de salida, 287 de ellos pensando. Si un bot de posventa respondiera 1.000 preguntas así, pagaría unos 0,19 USD; sin razonar (unos 100 tokens por respuesta) serían unos 0,05 USD. Casi cuatro veces menos, a cambio de respuestas que pueden equivocarse más en preguntas difíciles.
+| 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
