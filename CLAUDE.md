@@ -54,7 +54,7 @@ Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
 ## Documentación para otros proyectos
 
 `Documentación para otros proyectos/` guarda lo que se extrae de este proyecto para
-usarlo en otros (hoy: `transferencia-crm-ventas`, cómo se lleva lo aprendido a candyCRM).
+usarlo en otros (hoy: `documentacion-para-aplicar-en-candy-crm-ventas`, cómo se lleva lo aprendido a candyCRM).
 Es **solo local: no se sube a git** (está en `.gitignore`; no se hace `git init` ahí ni
 se hacen commits de esa carpeta). Sirve para que el usuario sepa que existe y de qué
 proyecto salió. Los repos de los otros proyectos (por ejemplo `CRM VENTAS`) nunca se
