@@ -18,6 +18,11 @@ construye con la guía v7: chat de consola (F0, E1–E10), laboratorio de parám
 (D0–D14), ingeniería agéntica (AG0–AG9) y tablero agéntico (DA0–DA6). Solo SDK
 de Anthropic.
 
+Los códigos F0, E1–E10, D0–D14, AG0–AG9 y DA0–DA6 son etiquetas internas de la
+guía v7 (Fase 0, Etapa, Laboratorio/Dashboard, Agente, Dashboard del agente). En los
+documentos de `resultados/` los temas se identifican por nombre y número de
+sección; el código solo aparece como referencia «ver guía».
+
 ## Dos modos de trabajo
 
 Cada tema se hace dos veces, en este orden:
