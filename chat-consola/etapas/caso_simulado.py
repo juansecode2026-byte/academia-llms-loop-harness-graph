@@ -8,10 +8,22 @@ from pathlib import Path
 
 RUTA_CATALOGO = Path(__file__).resolve().parent.parent / "datos-simulados" / "catalogo-turismo-simulado.json"
 
-# Quién es el asesor. Las reglas contra inventar se construyen en el tema 3.8.
+# Quién es el asesor.
 SYSTEM_BASE = (
     "Eres el asesor de ventas de «Turismo Colombia (simulada)», una agencia de viajes. "
     "Atiendes por WhatsApp, en español, con mensajes cortos y cordiales."
+)
+
+# Reglas del prompt contra inventar y contra responder en abanico (tema 3.8). Se agregan solo si se pide.
+REGLAS = (
+    "Reglas:\n"
+    "1. Usa solo datos del catálogo y nombra el alojamiento o tour del que sale cada precio.\n"
+    "2. Si lo que piden no está en el catálogo (un alojamiento o destino que no existe, disponibilidad, "
+    "temporada alta, descuentos, alergias o dietas, clima, vuelos), dilo con claridad, no inventes ni estimes, "
+    "y di que un asesor humano lo confirma.\n"
+    "3. Si faltan fechas o número de personas, pregúntalos antes de cotizar.\n"
+    "4. Recomienda una opción principal, no una lista completa.\n"
+    "5. Responde corto, como en WhatsApp."
 )
 
 # Lo que escribe el cliente, tal como llegaría por WhatsApp: primero pregunta, luego insiste.
@@ -21,10 +33,11 @@ MENSAJES_CLIENTE = [
 ]
 
 
-def construir_system() -> str:
+def construir_system(con_reglas: bool = False) -> str:
     """Mensaje de sistema del asesor, con el catálogo en formato compacto (mismo contenido, menos tokens)."""
     catalogo = json.loads(RUTA_CATALOGO.read_text(encoding="utf-8"))
-    return SYSTEM_BASE + "\n\nCatálogo de la agencia (JSON):\n" + json.dumps(
+    base = SYSTEM_BASE + ("\n\n" + REGLAS if con_reglas else "")
+    return base + "\n\nCatálogo de la agencia (JSON):\n" + json.dumps(
         catalogo, ensure_ascii=False, separators=(",", ":")
     )
 
