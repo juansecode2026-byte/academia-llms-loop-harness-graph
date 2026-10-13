@@ -63,6 +63,12 @@ proyecto salió. Los repos de los otros proyectos (por ejemplo `CRM VENTAS`) nun
 modifican desde aquí. Sigue la misma regla de `.md` fuente + HTML regenerado
 (`python scripts/md_a_html.py "Documentación para otros proyectos/<archivo>.md"`).
 
+Ahí vive también **`documentacion-ai-engineer`** (`.md` + `.html`, índice en mayúsculas con
+`indice: mayusculas` en el encabezado): lo que se aprende sobre el oficio de AI Engineer. **Cuando un
+tema del checklist deje información relevante sobre cómo trabaja un AI Engineer** (método, cómo
+medir, qué optimizar, cómo diseñar), se agrega allí, marcando si el dato es medido, calculado
+o estimado, y se anota en su bitácora.
+
 ## Ejercicio simulado
 
 El Nivel 1 se construye sobre un caso simulado: un asesor de viajes («Turismo Colombia

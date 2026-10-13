@@ -212,7 +212,8 @@ def construir(md_path):
         return (f'<li><a href="#{sid}"><i class="ck" data-for="{sid}"></i><b>{num}</b>{name}'
                 f'<span class="pg" data-for="{sid}"></span></a>{sub}</li>')
 
-    toc = '<nav id="indice" class="toc"><h2>Índice</h2><ol>' + "".join(toc_li(*t) for t in toc_items) + "</ol></nav>"
+    clase_toc = "toc mayus" if meta.get("indice") == "mayusculas" else "toc"
+    toc = f'<nav id="indice" class="{clase_toc}"><h2>Índice</h2><ol>' + "".join(toc_li(*t) for t in toc_items) + "</ol></nav>"
 
     # índice de la guía (Nivel 1): tarjetas por parte, según las marcas «parte» del .md
     if nivel1:
