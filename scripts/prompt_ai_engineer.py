@@ -4,14 +4,35 @@ Cuando una herramienta (Edit, Write, Bash) toca el manual de resultados, inyecta
 contexto el prompt de AI Engineer que hay que responder y agregar al «Análisis de resultados».
 """
 import json
+import sqlite3
 import sys
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent.parent / "chat-consola" / "datos-simulados" / "piloto-simulado.db"
+
+
+def base_medida() -> str:
+    """Totales reales de la tabla ejecuciones: la línea base contra la que se calcula el ahorro."""
+    try:
+        con = sqlite3.connect(BASE)
+        n, ent, sal, usd = con.execute(
+            "select count(*), sum(tokens_entrada), sum(tokens_salida), sum(costo_usd) from ejecuciones").fetchone()
+        con.close()
+        miles = lambda x: f"{x:,}".replace(",", ".")
+        return (f" Línea base medida en la base del piloto: {n} llamadas, {miles(ent)} tokens de entrada, "
+                f"{miles(sal)} de salida, {usd:.4f} USD.".replace(".", ",", 0))
+    except Exception:
+        return ""
 
 PROMPT = (
     "DESDE EL PUNTO DE VISTA DE UN AI ENGINEER: enumera los factores que encarecieron el gasto "
     "de tokens, con datos y números si es necesario, para mirar cómo se podría mejorar. "
     "Y DESDE EL PUNTO DE VISTA DE UN AI ENGINEER: enumera cómo podríamos optimizar ese resultado. "
     "Responde ambos puntos y agrega el resultado a la entrada del tema en el «Análisis de resultados» "
-    "(«Qué encareció el proceso» y «Cómo se podría optimizar»), marcando cada cifra como medida, calculada o estimada."
+    "(«Qué encareció el proceso» y «Cómo se podría optimizar»), marcando cada cifra como medida, calculada o estimada. "
+    "Además, muestra el TOTAL DE TOKENS AHORRADOS expresado en dólares: diferencia entre el resultado obtenido "
+    "(tokens y USD medidos) y el resultado con la optimización (tokens y USD calculados o estimados), "
+    "en una tabla: concepto, tokens antes, tokens después, tokens ahorrados, USD ahorrados, estado del dato."
 )
 
 try:
@@ -20,4 +41,4 @@ except Exception:
     sys.exit(0)
 
 if "resultados-proceso-manual" in json.dumps(datos.get("tool_input", {}), ensure_ascii=False):
-    print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": PROMPT}}, ensure_ascii=False))
+    print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": PROMPT + base_medida()}}, ensure_ascii=False))
