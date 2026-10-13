@@ -54,19 +54,20 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.2 Primera llamada a la API {ref=e1:E1}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 1: primera llamada a la API"`
-- [ ] Ejercicio A.2: primera llamada con un mensaje de cliente del caso, sin catálogo, para ver cómo inventa precios ([ver paso A.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 1: primera llamada a la API"`
+- [x] Ejercicio A.2: primera llamada con un mensaje de cliente del caso, sin catálogo, para ver cómo inventa precios ([ver paso A.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
-> _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
-> Archivo: `chat-consola/etapas/e1_primera_llamada.py`. Se ejecutó 3 veces con `claude-haiku-5-5` y la API real (2026-10-12). Las tres terminaron con `end_turn`.
-> Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente que habla con la API; `client.messages.create(...)` envía el mensaje con tres datos obligatorios (modelo, tope de salida `max_tokens` y la lista de mensajes); luego el script recorre `respuesta.content`, que es una lista de bloques, y une los de tipo `text`.
-> Lo observado: la respuesta trae una lista de bloques, no un texto suelto. En estas ejecuciones vino solo el bloque `text`: el modelo decidió no razonar para una pregunta tan simple. Tokens: 34 de entrada y 116, 108 y 113 de salida. Costo de las tres llamadas juntas: unos 0,0002 USD.
-> Para pensar, «¿la respuesta es idéntica?»: no. Las tres versiones dicen lo mismo con palabras distintas («patrones estadísticos y semánticos», «patrones, estructuras y relaciones»). El modelo elige cada token con algo de azar; lo controlaremos en la etapa de parámetros.
+> Archivo: `chat-consola/etapas/e1_primera_llamada.py`, reescrito con el caso (2026-10-13, `claude-haiku-5-5`, API real). Reemplaza la versión previa, que usaba la pregunta suelta «¿Qué es un modelo de lenguaje?».
+> Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente; `client.messages.create(...)` envía el mensaje del cliente («hola buenas, cuanto vale ir a cartagena 4 noches?») con un mensaje de sistema que le da el papel de asesor de «Turismo Colombia (simulada)», **sin catálogo ni reglas contra inventar**. Luego recorre `respuesta.content` (una lista de bloques) y une los de tipo `text`.
+> Lo observado en 3 ejecuciones del mensaje original: el asesor **no inventó cifras**; pidió datos (ciudad de salida, fechas, personas y tipo de hotel). Pero dijo «te armo una cotización exacta», algo que no podría hacer sin catálogo, y habló de zonas («centro amurallado», «Bocagrande») y categorías de hotel que no son las de nuestro catálogo. Las tres respuestas incluyeron un bloque `thinking` (razonamiento): 431, 588 y 497 tokens de salida, mientras que la pregunta suelta de la versión previa gastó unos 110. Eso es unas 4 veces más de salida y unos 0,00026 USD por respuesta.
+> Prueba extra, no guardada como archivo: un segundo turno con el cliente insistiendo («somos 2, del 10 al 14 de diciembre. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro»), 3 ejecuciones. **Ahí sí inventó**, con cifras en pesos distintas cada vez para el hotel de 4 noches: entre 2.400.000 y 4.800.000; entre 1.600.000 y 2.800.000; entre 1.600.000 y 3.600.000. Tokens: 228 de entrada (100 del primer turno más lo que se reenvía de la conversación) y entre 552 y 663 de salida. Costo de las 3: unos 0,001 USD.
+> Para pensar, «¿la respuesta es idéntica?»: no, y en el segundo turno la variación pasa de redacción a **contenido**: los números cambian.
+> Conclusión del tema: el modelo no se niega solo a dar un precio que no conoce; hay que construir la protección (catálogo y reglas), y es lo que se hace en los temas 3.7 y 3.8.
 
 ### 3.3 Ver cómo el modelo predice tokens {ref=e2:E2}
 
@@ -915,6 +916,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Se revierte el aplazamiento: los temas 3.18 a 3.23 (dashboard) vuelven al checklist, con sus casillas «Ejercicio E.7 a E.12»; las pruebas, los experimentos y las decisiones pasan a E.13, E.14 y E.15. |
 | 2026-10-13 | Las Partes 3 y 4 (agente y tablero) pasan a este documento como los temas 3.27 a 3.43, con las casillas «Ejercicio F.1 a F.17»; el proyecto del nivel pasa a ser el 3.44. El agentizando queda como segundo pase opcional. |
 | 2026-10-13 | Se reescribe el texto general del «Análisis de resultados» con el ejercicio del asesor de viajes y se agrega «En el ejercicio» a cada entrada. Las filas de esta bitácora que habían quedado al final del archivo vuelven a esta tabla. |
+| 2026-10-13 | Tema 3.2 rehecho con el caso del asesor de viajes: casillas marcadas, notas nuevas y entrada del análisis reescrita. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -976,20 +978,17 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con 
 > El entorno virtual es como tener una caja de herramientas aparte para cada obra. Si el CRM necesita una versión de la biblioteca `anthropic` y esta Academia otra, cada uno usa la suya y ninguno rompe al otro.
 > La clave en `.env` es como la llave de la casa guardada en un cajón, no pegada en la puerta: el programa la usa, pero no queda a la vista. Cuando hoy la clave quedó escrita en `.env.example` (la plantilla que sí se sube a GitHub), fue como dejarla pegada en la puerta; por eso se cambió la cerradura: se revocó y se creó otra.
 
-#### 3.2 · Primera llamada a la API (2026-10-12)
+#### 3.2 · Primera llamada a la API (2026-10-13)
 
-**Versión previa:** hecha con ejemplos sueltos de la guía; se reemplaza cuando el tema se rehaga con el caso del ejercicio.
+**Qué se hizo:** se escribió un programa de unas 30 líneas que le manda a Claude el mensaje de un cliente ficticio («hola buenas, cuanto vale ir a cartagena 4 noches?»), con el papel de asesor de viajes y sin catálogo, y muestra todo lo que devuelve. Se ejecutó tres veces, y después se hizo una prueba extra con un cliente que insiste en un precio.
 
-**Qué se hizo:** se escribió un programa de 25 líneas que le hace una pregunta a Claude y muestra todo lo que devuelve: la respuesta, por qué terminó y cuántos tokens usó. Se ejecutó tres veces con la API real.
+**A qué nos conduce:** a dos hallazgos que cambian el diseño. Primero, ante la pregunta inicial el modelo no inventó cifras: pidió datos (ciudad, fechas, personas, tipo de hotel). Pero prometió «una cotización exacta» que no podría dar y habló de zonas y hoteles que no son los de nuestro catálogo. Segundo, cuando el cliente insistió con un «dame un precio aproximado», sí inventó, con números distintos en cada intento. Conclusión: el modelo no se niega por sí solo a dar un dato que no tiene; la protección hay que construirla.
 
-**A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
-
-**En el ejercicio:** se va a rehacer con un mensaje de cliente («hola buenas, cuanto vale ir a cartagena 4 noches?») sin catálogo. Se espera ver cómo el modelo inventa precios, y esa será la razón de cargar el catálogo más adelante.
-
+**En el ejercicio:** este resultado es la línea base de las trampas del tema 3.8, el asesor «sin defensas». Cuando se cargue el catálogo (tema 3.7), la medida de éxito es que, ante la misma insistencia, el asesor use el precio «desde» del catálogo o admita que no lo sabe, en vez de dar un rango inventado.
 
 > **Ejemplo**
-> La pregunta «¿Qué es un modelo de lenguaje?» usó 34 tokens de entrada y unos 112 de salida. Con los precios de Haiku 5.5 (0,10 USD por millón de tokens de entrada y 0,50 por millón de salida), cada respuesta cuesta unos 0,00006 USD. Un asistente que contestara 10.000 preguntas parecidas al mes gastaría unos 0,60 USD.
-> Y la variación: es como preguntarle lo mismo a una persona tres veces. Las tres respuestas dicen que un modelo de lenguaje «predice y genera palabras de forma coherente», pero cambian el final: «responder preguntas, traducir, resumir» en una, «redactar textos» en otra.
+> El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado». Primera respuesta: «entre $2.400.000 y $4.800.000». Segunda: «entre $1.600.000 y $2.800.000». Tercera: «entre $1.600.000 y $3.600.000». Para el cliente las tres suenan igual de convincentes, pero se contradicen. Es como un vendedor que contesta de memoria sin mirar la lista de precios: a veces acierta, pero así no se puede cotizar.
+> El costo: una respuesta del primer mensaje costó unos 0,00026 USD (100 tokens de entrada y unos 500 de salida, casi todos de razonamiento), y una del segundo, unos 0,00032 USD. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 5,8 USD con Haiku.
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-12)
 
