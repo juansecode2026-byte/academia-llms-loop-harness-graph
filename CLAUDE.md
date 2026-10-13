@@ -51,7 +51,7 @@ Un tema no se agentiza hasta que su versión manual está cerrada y documentada.
 Documentos en `resultados/` (cada uno es un par `.md` + `.html`):
 
 - `resultados-proceso-manual.md` / `.html`
-- `resultados-proceso-agentizando.md` / `.html`
+- `resultados-proceso-agentizando.md` / `.html` — segundo pase opcional (repetir cada tema con agentes más adelante)
 
 ## Documentación para otros proyectos
 
@@ -73,7 +73,7 @@ tema 3.7 y que el tema 3.16 amplía con el registro de experimentos, sin crear o
 Sus pasos son casillas «Ejercicio X.N» dentro de los temas del manual: se marcan allí.
 La infraestructura de WhatsApp y Supabase quedan para candyCRM.
 
-**Nada se aplaza (decisión del 2026-10-13):** el checklist se reinició sobre el ejercicio y
+**Todo en un solo lugar y nada se aplaza (decisión del 2026-10-13):** el checklist se reinició sobre el ejercicio y
 cubre todo el Nivel 1, dashboards incluidos: 3.2 a 3.4 se rehacen con el caso, la Fase E
 (3.12 a 3.26, pasos E.1 a E.15) cubre el laboratorio y la Fase F (F.1 a F.17) el agente y su
 tablero. Más adelante se puede evaluar juntar todos los resultados en un solo archivo.
@@ -112,9 +112,9 @@ marca `<!-- parte: n | Título | Subtítulo | pN -->` antes de un tema agrupa el
 índice de la guía. Los números de sección y de tema se escriben a mano y deben
 seguir la secuencia; los ids de los enlaces salen de ellos (`s3-2`, `s3-proyecto`).
 
-Misma numeración en ambos (secciones 1–9; niveles = secciones 3–6), con índice
-numerado al inicio y checklist por tema. Cada tema del agentizando enlaza a su
-equivalente del manual. Los nuevos HTML de resultados van en `resultados/`, nunca
+Secciones 1–9; niveles = secciones 3–6, con índice numerado al inicio y checklist por
+tema. **El seguimiento de todo el Nivel 1 está en el manual**: Partes 1 y 2 (temas 3.1 a
+3.26), Partes 3 y 4 con el agente y su tablero (temas 3.27 a 3.43) y el proyecto (3.44). Los nuevos HTML de resultados van en `resultados/`, nunca
 en la carpeta de documentación.
 
 ## Convenciones

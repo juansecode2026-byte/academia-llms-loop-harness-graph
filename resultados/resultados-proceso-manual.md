@@ -15,8 +15,8 @@ lead: Academia LLMs — módulo LLMs del Pensum AI Engineer. Aquí se documenta,
 2. Avanzar en orden: no se pasa de nivel sin terminar el proyecto del nivel anterior — el proyecto es la prueba.
 3. Cada tema tiene el mismo checklist de 5 pasos y un bloque de **Notas del proceso** que se reemplaza por lo aprendido.
 4. Las casillas se guardan en este navegador. Para que el avance quede como prueba en GitHub, al cerrar un tema se marcan sus casillas en el `.md` (`- [x]`), se regenera el HTML y se hace commit.
-5. Todo lo que se aprenda aquí alimenta el documento [agentizando](resultados-proceso-agentizando.html), que reutiliza la misma numeración.
-6. **Ejercicio práctico:** el Nivel 1 se construye sobre un caso simulado, un asesor de viajes que atiende por WhatsApp a 10 clientes ficticios. Su explicación y su paso a paso están en [Ejercicio simulado · Chat de consola](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html). Los pasos del ejercicio aparecen como casillas «Ejercicio» dentro de cada tema y se marcan aquí.
+5. **Todo se sigue aquí, agentes incluidos:** las Partes 3 y 4 (agente, loop, graph, harness y su tablero) son los temas 3.27 a 3.43, con el mismo checklist. El documento [agentizando](resultados-proceso-agentizando.html) queda como un segundo pase opcional, para repetir cada tema con agentes cuando este checklist esté cerrado.
+6. **Ejercicio práctico:** el Nivel 1 se construye sobre un caso simulado, un asesor de viajes que atiende por WhatsApp a 10 clientes ficticios. Su explicación y su paso a paso están en [Ejercicio simulado · Chat de consola](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html). Los pasos del ejercicio aparecen como casillas «Ejercicio» dentro de cada tema y se marcan aquí, desde la primera llamada hasta el agente y su tablero.
 
 ## 2. Objetivo, alcance y base del proyecto
 
@@ -374,7 +374,215 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > **Notas del proceso**
 > _Pendiente de documentar._
 
-### 3.27 Proyecto del nivel {proyecto}
+<!-- parte: 3 | Parte 3 · Ingeniería agéntica | 10 apartados | p3 -->
+
+### 3.27 Qué vas a construir (agente) {ref=ag0:AG0 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag0) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.1: definir qué hará el agente asesor y qué queda siempre en manos de un humano ([ver paso F.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.28 Conceptos: harness, loop y graph {ref=ag1:AG1 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag1) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.2: aplicar al caso los conceptos de harness, loop y graph ([ver paso F.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.29 Proceso, línea base y casos de prueba {ref=ag2:AG2 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag2) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.3: medir la línea base y fijar los casos de prueba con los 10 clientes ([ver paso F.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.30 Herramientas {ref=ag3:AG3 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag3) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.4: herramientas: buscar en el catálogo, estimar un precio, escalar a un humano ([ver paso F.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.31 Loop {ref=ag4:AG4 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag4) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.5: loop que consulta el catálogo con límite de vueltas ([ver paso F.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.32 Graph {ref=ag5:AG5 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag5) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.6: graph que clasifica, consulta, responde y verifica, enrutando por modelo según el costo ([ver paso F.6](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.33 Harness {ref=ag6:AG6 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag6) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.7: harness con tope de gasto por conversación y aprobación humana antes del precio final ([ver paso F.7](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.34 Trazas (agentes.db) {ref=ag7:AG7 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag7) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.8: trazas de cada paso del agente en la base única ([ver paso F.8](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.35 Evaluación y optimización {ref=ag8:AG8 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag8) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.9: evaluar las variantes (sin loop, con loop, con graph, con harness) y compararlas ([ver paso F.9](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.36 Pruebas y cierre {ref=ag9:AG9 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#ag9) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.10: pruebas sin gastar tokens y cierre ([ver paso F.10](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+<!-- parte: 4 | Parte 4 · Tablero de operación agéntica | 7 apartados | p4 -->
+
+### 3.37 Qué vas a construir (tablero agéntico) {ref=da0:DA0 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da0) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.11: definir qué indicadores del agente se ven y qué decisión habilita cada uno ([ver paso F.11](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.38 Encabezado {ref=da1:DA1 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da1) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.12: encabezado del tablero: qué agente, qué variante y qué periodo se mira ([ver paso F.12](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.39 Indicadores {ref=da2:DA2 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da2) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.13: calcular los indicadores del agente asesor de viajes: éxito, costo por tarea, inventó, escalado ([ver paso F.13](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.40 Vistas {ref=da3:DA3 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da3) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.14: vistas del tablero: resumen, variantes, grafo, ejecuciones y decisiones ([ver paso F.14](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.41 Reglas de decisión · ciclo de mejora {ref=da4:DA4 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da4) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.15: reglas «si… entonces…» para ajustar el agente y volver a evaluarlo ([ver paso F.15](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.42 Bibliotecas y construcción {ref=da5:DA5 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da5) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.16: construir el tablero con las bibliotecas de la guía ([ver paso F.16](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.43 Pruebas y cierre {ref=da6:DA6 etiqueta="En plan en la guía"}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da6) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio F.17: pruebas sin gastar tokens del tablero y cierre ([ver paso F.17](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.44 Proyecto del nivel {proyecto}
 
 🛠 Chatbot de consola con memoria de conversación usando un SDK oficial.
 
@@ -785,3 +993,4 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 | 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |
 | 2026-10-13 | Se reinicia el checklist sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso (casillas desmarcadas, notas previas conservadas); nuevas casillas «Ejercicio» en 3.12 a 3.15 y 3.24; renumerados los pasos E.5, E.6, E.8 y E.9; temas 3.18 a 3.23 (dashboard) aplazados. |
 | 2026-10-13 | Se revierte el aplazamiento: los temas 3.18 a 3.23 (dashboard) vuelven al checklist, con sus casillas «Ejercicio E.7 a E.12»; las pruebas, los experimentos y las decisiones pasan a E.13, E.14 y E.15. |
+| 2026-10-13 | Las Partes 3 y 4 (agente y tablero) pasan a este documento como los temas 3.27 a 3.43, con las casillas «Ejercicio F.1 a F.17»; el proyecto del nivel pasa a ser el 3.44. El agentizando queda como segundo pase opcional. |

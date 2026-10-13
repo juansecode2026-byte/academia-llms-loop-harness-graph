@@ -194,23 +194,23 @@ Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente c
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
-| F.1 | Definir qué hará el agente asesor y qué quedará siempre en manos de un humano | [3.1 Qué vas a construir (agente)](../resultados/resultados-proceso-agentizando.html#s3-1) |
-| F.2 | Aplicar al caso los conceptos de harness, loop y graph | [3.2 Conceptos: harness, loop y graph](../resultados/resultados-proceso-agentizando.html#s3-2) |
-| F.3 | Medir la línea base (lo que hace un asesor humano) y fijar los casos de prueba con los 10 clientes | [3.3 Proceso, línea base y casos de prueba](../resultados/resultados-proceso-agentizando.html#s3-3) |
-| F.4 | Herramientas: buscar en el catálogo, estimar un precio, escalar a un humano | [3.4 Herramientas](../resultados/resultados-proceso-agentizando.html#s3-4) |
-| F.5 | Loop: el agente consulta el catálogo cuantas veces haga falta, con límite de vueltas | [3.5 Loop](../resultados/resultados-proceso-agentizando.html#s3-5) |
-| F.6 | Graph: clasificar, consultar, responder y verificar, enrutando por modelo según el costo | [3.6 Graph](../resultados/resultados-proceso-agentizando.html#s3-6) |
-| F.7 | Harness: tope de gasto por conversación y aprobación humana antes de dar un precio final | [3.7 Harness](../resultados/resultados-proceso-agentizando.html#s3-7) |
-| F.8 | Trazas: cada paso del agente guardado en la base única | [3.8 Trazas](../resultados/resultados-proceso-agentizando.html#s3-8) |
-| F.9 | Evaluar las variantes (sin loop, con loop, con graph, con harness) sobre los casos y comparar | [3.9 Evaluación y optimización](../resultados/resultados-proceso-agentizando.html#s3-9) |
-| F.10 | Pruebas sin gastar tokens y cierre | [3.10 Pruebas y cierre](../resultados/resultados-proceso-agentizando.html#s3-10) |
-| F.11 | Definir qué indicadores del agente se ven y qué decisión habilita cada uno | [3.11 Qué vas a construir (tablero agéntico)](../resultados/resultados-proceso-agentizando.html#s3-11) |
-| F.12 | Encabezado del tablero: qué agente, qué variante y qué periodo | [3.12 Encabezado](../resultados/resultados-proceso-agentizando.html#s3-12) |
-| F.13 | Calcular los indicadores: éxito, costo por tarea, información inventada, escalado | [3.13 Indicadores](../resultados/resultados-proceso-agentizando.html#s3-13) |
-| F.14 | Vistas: resumen, variantes, grafo, ejecuciones y decisiones | [3.14 Vistas](../resultados/resultados-proceso-agentizando.html#s3-14) |
-| F.15 | Reglas de decisión y ciclo de mejora del agente | [3.15 Reglas de decisión · ciclo de mejora](../resultados/resultados-proceso-agentizando.html#s3-15) |
-| F.16 | Construir el tablero con las bibliotecas de la guía | [3.16 Bibliotecas y construcción](../resultados/resultados-proceso-agentizando.html#s3-16) |
-| F.17 | Pruebas sin gastar tokens del tablero y cierre | [3.17 Pruebas y cierre](../resultados/resultados-proceso-agentizando.html#s3-17) |
+| F.1 | Definir qué hará el agente asesor y qué quedará siempre en manos de un humano | [3.27 Qué vas a construir (agente)](../resultados/resultados-proceso-manual.html#s3-27) |
+| F.2 | Aplicar al caso los conceptos de harness, loop y graph | [3.28 Conceptos: harness, loop y graph](../resultados/resultados-proceso-manual.html#s3-28) |
+| F.3 | Medir la línea base (lo que hace un asesor humano) y fijar los casos de prueba con los 10 clientes | [3.29 Proceso, línea base y casos de prueba](../resultados/resultados-proceso-manual.html#s3-29) |
+| F.4 | Herramientas: buscar en el catálogo, estimar un precio, escalar a un humano | [3.30 Herramientas](../resultados/resultados-proceso-manual.html#s3-30) |
+| F.5 | Loop: el agente consulta el catálogo cuantas veces haga falta, con límite de vueltas | [3.31 Loop](../resultados/resultados-proceso-manual.html#s3-31) |
+| F.6 | Graph: clasificar, consultar, responder y verificar, enrutando por modelo según el costo | [3.32 Graph](../resultados/resultados-proceso-manual.html#s3-32) |
+| F.7 | Harness: tope de gasto por conversación y aprobación humana antes de dar un precio final | [3.33 Harness](../resultados/resultados-proceso-manual.html#s3-33) |
+| F.8 | Trazas: cada paso del agente guardado en la base única | [3.34 Trazas](../resultados/resultados-proceso-manual.html#s3-34) |
+| F.9 | Evaluar las variantes (sin loop, con loop, con graph, con harness) sobre los casos y comparar | [3.35 Evaluación y optimización](../resultados/resultados-proceso-manual.html#s3-35) |
+| F.10 | Pruebas sin gastar tokens y cierre | [3.36 Pruebas y cierre](../resultados/resultados-proceso-manual.html#s3-36) |
+| F.11 | Definir qué indicadores del agente se ven y qué decisión habilita cada uno | [3.37 Qué vas a construir (tablero agéntico)](../resultados/resultados-proceso-manual.html#s3-37) |
+| F.12 | Encabezado del tablero: qué agente, qué variante y qué periodo | [3.38 Encabezado](../resultados/resultados-proceso-manual.html#s3-38) |
+| F.13 | Calcular los indicadores: éxito, costo por tarea, información inventada, escalado | [3.39 Indicadores](../resultados/resultados-proceso-manual.html#s3-39) |
+| F.14 | Vistas: resumen, variantes, grafo, ejecuciones y decisiones | [3.40 Vistas](../resultados/resultados-proceso-manual.html#s3-40) |
+| F.15 | Reglas de decisión y ciclo de mejora del agente | [3.41 Reglas de decisión · ciclo de mejora](../resultados/resultados-proceso-manual.html#s3-41) |
+| F.16 | Construir el tablero con las bibliotecas de la guía | [3.42 Bibliotecas y construcción](../resultados/resultados-proceso-manual.html#s3-42) |
+| F.17 | Pruebas sin gastar tokens del tablero y cierre | [3.43 Pruebas y cierre](../resultados/resultados-proceso-manual.html#s3-43) |
 ## 12. Lo que queda para después
 
 | Qué | Por qué no va ahora | Cuándo |
@@ -232,3 +232,4 @@ Lo que queda como estándar para otros proyectos no es el caso de viajes, sino e
 | 2026-10-13 | Decisión: la base SQLite nace en 3.7 (C.3) y es la única; el tema 3.16 la amplía con el registro de experimentos (paso E.5) en vez de crear otra. |
 | 2026-10-13 | Se reinicia el checklist sobre el ejercicio: la Fase A se rehace con el caso, la Fase E cubre todo el laboratorio sin dashboard (pasos E.1 a E.9, antes E.0 a E.3), nueva Fase F para las Partes 3 y 4, y se aplazan los dashboards. |
 | 2026-10-13 | Se revierte el aplazamiento de los dashboards: la Fase E vuelve a cubrir toda la Parte 2 (pasos E.1 a E.15) y la Fase F toda la Parte 3 y 4 (F.1 a F.17). |
+| 2026-10-13 | Las Partes 3 y 4 se siguen dentro del checklist del manual (temas 3.27 a 3.43); los pasos F.1 a F.17 enlazan allí. |
