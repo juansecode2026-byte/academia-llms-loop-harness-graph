@@ -933,6 +933,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.2 rehecho con el caso del asesor de viajes: casillas marcadas, notas nuevas y entrada del análisis reescrita. |
 | 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1, marcado): ya existe antes del tema 3.3; las casillas A.3 y A.4 pasan a usarlo. |
 | 2026-10-13 | Tema 3.2 repetido con el catálogo cargado (el asesor no inventa; la conversación cuesta 3,3 veces más). Tema 3.3 rehecho con el caso: 6 ejecuciones, casillas marcadas, notas y entrada del análisis reescritas. |
+| 2026-10-13 | Los ejemplos de las entradas 3.2 y 3.3 del análisis muestran las respuestas con catálogo y el registro del que sale cada cifra. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -965,7 +966,7 @@ En lugar de practicar con preguntas sueltas, todo el checklist se vive sobre un 
 
 #### Cómo leer cada entrada
 
-Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con cuatro partes: **qué se hizo**, **a qué nos conduce**, **en el ejercicio** (qué significa ese resultado para el asesor de viajes) y un **ejemplo** concreto con números cuando los hay. El número y el título de cada tema, más arriba, llevan directo a su entrada.
+Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con cuatro partes: **qué se hizo**, **a qué nos conduce**, **en el ejercicio** (qué significa ese resultado para el asesor de viajes) y un **ejemplo** concreto con números cuando los hay. Desde que existe el catálogo, los ejemplos muestran las respuestas del asesor **ancladas en los registros del catálogo** (con el nombre del registro de donde sale cada cifra), para poder verificarlas. El número y el título de cada tema, más arriba, llevan directo a su entrada.
 
 #### Lo que vamos logrando
 
@@ -1005,8 +1006,11 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con 
 **En el ejercicio:** el resultado sin catálogo es la línea base de las trampas del tema 3.8, y el resultado con catálogo es la primera mejora medida. El precio de la mejora: la conversación cuesta unas 3,3 veces más (de 0,0006 a 0,0019 USD), porque el catálogo viaja en cada mensaje.
 
 > **Ejemplo**
-> El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado». Primera respuesta: «entre $2.400.000 y $4.800.000». Segunda: «entre $1.600.000 y $2.800.000». Tercera: «entre $1.600.000 y $3.600.000». Para el cliente las tres suenan igual de convincentes, pero se contradicen. Es como un vendedor que contesta de memoria sin mirar la lista de precios: a veces acierta, pero así no se puede cotizar.
-> El costo: una respuesta del primer mensaje costó unos 0,00026 USD (100 tokens de entrada y unos 500 de salida, casi todos de razonamiento), y una del segundo, unos 0,00032 USD. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 5,8 USD con Haiku.
+> El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado, un hotel bueno en el centro».
+> **Sin catálogo,** tres intentos, tres cifras distintas inventadas: «entre $2.400.000 y $4.800.000», «entre $1.600.000 y $2.800.000», «entre $1.600.000 y $3.600.000». Suenan igual de convincentes, pero se contradicen: es un vendedor que contesta de memoria sin mirar la lista de precios.
+> **Con catálogo,** tres intentos, la misma cifra: «Casa Naranja del Centro: $480.000 por noche, **$1.920.000** en total. Es el precio base de temporada baja; diciembre suele ser temporada alta, así que el precio final será más alto. Un asesor humano te confirma disponibilidad y precio exacto».
+> ¿De dónde sale cada dato? Del registro del catálogo `casa-naranja-del-centro`: `precio_desde` 480000, ubicación «Dentro del centro amurallado» (por eso es «el hotel del centro»). El total son 4 noches × 480.000 = 1.920.000. Lo que el catálogo no tiene, como la tarifa de diciembre y los cupos, el asesor lo dijo en vez de inventarlo. Cualquiera puede verificar la respuesta abriendo el archivo del catálogo.
+> El costo: una conversación de dos mensajes costó unos 0,0006 USD sin catálogo y unos 0,0019 USD con catálogo. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 5,8 USD sin catálogo y unos 19 USD con él (Haiku): se paga más, pero por cifras que sí se pueden cotizar.
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-13)
 
@@ -1017,8 +1021,9 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con 
 **En el ejercicio:** la decisión de cuánto catálogo cargar (todo, o solo lo que el cliente pregunta) es la primera palanca de costo del asesor. Se mide en el tema 3.4, junto con cuántos turnos recuerda.
 
 > **Ejemplo**
-> Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero tarda y cuesta más. Con 10.000 mensajes al mes con Haiku, sin catálogo serían unos 2,9 USD y con catálogo unos 9,7 USD.
-> Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, se estima que pesaría unos 1.000 tokens y la respuesta costaría unos 0,0004 USD. Es una estimación: se mide en el tema 3.4.
+> Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero tarda y cuesta más.
+> La respuesta real de la primera ejecución con catálogo, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`); sin catálogo, la misma pregunta no podía devolver ninguno de esos nombres ni precios.
+> El costo: con 10.000 mensajes al mes con Haiku, sin catálogo serían unos 2,9 USD y con catálogo unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, se estima que pesaría unos 1.000 tokens y la respuesta costaría unos 0,0004 USD. Es una estimación: se mide en el tema 3.4.
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
 
