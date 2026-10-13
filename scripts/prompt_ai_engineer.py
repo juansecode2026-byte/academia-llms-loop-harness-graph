@@ -15,12 +15,15 @@ def base_medida() -> str:
     """Totales reales de la tabla ejecuciones: la línea base contra la que se calcula el ahorro."""
     try:
         con = sqlite3.connect(BASE)
-        n, ent, sal, usd = con.execute(
-            "select count(*), sum(tokens_entrada), sum(tokens_salida), sum(costo_usd) from ejecuciones").fetchone()
+        filas = con.execute(
+            "select effort, ventana, count(*), sum(tokens_entrada), sum(tokens_salida), sum(costo_usd) "
+            "from ejecuciones group by effort, ventana order by min(id)").fetchall()
         con.close()
         miles = lambda x: f"{x:,}".replace(",", ".")
-        return (f" Línea base medida en la base del piloto: {n} llamadas, {miles(ent)} tokens de entrada, "
-                f"{miles(sal)} de salida, {usd:.4f} USD.".replace(".", ",", 0))
+        partes = [f"effort {e}, ventana {v}: {n} llamadas, {miles(ent)} tokens de entrada, {miles(sal)} de salida, "
+                  f"{usd:.4f} USD".replace("0.", "0,") for e, v, n, ent, sal, usd in filas]
+        return (" Mediciones en la base del piloto, por configuración (la primera, effort default y ventana "
+                "completa, es la línea base del tema 3.4): " + "; ".join(partes) + ".")
     except Exception:
         return ""
 

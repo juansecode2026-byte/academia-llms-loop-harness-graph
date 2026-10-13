@@ -243,15 +243,30 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.9 Ensamblar el chat final {ref=e8:E8}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e8) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 8: chat final ensamblado"`
-- [ ] Ejercicio D.2: atender a los 10 clientes con recorte de memoria y guardar cada llamada ([ver paso D.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e8) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 8: chat final ensamblado"`
+- [x] Ejercicio D.2: atender a los 10 clientes con recorte de memoria y guardar cada llamada ([ver paso D.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Programa: `chat-consola/chat.py`, armado por bloques como pide la guía (configuración, memoria, llamada, comandos, bucle) y adaptado al caso. Cada decisión viene de un tema anterior: Haiku (3.6), `max_tokens` 2.048 y `effort` bajo (3.5), catálogo con las reglas contra inventar (3.8), streaming (3.3), costo por llamada (3.4) y una memoria por cliente (3.7). Resuelve los dos problemas del 3.7: **la memoria se guarda en la base del piloto** (tabla `mensajes`, con una columna nueva `config` para no pisar la conversación medida en 3.4) y **se envía con ventana de 5 turnos**. Comandos: `/cliente N`, `/tokens` (cuenta gratis lo que se enviará), `/historial`, `/reset`, `/ayuda`, `/salir`. Errores por tipo (clave inválida, límite de uso, sin conexión, error HTTP) con aviso claro y sin guardar el mensaje fallido.
+> **Ejecuta y observa:** (1) en consola, Camilo preguntó por el Hotel Poblado Verde y el asesor respondió en streaming «desde $330.000 COP por noche» (registro `hotel-poblado-verde`) y preguntó fechas y personas antes de cotizar; `/tokens` dijo 6.926 tokens para la próxima llamada y `/historial` mostró la ventana; (2) con una clave falsa salió «[API key inválida. Revisa tu .env]», sin traza de error y sin guardar nada; (3) al abrir el chat dice cuántos turnos tiene guardados cada cliente, porque la memoria vive en la base.
+> **Paso D.2 (los 10 clientes):** `python chat.py --piloto` atendió los mismos 184 mensajes del 3.4 con la configuración final, más una pregunta de cierre por cliente («¿me confirmas los datos de mi viaje que te he dado?»): 194 llamadas, 0,1725 USD, todas terminadas sin cortes (`end_turn`). Después, `--sonda-completa` hizo la misma pregunta de cierre con el historial completo (10 llamadas, 0,01415 USD), para aislar el efecto de la ventana.
+>
+> | Medida (184 mensajes) | Línea base (3.4) | Chat final (3.9) | Cambio |
+> |---|---|---|---|
+> | Tokens de entrada | 1.747.598 | 1.393.846 | −20,2 % |
+> | Tokens de salida | 76.523 | 47.473 | −38,0 % |
+> | Razonamiento | 25.101 | 9.795 | −61,0 % |
+> | Costo | 0,2130 USD | 0,1631 USD | −23,4 % |
+> | Entrada máxima de una llamada | 14.845 (Julián) | 8.165 (Julián) | Ya no crece con la conversación |
+>
+> 1. **Más barato:** −23,4 % en las mismas 184 llamadas, por encima del −16 % calculado solo para la ventana, porque también bajó la salida (reglas de brevedad y `effort` bajo).
+> 2. **Pero olvida:** con la ventana de 5 turnos, el asesor recordó el dato clave en **6 de 10 clientes**; con el historial completo, en **10 de 10**. Olvidó las edades de los niños Ramírez (4, 7 y 11), las fechas de Camilo (3 al 6 de noviembre), que Valentina no come carne y el presupuesto de 3 millones de Julián. No inventó: dijo «no me has dado fechas» o «no me has dicho cuál es», y en el caso de Valentina incluso corrigió una suposición suya. Es justo el riesgo que se había anticipado en 3.4.
+> 3. **Las trampas siguen bien:** en el chat final, 0 de 8 trampas inventadas. En la de Andrés hizo bien la cuenta: 6 personas en cabañas de 3 (`ecohostal-selva-tayrona`, `huespedes_max` 3) son 2 cabañas, «$380.000 por noche».
+> **Para pensar** (de la guía: ¿qué pasa al cerrar y después de 500 turnos?): al cerrar ya no se pierde nada (vive en la base), y la entrada ya no crece: con la ventana, la llamada más grande pesó 8.165 tokens en vez de 14.845. El costo que queda es el catálogo, y el precio de la ventana es la memoria: hace falta una ficha del cliente que conserve los datos clave fuera de la ventana.
 
 ### 3.10 Pruebas automáticas sin gastar tokens {ref=e9:E9}
 
@@ -1014,6 +1029,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.7 completo con una memoria por cliente (5 llamadas, 0,00483 USD): memoria, aislamiento entre clientes y experimento de ruptura; entrada del análisis con la tabla de ahorro. Se marca el paso C.5. |
 | 2026-10-13 | Tema 3.8 completo con 8 trampas del catálogo (0,00850 USD): sin reglas contra con reglas del prompt; ninguna de las dos inventó. Se agregan las reglas a `caso_simulado.py` (opcionales) y se marca el paso D.1. |
 | 2026-10-13 | Cada entrada del análisis cierra con «CONCLUSIONES» (cuatro consejos de AI Engineer enfocados en solución, con otra letra en el HTML); el hook automático lo pide en cada entrada nueva. |
+| 2026-10-13 | Tema 3.9 completo: `chat.py` con memoria en la base (columna `config` en `mensajes`) y ventana de 5 turnos; paso D.2 con los 10 clientes (194 llamadas, 0,1725 USD) y sonda con historial completo (0,01415 USD): −23,4 % de costo, pero recuerda el dato clave en 6 de 10 clientes contra 10 de 10. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1485,3 +1501,67 @@ En palabras simples: las reglas pagan su propio costo y dejan una ganancia míni
 > 2. **Validar cada respuesta en código.** Revisar que cada precio y cada nombre de hotel o tour existan en el catálogo y marcar palabras de riesgo (clima, adrenalina, garantía, descuento, %): 0 tokens y detección automática de deslices sin leer a mano (3.10 y 3.11).
 > 3. **Empaquetar el contexto en vez de enviar todo.** Catálogo de interés, ventana de 5 turnos y ficha del cliente: −55 % del costo (**calculado**, 3.4). Para 37 registros no hace falta un RAG con vectores: un filtro por ciudad es más barato y exacto; el RAG con vectores conviene cuando el catálogo crezca o se busque por descripción.
 > 4. **Caché para la parte fija.** Reglas y catálogo (~6.700 tokens) se repiten en cada llamada; con el prompt ordenado (lo fijo primero) la caché los cobra más barato. Ahorro **por verificar** hasta confirmar la tarifa de los modelos 5.5.
+
+#### 3.9 · Ensamblar el chat final (2026-10-13)
+
+**Qué se hizo:** se juntó todo lo aprendido en un solo programa, `chat.py`: el asesor con el catálogo y las reglas, en Haiku, con streaming, memoria por cliente guardada en la base y ventana de 5 turnos. Con él se atendió a los 10 clientes del piloto (los mismos 184 mensajes del 3.4) y se les hizo una pregunta de cierre para ver si el asesor seguía recordando su dato clave. Fueron 205 llamadas en total por 0,1875 USD (incluye la prueba en consola y la comparación con el historial completo).
+
+**A qué nos conduce:** a la primera decisión real de AI Engineer con datos propios: **la ventana ahorra, pero hace olvidar**. El costo bajó 23,4 % y la entrada dejó de crecer (la llamada más grande pasó de 14.845 a 8.165 tokens), pero el asesor solo recordó el dato clave de 6 de los 10 clientes, contra 10 de 10 con la memoria completa. Ningún ahorro se acepta sin medir lo que se pierde, y aquí se perdió algo importante: que Valentina no come carne o que los niños Ramírez tienen 4, 7 y 11 años.
+
+**En el ejercicio:** el paso D.2 queda hecho y el asesor ya funciona como programa completo: cualquier cliente se puede retomar donde quedó. Antes de usarlo con clientes de verdad hay que resolver la memoria con una ficha del cliente; las pruebas automáticas del 3.10 deben vigilar justamente que no se pierdan esos datos.
+
+**Qué encareció el proceso:** con el historial recortado, **el catálogo pasó a ser casi todo el gasto**. De los 7.575 tokens de entrada promedio por llamada, 6.478 son el catálogo (85,5 %). Repartido sobre el costo de los 184 mensajes (0,1631 USD):
+
+| Parte | Tokens (184 llamadas) | Costo (USD) | % del costo |
+|---|---|---|---|
+| Catálogo completo, reenviado en cada mensaje | ~1.192.000 | ~0,1192 | ~73 % |
+| Respuestas del asesor (incluye 9.795 de razonamiento) | 47.473 | 0,0237 | ~15 % |
+| Ventana de la conversación, mensaje nuevo e instrucciones | ~163.000 | ~0,0163 | ~10 % |
+| Reglas contra inventar | ~39.000 | ~0,0039 | ~2 % |
+
+Además, medir la memoria tuvo su costo: la pregunta de cierre con historial completo pesó 12.275 tokens por llamada, contra 7.567 con la ventana (cifras **calculadas** con los tokens medidos de las 184 llamadas; el reparto entre catálogo y ventana es aproximado).
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Ventana de 5 turnos | Entrada máxima de 14.845 a 8.165 tokens; entrada total −20,2 % | Ahorra y deja el costo por llamada estable |
+| Memoria con la ventana | Dato clave recordado: 6 de 10 clientes, contra 10 de 10 con el historial completo | Pierde edades, fechas, dieta y presupuesto dichos al principio |
+| Catálogo completo | 6.478 de 7.575 tokens de entrada por llamada (85,5 %) | ~73 % del costo: ahora es casi todo el gasto |
+| Reglas y `effort` bajo | Salida −38 %; razonamiento de 25.101 a 9.795 tokens (−61 %) | Respuestas más cortas y menos razonamiento sin perder exactitud en las trampas |
+| Reglas contra inventar | 213 tokens por llamada (~39.000 en el piloto) | ~2 % del costo; 0 de 8 trampas inventadas |
+| Longitud de la conversación | Costo por cliente de 0,0081 (Camilo, 10 turnos) a 0,0236 USD (Sofía, 28 turnos) | Con la ventana crece casi en línea recta con los turnos |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Memoria con la ventana | Ficha del cliente: 3 a 5 líneas con personas, fechas, presupuesto y restricciones, que viaja siempre fuera de la ventana | Volver a 10 de 10 recuerdos por unos 80 tokens más por llamada | **Estimado** | 3.25 y 3.26 |
+| Catálogo completo | Mandar solo los registros de las ciudades del cliente | ~−4.500 tokens por llamada; costo del chat final de 0,1631 a ~0,080 USD | **Estimado** (con el promedio de 1.953 tokens medido en 3.4) | 3.25, 3.26 y 3.30 |
+| Parte fija repetida (catálogo y reglas) | Caché de prompts | Potencial sobre el ~75 % de la entrada | **Por verificar** (tarifa de los modelos 5.5) | Después de 3.10 |
+| Tamaño de la ventana | Probar 5, 8 y 10 turnos con la misma pregunta de cierre | Encontrar el punto donde no se olvida sin pagar el historial completo | **Por medir** | 3.25 y 3.26 |
+| Medición de la memoria | Convertir la pregunta de cierre en prueba automática (patrón del dato clave por cliente) | Detectar olvidos sin leer respuestas a mano | **Medido** (ya funciona en este tema) | 3.10 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre la línea base medida (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y el chat final, más lo que se ahorraría con la siguiente optimización.
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Entrada, chat final contra línea base | 1.747.598 | 1.393.846 | 353.752 | 0,0354 | **Medido** |
+| Salida, chat final contra línea base | 76.523 | 47.473 | 29.050 | 0,0145 | **Medido** |
+| Total del chat final | 1.824.121 | 1.441.319 | 382.802 | 0,0499 (−23,4 %: de 0,2130 a 0,1631) | **Medido** |
+| Más catálogo de interés sobre el chat final | 1.393.846 de entrada | ~561.000 | ~833.000 | ~0,083 (de 0,1631 a ~0,080; −62 % frente a la línea base) | **Estimado** |
+| Más ficha del cliente (costo, no ahorro) | — | +~14.700 de entrada | −14.700 | −0,0015 | **Estimado** |
+| A 1.000 conversaciones al mes | ~182 millones | ~144 millones con el chat final; ~61 millones con catálogo de interés | ~38 a ~121 millones | ~5 a ~13 USD (de ~21,3 a ~16,3 o ~8,0) | **Estimado** (supone que las 10 conversaciones son representativas) |
+
+En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el catálogo ahorraría casi dos tercios. Pero el ahorro de la ventana tiene un precio en memoria, y recuperarlo con una ficha del cliente cuesta casi nada (unos 0,0015 USD en todo el piloto).
+
+> **Ejemplo**
+> Valentina dijo al comienzo «no como carne, soy vegetariana». Veinte turnos después, al preguntarle qué datos tenía de su viaje, el asesor con la ventana de 5 turnos respondió: «Restricción de comida o alergia: no me has dicho cuál es» y corrigió una suposición suya («yo dije que ibas sola, pero tú no lo mencionaste»). No inventó, pero olvidó lo más importante para recomendarle un tour. Con el historial completo, el mismo asesor sí lo recordó. En cambio, a Andrés, que pidió un descuento para 6 personas, el chat final le respondió bien: no hay descuentos publicados, y por el `ecohostal-selva-tayrona` (máximo 3 huéspedes, desde $190.000) serían 2 cabañas, «$380.000 por noche».
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Agregar la ficha del cliente antes de cualquier otro ahorro.** La ventana olvidó el dato clave en 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián). Una ficha de 3 a 5 líneas (personas, fechas, presupuesto y restricciones como dieta, alergia o movilidad) que viaje siempre fuera de la ventana debería volver a 10 de 10 por unos 80 tokens por llamada (~0,0015 USD en el piloto, **estimado**). Se mide con la misma pregunta de cierre en 3.25 y 3.26.
+> 2. **Filtrar el catálogo: ahora es el 73 % del costo.** Con la ventana, el catálogo completo quedó como casi todo el gasto (6.478 de 7.575 tokens por llamada). Mandar solo las ciudades del cliente bajaría el chat final de 0,1631 a ~0,080 USD (**estimado**), −62 % frente a la línea base. Se prueba en 3.25, 3.26 y como herramienta en 3.30.
+> 3. **Convertir la pregunta de cierre en prueba automática.** El patrón del dato clave por cliente ya detecta olvidos sin leer a mano (6 de 10 contra 10 de 10). Llevarlo a las pruebas del 3.10, junto con las 8 trampas, para que ningún cambio de ventana, catálogo o prompt se acepte si baja la memoria o aparece un invento.
+> 4. **Elegir el tamaño de la ventana con datos.** Probar 5, 8 y 10 turnos, con y sin ficha, midiendo costo y recuerdos en las mismas 10 conversaciones; quedarse con la combinación más barata que mantenga 10 de 10. La caché de la parte fija (catálogo y reglas, ~75 % de la entrada) se suma después, cuando se verifique su tarifa.
+

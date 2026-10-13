@@ -54,10 +54,36 @@ create table if not exists ejecuciones (
 """
 
 
+def _migrar_mensajes(con: sqlite3.Connection) -> None:
+    """Tema 3.9: los mensajes guardan con qué configuración se generaron, para que el chat final
+    (reglas y ventana) no pise la conversación medida en el tema 3.4 (configuración 'completa')."""
+    columnas = {f["name"] for f in con.execute("pragma table_info(mensajes)")}
+    if "config" in columnas:
+        return
+    con.executescript("""
+        create table mensajes_nueva (
+            id integer primary key autoincrement,
+            cliente_id integer not null references clientes(id),
+            config text not null default 'completa',
+            turno integer not null,
+            rol text not null check (rol in ('cliente', 'asesor')),
+            contenido text not null,
+            creado text default (datetime('now')),
+            unique (cliente_id, config, turno, rol)
+        );
+        insert into mensajes_nueva (id, cliente_id, config, turno, rol, contenido, creado)
+            select id, cliente_id, 'completa', turno, rol, contenido, creado from mensajes;
+        drop table mensajes;
+        alter table mensajes_nueva rename to mensajes;
+    """)
+    con.commit()
+
+
 def conectar() -> sqlite3.Connection:
     con = sqlite3.connect(RUTA_BASE, timeout=60)
     con.row_factory = sqlite3.Row
     con.executescript(ESQUEMA)
+    _migrar_mensajes(con)
     return con
 
 
@@ -75,12 +101,13 @@ def cargar_clientes(con: sqlite3.Connection) -> list[dict]:
     return clientes
 
 
-def historial(con: sqlite3.Connection, cliente_id: int, hasta_turno: int | None = None) -> list[dict]:
-    """Mensajes del cliente en el formato de la API (user/assistant), en orden."""
+def historial(con: sqlite3.Connection, cliente_id: int, hasta_turno: int | None = None,
+              config: str = "completa") -> list[dict]:
+    """Mensajes del cliente (de una configuración) en el formato de la API (user/assistant), en orden."""
     filas = con.execute(
-        "select turno, rol, contenido from mensajes where cliente_id = ? "
+        "select turno, rol, contenido from mensajes where cliente_id = ? and config = ? "
         + ("and turno <= ? " if hasta_turno else "")
         + "order by turno, case rol when 'cliente' then 0 else 1 end",
-        (cliente_id, hasta_turno) if hasta_turno else (cliente_id,),
+        (cliente_id, config, hasta_turno) if hasta_turno else (cliente_id, config),
     ).fetchall()
     return [{"role": "user" if f["rol"] == "cliente" else "assistant", "content": f["contenido"]} for f in filas]
