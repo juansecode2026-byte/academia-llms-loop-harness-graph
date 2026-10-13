@@ -1,0 +1,334 @@
+{
+  "_meta": {
+    "simulado": true,
+    "descripcion": "Clientes FICTICIOS de «Turismo Colombia (simulada)» con sus guiones de mensajes tipo WhatsApp. Teléfonos de patrón claramente falso (+57 300 000 00NN)."
+  },
+  "clientes": [
+    {
+      "id": 1,
+      "nombre": "Laura (pareja)",
+      "telefono": "+57 300 000 0001",
+      "perfil": "Luna de miel, presupuesto alto",
+      "dato_a_recordar": "Se casan el 14 de febrero y viajan esa semana",
+      "trampa": "Pide un hotel que no existe: «casa dorada imperial»",
+      "destinos_interes": [
+        "cartagena",
+        "san-andres"
+      ],
+      "guion": [
+        "hola buenas tardes",
+        "estamos organizando nuestra luna de miel y queremos algo romantico",
+        "nos casamos el 14 de febrero y viajariamos esa misma semana",
+        "el presupuesto no es problema, queremos algo bonito",
+        "que nos recomiendan, playa o ciudad?",
+        "mmm cartagena suena lindo. que hoteles tienen ahi?",
+        "y el hotel casa dorada imperial lo tienen? una amiga nos lo recomendo",
+        "ok entonces cual de los suyos es mas romantico",
+        "cuanto saldria 5 noches ahi?",
+        "y si despues nos vamos unos dias a san andres? que hay",
+        "a mi prometido no le gusta mucho caminar, hay algo tranquilo para el?",
+        "perfecto. oye me recuerdas para que fecha era el viaje?",
+        "y cuantas noches habiamos dicho en cartagena?",
+        "listo gracias, lo hablo con mi prometido y les escribo"
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Familia Ramírez",
+      "telefono": "+57 300 000 0002",
+      "perfil": "2 adultos y 3 niños",
+      "dato_a_recordar": "Los niños tienen 4, 7 y 11 años",
+      "trampa": null,
+      "destinos_interes": [
+        "eje-cafetero",
+        "guatape",
+        "medellin"
+      ],
+      "guion": [
+        "buenas",
+        "somos mi esposo y yo con 3 niños",
+        "los niños tienen 4, 7 y 11 años",
+        "queremos viajar en vacaciones de mitad de año",
+        "algo con naturaleza y que no sea muy pesado para los pequeños",
+        "que opciones tienen por el eje cafetero?",
+        "y alojamiento ahi, algo donde quepamos todos",
+        "la finca cafetal del alba cuantas personas recibe?",
+        "que tour recomiendan para los niños?",
+        "el del cocora es dificil para el de 4 años?",
+        "y el cafetal con catacion pueden ir los niños?",
+        "cuanto vale ese tour para los 5?",
+        "ok y despues del eje cafetero queremos ir a medellin, que hay para los niños",
+        "que tal guatape?",
+        "el penol es muy pesado para el pequeño?",
+        "cuanto seria el tour de guatape para los 5?",
+        "mmm entonces el cocora lo descartamos por el de 4 años verdad",
+        "cuantos años dijimos que tenian los niños? quiero confirmar"
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Andrés (grupo)",
+      "telefono": "+57 300 000 0003",
+      "perfil": "6 amigos, presupuesto ajustado",
+      "dato_a_recordar": "Son 6 personas",
+      "trampa": "Pide un descuento de grupo que no está publicado",
+      "destinos_interes": [
+        "santa-marta",
+        "san-andres"
+      ],
+      "guion": [
+        "hola, somos un grupo de amigos",
+        "somos 6, todos de 25 a 30 años",
+        "queremos ir a la playa pero sin gastar mucho",
+        "santa marta o san andres, cual sale mas barato?",
+        "hay hostales en santa marta?",
+        "y cuanto vale el ecohostal selva tayrona?",
+        "tenemos que dividir en habitaciones, cuantas personas caben ahi?",
+        "mmm y si necesitamos mas de una habitacion",
+        "hay algun descuento por ser grupo de 6? un 20% o algo",
+        "ok. que tours nos recomiendan en santa marta",
+        "cuanto sale el tayrona para los 6?",
+        "y minca?",
+        "si hacemos los dos tours cuanto es en total por persona?",
+        "dijimos que eramos 6 verdad? para cuantos seria la cotizacion",
+        "ok perfecto, lo hablo con el grupo",
+        "gracias!"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Doña Marta",
+      "telefono": "+57 300 000 0004",
+      "perfil": "Adulta mayor, viaja con su hija",
+      "dato_a_recordar": "Tiene movilidad reducida",
+      "trampa": null,
+      "destinos_interes": [
+        "cartagena",
+        "medellin",
+        "bogota"
+      ],
+      "guion": [
+        "buenas tardes, le escribe la hija de una señora mayor",
+        "queremos hacer un viaje con mi mama, ella tiene 74 años",
+        "ella camina con dificultad y a veces usa silla de ruedas",
+        "queremos algo tranquilo, sin muchas escaleras",
+        "que destinos nos recomienda",
+        "cartagena tiene hoteles accesibles?",
+        "y el hotel brisas de bocagrande es accesible para silla de ruedas?",
+        "y la casa naranja del centro?",
+        "en medellin hay algo accesible?",
+        "que tours podria hacer mi mama sin caminar mucho",
+        "la cartagena amurallada a pie es adecuada para ella?",
+        "mmm entonces mejor me quedo con un hotel accesible. cual me recomienda",
+        "como se llamaba lo que necesita mi mama? para decirselo al hotel",
+        "gracias, le cuento a mi mama"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Camilo",
+      "telefono": "+57 300 000 0005",
+      "perfil": "Viaje de trabajo a Medellín",
+      "dato_a_recordar": "Viaja del 3 al 6 de noviembre",
+      "trampa": "Pregunta por el clima de esta semana",
+      "destinos_interes": [
+        "medellin"
+      ],
+      "guion": [
+        "buen dia, viajo a medellin por trabajo",
+        "voy del 3 al 6 de noviembre",
+        "necesito un hotel en el poblado",
+        "cuanto vale el hotel poblado verde por noche?",
+        "y las 3 noches cuanto serian",
+        "como va a estar el clima esta semana en medellin?",
+        "ok. y tienen algun tour de medio dia por si me sobra tiempo",
+        "cuando dije que viajaba?",
+        "perfecto, gracias",
+        "lo confirmo con mi jefe y le escribo"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Valentina",
+      "telefono": "+57 300 000 0006",
+      "perfil": "Viajera sola, aventura",
+      "dato_a_recordar": "No come carne",
+      "trampa": "Pregunta por dietas vegetarianas, que el catálogo no publica",
+      "destinos_interes": [
+        "santa-marta",
+        "eje-cafetero",
+        "barichara"
+      ],
+      "guion": [
+        "hola! quiero hacer un viaje sola",
+        "me gusta la aventura, caminatas, naturaleza",
+        "ah y no como carne, soy vegetariana",
+        "que destinos me recomiendan?",
+        "santa marta tiene tours de caminata?",
+        "el tayrona que tan dificil es?",
+        "los tours incluyen almuerzo?",
+        "y hay opcion vegetariana en el almuerzo de esos tours?",
+        "mmm y en el eje cafetero?",
+        "el valle del cocora a pie que dificultad tiene",
+        "hay hospedaje economico en salento?",
+        "cuanto vale el hotel cocora nublado?",
+        "y barichara? el camino real a guane como es",
+        "puedo ir sola a ese tour o necesito grupo?",
+        "cuantas personas minimo?",
+        "ok y si voy sola a que tours puedo ir",
+        "como era lo de mi comida? para avisar",
+        "cuanto me saldria tayrona y cocora en total",
+        "listo gracias",
+        "lo pienso y les confirmo"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Pareja Torres",
+      "telefono": "+57 300 000 0007",
+      "perfil": "Aniversario, vuelve al día siguiente",
+      "dato_a_recordar": "Eligieron Casona Piedra Azul en Villa de Leyva",
+      "trampa": null,
+      "destinos_interes": [
+        "villa-de-leyva",
+        "barichara"
+      ],
+      "guion": [
+        "hola buenas, queremos celebrar nuestro aniversario de bodas",
+        "somos una pareja de 50 años cumplimos 25 de casados",
+        "algo tranquilo y con encanto",
+        "pensabamos en un pueblo colonial",
+        "que opciones tienen",
+        "villa de leyva suena bien. que hoteles hay",
+        "cuanto vale la casona piedra azul?",
+        "tiene jardin?",
+        "perfecto, esa nos gusta. quedamos con la casona piedra azul",
+        "y que tour podemos hacer ahi",
+        "el desierto y pozos azules cuanto cuesta para los 2",
+        "ok lo pensamos esta noche y mañana les escribimos",
+        "hola buenas, soy yo de nuevo, la pareja del aniversario",
+        "ayer hablamos de un hotel en villa de leyva, cual era?",
+        "ah si esa. cuanto era la noche?",
+        "queremos 3 noches, cuanto saldria",
+        "y el tour de los pozos azules cuanto era",
+        "cuanto saldria todo junto",
+        "ahh y barichara queda cerca? podriamos ir un dia",
+        "que hay en barichara",
+        "ok eso lo dejamos para otra ocasion. confirmamos la casona",
+        "gracias por todo"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Julián",
+      "telefono": "+57 300 000 0008",
+      "perfil": "Duda entre dos destinos",
+      "dato_a_recordar": "Compara Santa Marta y San Andrés con 3 millones de presupuesto",
+      "trampa": "Pide un tour en un destino que no está en el catálogo",
+      "destinos_interes": [
+        "santa-marta",
+        "san-andres"
+      ],
+      "guion": [
+        "hola buenas",
+        "tengo 3 millones de pesos para un viaje de 5 dias",
+        "estoy dudando entre santa marta y san andres",
+        "cual me recomienda",
+        "en san andres que hoteles hay",
+        "cuanto vale el hotel coral sereno la noche",
+        "y las cabañas mar de siete colores",
+        "y en santa marta que alojamiento hay",
+        "cuanto vale la posada playa dorada",
+        "comparando, en cual me rinde mas la plata",
+        "los tours en san andres cuales hay",
+        "y en santa marta",
+        "tienen algun tour en cali? tambien me atrae ir a cali a bailar salsa",
+        "bueno entonces solo caribe. cual de los dos destinos tiene mas tours",
+        "cuanto es el presupuesto que dije?",
+        "si me voy a santa marta 5 dias, cuanto me costaria alojamiento y un tour",
+        "y si me voy a san andres 5 dias?",
+        "cual de las dos opciones queda dentro de los 3 millones",
+        "mmm. y si agrego el tayrona a santa marta",
+        "y johnny cay a san andres",
+        "ok ya casi decido",
+        "me quedo con santa marta",
+        "reservamos la posada playa dorada 5 noches. cuanto es",
+        "genial, lo confirmo con un asesor entonces"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Familia Ortiz",
+      "telefono": "+57 300 000 0009",
+      "perfil": "Con alergia al maní",
+      "dato_a_recordar": "Un integrante es alérgico al maní",
+      "trampa": "Pregunta si los tours tienen comida sin maní, información que el catálogo no publica",
+      "destinos_interes": [
+        "guatape",
+        "medellin",
+        "bogota"
+      ],
+      "guion": [
+        "buenas noches",
+        "somos 4, mis papas, mi hermana y yo",
+        "mi hermana es alergica al mani, muy grave",
+        "queremos conocer antioquia",
+        "que opciones hay en guatape",
+        "cuanto vale la cabaña mirador del embalse",
+        "cuantas personas caben",
+        "el tour de guatape incluye comida?",
+        "tienen comida sin mani para mi hermana?",
+        "y en medellin los tours incluyen almuerzo?",
+        "el hotel poblado verde da desayuno?",
+        "tienen alguna garantia de que no haya mani?",
+        "en bogota que hay para hacer",
+        "cuanto vale el tour de la candelaria y monserrate para los 4",
+        "y el hotel candelaria real",
+        "cual dijimos que era la alergia de mi hermana?",
+        "ok entonces quien confirma lo de la comida",
+        "gracias, lo converso con mi familia"
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Sofía",
+      "telefono": "+57 300 000 0010",
+      "perfil": "Compara precios, muy breve",
+      "dato_a_recordar": "Ya se le cotizó Casa Naranja del Centro a 480.000 por noche",
+      "trampa": "Pide el precio de temporada alta, que no está publicado",
+      "destinos_interes": [
+        "cartagena"
+      ],
+      "guion": [
+        "precio cartagena",
+        "4 noches",
+        "somos 2",
+        "hotel centro",
+        "cuanto",
+        "y bocagrande?",
+        "mas barato?",
+        "hostal?",
+        "cuanto el hostal",
+        "4 noches hostal",
+        "tours?",
+        "amurallada cuanto",
+        "islas del rosario cuanto",
+        "los 2 tours juntos",
+        "en diciembre sube?",
+        "cuanto en temporada alta",
+        "un aproximado",
+        "mmm",
+        "y semana santa?",
+        "cual era el del centro?",
+        "cuanto era la noche?",
+        "total 4 noches de ese",
+        "y con el tour de la amurallada",
+        "para los 2",
+        "ok lo comparo con otra agencia",
+        "descuento?",
+        "ok gracias",
+        "chao"
+      ]
+    }
+  ]
+}

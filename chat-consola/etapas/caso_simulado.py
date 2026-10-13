@@ -27,3 +27,16 @@ def construir_system() -> str:
     return SYSTEM_BASE + "\n\nCatálogo de la agencia (JSON):\n" + json.dumps(
         catalogo, ensure_ascii=False, separators=(",", ":")
     )
+
+
+# Precios en USD por millón de tokens, verificados el 2026-10-11 en la página de precios de Anthropic.
+PRECIOS = {
+    "claude-haiku-5-5": {"in": 0.10, "out": 0.50},
+    "claude-sonnet-5-5": {"in": 2.00, "out": 10.00},
+    "claude-opus-5-5": {"in": 4.00, "out": 20.00},
+}
+
+
+def costo_usd(modelo: str, tokens_entrada: int, tokens_salida: int) -> float:
+    p = PRECIOS[modelo]
+    return (tokens_entrada * p["in"] + tokens_salida * p["out"]) / 1_000_000

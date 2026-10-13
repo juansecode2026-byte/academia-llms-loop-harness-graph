@@ -100,22 +100,58 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 3: tokens y costos"`
-- [ ] Ejercicio A.4: medir cuánto pesa el catálogo en tokens y su costo en cada llamada; contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación del caso ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 3: tokens y costos"`
+- [x] Ejercicio A.4: radiografía del contexto sobre las conversaciones de los 10 clientes: de qué está hecha cada llamada, cuánto es redundante, cuánto catálogo sobra y cuánto bajaría el costo con cada palanca ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
-> _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
-> Archivo: `chat-consola/etapas/e3_tokens_costos.py` (2026-10-12, `claude-haiku-5-5`, API real para la parte A; las partes B y C son aritmética).
-> Qué hace: la parte A usa `client.messages.count_tokens(...)`, que cuenta tokens sin generar respuesta (no cobra generación), y resta el conteo de un «.» para quitar el formato del mensaje. La parte B simula 20 turnos de un chat con memoria: en cada turno se suma el mensaje del usuario, se reenvía todo el historial y se suma la respuesta. La parte C pasa esos totales a dólares con los precios de cada modelo.
-> Parte A, lo observado: español 64 caracteres → 21 tokens; inglés 57 caracteres → 14 tokens; código 32 caracteres → 13; números 29 caracteres → 13; emoji 4 caracteres → 9. El mismo contenido en español ocupa cerca de 1,5 veces más tokens que en inglés, y cuatro emojis ocupan más tokens que una frase corta de código.
-> Parte B: sin memoria la entrada total de 20 turnos sería de unos 2.000 tokens; con memoria es 47.600 (casi 24 veces). La entrada de una sola llamada pasa de 100 tokens en el turno 1 a 4.660 en el turno 20.
-> Parte C, costo de esa conversación de 20 turnos: Haiku 0,0068 USD, Sonnet 0,1352 USD, Opus 0,2704 USD.
-> Experimento sugerido, `TOK_RESPUESTA = 500` (calculado, no es una llamada): entrada acumulada 104.600 tokens; Haiku 0,0155 USD, Sonnet 0,3092 USD, Opus 0,6184 USD. Respuestas 2,5 veces más largas encarecen el chat unas 2,3 veces, porque cada respuesta se vuelve a pagar como entrada en los turnos siguientes.
-> Para pensar, «¿qué estrategias hay para recordar sin reenviar todo?»: (1) ventana deslizante, conservar solo los últimos N turnos; con la misma simulación, 10 turnos → 34.400 tokens de entrada y 5 turnos → 18.800, frente a 47.600 sin recorte (es el recorte de la etapa 8); (2) resumir lo viejo en pocas líneas y reenviar solo el resumen; (3) caché de prompts, que abarata la parte repetida del historial; (4) guardar los hechos importantes aparte y buscarlos cuando hagan falta (idea que reaparece en RAG).
+> Archivos (2026-10-13, `claude-haiku-5-5`, API real): `chat-consola/etapas/e3_tokens_costos.py` (la radiografía), `simulador_clientes.py` (entrega los mensajes de los 10 clientes al asesor), `base_piloto.py` (la base SQLite del piloto, `datos-simulados/piloto-simulado.db`, ignorada por git), `caso_simulado.py` y `datos-simulados/clientes-simulados.json` (los 10 clientes con sus guiones). El informe completo queda en `chat-consola/informes/radiografia-contexto.md`.
+> Qué hace: el simulador corre las 10 conversaciones (184 mensajes, de 10 a 28 por cliente) contra el asesor, con el catálogo completo y todo el historial, y guarda cada llamada en la tabla `ejecuciones` (tokens de entrada, salida y razonamiento, costo, tiempo y motivo de parada). Después `e3_tokens_costos.py` cuenta con la API (`count_tokens`, que no genera respuesta ni cobra generación) los tokens de cada mensaje y reparte cada llamada en instrucciones, catálogo, historial y mensaje nuevo. La entrada de cualquier llamada se reconstruye exactamente sumando los tokens de cada mensaje más 2 de formato por mensaje: error de 0,00 % en las 184 llamadas. Eso permite calcular con precisión qué pasaría con otra configuración, sin volver a llamar al modelo.
+> Tropiezo: con 5 clientes en paralelo el simulador chocó con el límite de la cuenta (500.000 tokens de entrada por minuto) y se detuvo con 159 de 184 llamadas guardadas. Se le agregó una espera con reintento y se retomó con 3 en paralelo; el script continúa donde quedó, así que no se repitió ninguna llamada.
+> Costo del tema: 0,213 USD por las 184 llamadas reales. Los conteos de tokens no cobran.
+> Memoria con el historial completo (revisado a mano en 14 preguntas de «¿qué te dije?»): 13 respuestas correctas y 1 parcial. Por ejemplo, Familia Ramírez: «los niños tienen 4, 7 y 11 años»; Pareja Torres, un día después: «la Casona Piedra Azul, desde $340.000 por noche»; Sofía: «Casa Naranja del Centro, $480.000 por noche, $1.920.000 por 4 noches». La parcial: Laura preguntó cuántas noches habían dicho en Cartagena y el asesor dudó si las 5 noches eran solo de Cartagena. Esta es la referencia para cuando se recorte la memoria.
+
+**De qué está hecha cada llamada (promedio de 184 llamadas):**
+
+| Parte | Tokens | % de la entrada | % del costo total |
+|---|---|---|---|
+| Instrucciones del asesor | 67 | 0,7 % | 0,6 % |
+| Catálogo completo | 6.478 | 68,2 % | 55,9 % |
+| Historial de la conversación | 2.936 | 30,9 % | 25,4 % |
+| Mensaje nuevo del cliente | 17 | 0,2 % | 0,1 % |
+| Salida (respuesta y razonamiento) | 416 | – | 18,0 % |
+| **Total** | **9.914** | | **0,00116 USD por llamada** |
+
+**Cómo crece la entrada turno a turno:**
+
+| Turno | Llamadas | Entrada (tokens) | Salida (tokens) | Costo por llamada (USD) |
+|---|---|---|---|---|
+| 1 | 10 | 6.565 | 302 | 0,00081 |
+| 2 a 5 | 40 | 7.419 | 749 | 0,00112 |
+| 6 a 10 | 50 | 8.956 | 385 | 0,00109 |
+| 11 a 20 | 70 | 10.895 | 303 | 0,00124 |
+| 21 a 28 | 14 | 12.480 | 222 | 0,00136 |
+
+**Las palancas, calculadas sobre las 184 llamadas reales** (se mantiene la salida observada; no se mide si la calidad de las respuestas cambia):
+
+| Configuración | Costo de las 184 llamadas (USD) | Ahorro | 1.000 conversaciones al mes (USD) |
+|---|---|---|---|
+| Punto de partida: todo el historial y el catálogo completo (real) | 0,2130 | 0 % | 21 |
+| Ventana de 10 turnos | 0,1968 | 8 % | 20 |
+| Ventana de 5 turnos | 0,1787 | 16 % | 18 |
+| Solo el catálogo de las ciudades que le interesan al cliente | 0,1296 | 39 % | 13 |
+| Catálogo de interés + ventana de 5 turnos | 0,0953 | 55 % | 10 |
+
+> **Qué dice el resultado**
+> 1. **Lo que más pesa es el catálogo, no la memoria.** El catálogo es el 68 % de la entrada y el 56 % del costo; el historial, el 31 % de la entrada y el 25 % del costo. Por eso recortar la memoria a 5 turnos ahorra solo un 16 %, mientras que enviar solo el catálogo de las ciudades que le interesan al cliente ahorra un 39 %.
+> 2. **El 97 % de lo que se envía en cada turno ya se había enviado en el turno anterior** (entre 91 % y 99 %). Es texto redundante: la conversación solo agrega la respuesta anterior y el mensaje nuevo. Es el potencial de la caché de prompts, cuya tarifa todavía no está verificada.
+> 3. **El 70 % del catálogo sobra** para lo que pregunta cada cliente: con solo sus ciudades pesa en promedio 1.953 tokens (entre 1.069 de Camilo, que solo pregunta por Medellín, y 2.615 de Valentina, que pregunta por tres ciudades).
+> 4. **Cada turno cuesta más que el anterior:** la entrada pasa de 6.565 tokens en el turno 1 a 12.480 en los turnos 21 a 28, y una conversación de 10 turnos (Camilo) costó 0,0090 USD contra 0,0317 USD una de 24 (Julián).
+> 5. **El razonamiento es poco en conversación:** el 17 % de la salida, que equivale a cerca del 3 % del costo total. Las respuestas son cortas y, en turnos de puro dato («cuanto era la noche?»), casi no razona.
+> Para pensar, «¿qué estrategias hay para recordar sin reenviar todo?»: ventana de los últimos N turnos (−16 % con 5), mandar solo el catálogo de interés (−39 %), las dos juntas (−55 %), y por probar: resumir lo viejo en pocas líneas y la caché de prompts. La más rentable no era recortar la memoria sino el catálogo.
 
 ### 3.5 Parámetros de generación {ref=e4:E4}
 
@@ -149,9 +185,9 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
 - [x] Ejercicio C.1: crear el catálogo ficticio (JSON); adelantado, ya está creado en `chat-consola/datos-simulados/` ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
-- [ ] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
-- [ ] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones); es la base única, el tema 3.16 la amplía ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
-- [ ] Ejercicio C.4: construir el simulador que entrega los mensajes ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [x] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp; adelantado en el tema 3.4, ya está creado ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [x] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones); es la base única, el tema 3.16 la amplía; adelantado en el tema 3.4, ya está creado ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [x] Ejercicio C.4: construir el simulador que entrega los mensajes; adelantado en el tema 3.4, ya está creado ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 
 > **Notas del proceso**
@@ -935,6 +971,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Las entradas del análisis suman «Qué encareció el proceso» y «Cómo se podría optimizar» (mirada de AI Engineer); aplicado a 3.2 y 3.3. |
 | 2026-10-13 | El análisis suma «Variables que afectaron el proceso» y «Cómo optimizar cada variable» (tablas con cifras) en 3.2 y 3.3, y un «resumen acumulado de variables» para decidir con datos. |
 | 2026-10-13 | Los temas 3.2 y 3.3 quedan enfocados solo en el asesor con el catálogo cargado (notas, tablas, análisis y resumen de variables). |
+| 2026-10-13 | Tema 3.4 completo con 10 conversaciones reales (184 llamadas, 0,213 USD): radiografía del contexto, palancas calculadas y entrada del análisis. Se adelantan los pasos C.2, C.3 y C.4 (clientes, base SQLite y simulador). Las estimaciones de 3.2 y 3.3 pasan a cifras calculadas. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -975,14 +1012,17 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 
 | Variable | Qué es, en simple | Dato más reciente | Cómo optimizarla | Estado del dato | Tema |
 |---|---|---|---|---|---|
-| Catálogo en el contexto | Los datos de la agencia que se mandan en cada mensaje | 6.578 tokens por mensaje; 68 % del costo de una respuesta (3.3) | Mandar solo lo relevante; caché de prompts | Medido; ahorro estimado; caché por verificar | 3.4, 3.25, 3.30 |
-| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | En dos turnos, la entrada sube de 6.578 a unos 7.000 tokens (3.2); 47.600 tokens en 20 turnos simulados (versión previa del 3.4) | Ventana de los últimos N turnos; resumen de lo viejo | Medido en 2 turnos; calculado en 20 | 3.4 |
-| Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida: 239 de 620 tokens (3.3) | Esfuerzo (effort) según el tipo de mensaje | Medido | 3.5, 3.32 |
-| Longitud de la respuesta | Lo que el asesor escribe al cliente | 380 tokens visibles en promedio, entre 345 y 413 (3.3) | Respuestas de chat; tope de `max_tokens` | Medido | 3.5 |
+| Catálogo completo | Los datos de la agencia que se mandan en cada mensaje | 6.478 tokens por llamada: 68,2 % de la entrada y 56 % del costo (3.4, 184 llamadas) | Mandar solo el catálogo de interés | Medido | 3.4, 3.25, 3.30 |
+| Catálogo innecesario | La parte del catálogo que no sirve para lo que preguntó el cliente | 70 %: con solo sus ciudades, 1.953 tokens en promedio (3.4) | Filtrar por ciudades de interés: −39 % del costo | Medido; ahorro calculado | 3.25, 3.30 |
+| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | 2.936 tokens por llamada en promedio; la entrada va de 6.565 (turno 1) a 12.480 (turnos 21 a 28) (3.4) | Ventana de 5 turnos (−16 %); resumen de lo viejo | Medido; ahorro calculado; resumen por medir | 3.25 |
+| Texto redundante | Lo que se envía igual que en la llamada anterior | 96,7 % de la entrada (3.4) | Caché de prompts | Medido; tarifa por verificar | 3.4 en adelante |
+| Longitud de la conversación | Cuántos turnos dura | De 0,0090 USD (10 turnos) a 0,0317 USD (24 turnos) por conversación (3.4) | Ventana, resumen, filtrar catálogo | Medido | 3.25 |
+| Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida en el primer mensaje largo (3.3); 17 % en las conversaciones (3.4), cerca del 3 % del costo | Esfuerzo (effort) según el tipo de mensaje | Medido | 3.5, 3.32 |
+| Longitud de la respuesta | Lo que el asesor escribe al cliente | 416 tokens de salida por respuesta en promedio, 18 % del costo (3.4) | Respuestas de chat; tope de `max_tokens` | Medido | 3.5 |
 | Modelo | Haiku, Sonnet u Opus | Sonnet cuesta unas 20 veces más que Haiku por token | Elegir el modelo según la tarea | Calculado con los precios | 3.6 |
 | Formato de los datos | Cómo se escribe el catálogo | Compacto: 18 % menos tokens (7.923 a 6.469) | Ya aplicado | Medido | — |
-| Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 |
-| Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Con catálogo, 3 de 3 respuestas con la misma cifra verificable: $1.920.000 de `casa-naranja-del-centro` (3.2) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
+| Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 en adelante |
+| Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Con catálogo, 3 de 3 respuestas con la misma cifra verificable: $1.920.000 de `casa-naranja-del-centro` (3.2); 13 de 14 recuerdos correctos con el historial completo (3.4) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
 | Tiempo hasta el primer token | Cuánto tarda el asesor en empezar a responder | Sin medir | «Escribiendo…» y mensajes cortos | Por medir | 3.15 |
 
 #### Lo que vamos logrando
@@ -1046,7 +1086,7 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
-| Catálogo en el contexto | Mandar solo los registros que sirven: si preguntan por Cartagena, sus 5 registros y no los 37 | De 6.500 a unos 1.000 tokens por mensaje; la conversación, de unos 0,0019 a unos 0,0008 USD | **Estimado** | 3.4 (medirlo), 3.25 y 3.26, herramienta en 3.30 |
+| Catálogo en el contexto | Mandar solo los registros de las ciudades que le interesan al cliente | De 6.478 a unos 1.953 tokens por mensaje en promedio (entre 1.069 y 2.615); el costo total baja un 39 % | **Calculado** sobre 184 llamadas reales (tema 3.4); la calidad se prueba en 3.25 y 3.26 | 3.25 y 3.26, herramienta en 3.30 |
 | Catálogo repetido en cada turno | Caché de prompts: la parte que se repite se cobra más barata | Menor costo de entrada desde el segundo mensaje | **Por verificar** (tarifa sin confirmar en los modelos 5.5) | 3.4 |
 | Cálculos de precios | Que el código calcule el total (4 × 480.000) y el modelo solo lo redacte | Total siempre exacto y menos razonamiento | **Por medir** | 3.30 |
 | Longitud de la respuesta | Respuestas del tamaño de un chat: preguntar personas y fechas antes de listar todo; tope de `max_tokens` | Menos salida y menos historial para reenviar | **Por medir** | 3.5 |
@@ -1092,7 +1132,7 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
-| Entrada (68 %) | Solo los registros del catálogo que sirven, o caché de la parte que se repite | Respuesta de unos 0,00097 a unos 0,0004 USD | **Estimado** | 3.4, 3.25 y 3.26 |
+| Entrada (68 %) | Solo los registros del catálogo que sirven, o caché de la parte que se repite | El costo de las conversaciones baja un 39 % solo con el catálogo de interés (tema 3.4) | **Calculado** | 3.25 y 3.26 |
 | Respuesta visible (20 %) | Mensajes cortos de chat, con instrucción clara y tope de `max_tokens` | Menos salida por respuesta | **Por medir** | 3.5 |
 | Razonamiento (12 %) | Esfuerzo (effort) bajo en saludos, alto en cotizaciones | Menos razonamiento en mensajes simples | **Por medir** | 3.5 y 3.32 |
 | Streaming | «Escribiendo…» desde el primer token y envío por párrafos | Mejor tiempo percibido, mismo costo | **Por medir** (tiempo hasta el primer token) | 3.15 |
@@ -1101,19 +1141,52 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 > **Ejemplo**
 > Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero cuesta más.
 > La respuesta real de la primera ejecución, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`).
-> El costo: con 10.000 mensajes al mes con Haiku serían unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, se estima que pesaría unos 1.000 tokens y la respuesta costaría unos 0,0004 USD, es decir, unos 4 USD al mes. Es una estimación: se mide en el tema 3.4.
+> El costo: con 10.000 mensajes al mes con Haiku serían unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, en el tema 3.4 se calculó que pesaría en promedio unos 1.950 tokens (entre 1.069 y 2.615 según las ciudades) y que las conversaciones costarían un 39 % menos.
 
-#### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
+#### 3.4 · Tokens, ventana de contexto y costos (2026-10-13)
 
-**Versión previa:** hecha con ejemplos sueltos de la guía; se reemplaza cuando el tema se rehaga con el caso del ejercicio.
+**Qué se hizo:** se corrieron las conversaciones completas de 10 clientes ficticios (184 mensajes, de 10 a 28 por cliente) contra el asesor con el catálogo cargado, y se midió en qué se va cada token de cada llamada: instrucciones, catálogo, historial, mensaje nuevo y respuesta. Con esos datos reales se calculó cuánto bajaría el costo con cada palanca.
 
-**Qué se hizo:** se contaron los tokens de distintos tipos de texto y se simuló una conversación de 20 turnos para ver cuánto crece lo que se envía en cada mensaje, y cuánto costaría esa conversación con cada modelo.
+**A qué nos conduce:** a una sorpresa que cambia qué optimizar primero: **lo que más pesa no es la memoria, es el catálogo**. Se esperaba que el historial, que crece, fuera el problema; pero el catálogo completo es el 68 % de lo que se envía, y el 70 % de él no le sirve al cliente que está preguntando. Además, el 97 % de lo que se envía en cada turno ya se había enviado en el turno anterior. Con esto ya no se optimiza a ojo: se sabe qué atacar primero y cuánto se espera ganar.
 
-**A qué nos conduce:** a entender de dónde sale la factura. Un modelo no recuerda nada entre llamadas: para que «recuerde», hay que reenviarle toda la conversación cada vez, y todo lo que se reenvía se cobra de nuevo. Por eso una conversación de 20 turnos cuesta casi 24 veces más que 20 mensajes sueltos. También se ve que el idioma importa (el español usa más tokens que el inglés) y que la elección del modelo mueve el costo muchísimo: el mismo chat cuesta 0,0068 USD con Haiku y 0,2704 USD con Opus. Esas cuentas son las que permiten cotizar un proyecto antes de construirlo.
+**En el ejercicio:** las 10 conversaciones quedaron guardadas en la base única del piloto, con cada llamada medida. Esa es la línea base con la que se compara cada mejora en los temas 3.25 y 3.26, y los 14 «¿qué te dije?» revisados (13 correctos, 1 parcial) son la referencia para comprobar que recortar la memoria no hace que el asesor olvide los datos del cliente.
 
-**En el ejercicio:** se va a rehacer con mensajes tipo WhatsApp y la conversación de un cliente del caso. Servirá para elegir cuántos turnos recuerda el asesor, que es la decisión que más mueve el costo.
+**Qué encareció el proceso:** el costo de una llamada promedio (0,00116 USD) se reparte así:
 
+| Parte | Costo (USD) | % del costo |
+|---|---|---|
+| Catálogo completo, reenviado en cada mensaje | 0,00065 | 56 % |
+| Historial de la conversación | 0,00029 | 25 % |
+| Respuesta del asesor (incluye el razonamiento) | 0,00021 | 18 % |
+| Instrucciones y mensaje nuevo | 0,00001 | 1 % |
+
+En palabras simples: más de la mitad del dinero se va en volver a mandarle al asesor un catálogo del que casi siempre usa una cuarta parte; otra cuarta parte, en repetirle la conversación; y menos de una quinta parte, en lo que el asesor escribe. Y como cada turno reenvía todo lo anterior, una conversación larga cuesta mucho más que una corta: 0,0317 USD la de 24 turnos contra 0,0090 USD la de 10.
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Catálogo completo | 6.478 tokens por llamada; 68,2 % de la entrada | 56 % del costo |
+| Historial (la memoria) | 2.936 tokens por llamada en promedio; la entrada crece de 6.565 (turno 1) a 12.480 (turnos 21 a 28) | 25 % del costo; sube con cada turno |
+| Texto redundante | 96,7 % de lo que se envía ya se había enviado en la llamada anterior (entre 90,7 % y 99,3 %) | Casi toda la entrada se paga más de una vez |
+| Catálogo innecesario | Con solo las ciudades de cada cliente pesaría 1.953 tokens en promedio, 30 % del completo | 70 % del catálogo no le sirve al cliente |
+| Longitud de la conversación | De 10 a 28 turnos: 0,0090 a 0,0317 USD por conversación | El costo crece más rápido que el número de turnos |
+| Salida y razonamiento | 416 tokens por respuesta; el razonamiento es el 17 % | 18 % del costo; el razonamiento, cerca del 3 % |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):** se cambia una cosa a la vez y se mide costo **y** exactitud. Los ahorros son calculados sobre las 184 llamadas reales; la calidad de las respuestas se prueba en el laboratorio.
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Catálogo innecesario | Mandar solo los registros de las ciudades que le interesan al cliente | Costo total −39 % (de 0,2130 a 0,1296 USD en las 184 llamadas) | **Calculado** | 3.25 y 3.26; herramienta en 3.30 |
+| Historial | Ventana de los últimos 5 turnos | −16 % (−8 % con 10 turnos); riesgo: que olvide datos del cliente | **Calculado**; la memoria se prueba con los 14 «¿qué te dije?» | 3.25 y 3.26 |
+| Las dos anteriores juntas | Catálogo de interés más ventana de 5 turnos | −55 %: de unos 21 a unos 10 USD por 1.000 conversaciones | **Calculado** | 3.25 y 3.26 |
+| Texto redundante | Caché de prompts: se guarda la parte que se repite y se cobra más barata | Potencial: el 97 % de la entrada se repite | **Por verificar** (la tarifa de los modelos 5.5 no está confirmada) | 3.4 en adelante |
+| Historial | Resumir lo viejo en pocas líneas en lugar de recortarlo | Conserva los datos del cliente con menos tokens | **Por medir** | 3.25 y 3.26 |
+| Salida y razonamiento | Respuestas del tamaño de un chat y esfuerzo (effort) según el tipo de mensaje | Reducir ese 18 % del costo | **Por medir** | 3.5 y 3.32 |
 
 > **Ejemplo**
-> Un asistente de ventas atiende 1.000 conversaciones al mes, de 20 turnos cada una. Con Haiku cuesta unos 6,8 USD al mes; con Sonnet, unos 135; con Opus, unos 270. Es el mismo servicio: cambiar de modelo lo multiplica por 40.
-> Y cuánto pesa la memoria: si el asistente solo recordara los últimos 5 turnos en vez de los 20, la entrada baja de 47.600 a 18.800 tokens por conversación (un 60 % menos) y las conversaciones largas dejan de encarecerse sin freno. Es como un vendedor que, antes de cada respuesta, no relee la libreta completa del cliente sino solo las últimas cinco notas.
+> Julián, el cliente que dudaba entre Santa Marta y San Andrés, tuvo la conversación más larga de las que comparaban destinos: 24 turnos. En su último mensaje se enviaron 14.845 tokens, de los cuales 6.478 eran el catálogo completo, aunque Julián solo preguntó por Santa Marta y San Andrés, cuyos registros (por ejemplo `posada-playa-dorada`, `hotel-coral-sereno`, `tayrona-senderismo`) pesan 1.941 tokens: el 30 % del catálogo. Su conversación costó 0,0317 USD.
+> Lo mismo con Camilo, que solo pregunta por Medellín: su catálogo útil son 1.069 tokens y la conversación de 10 turnos costó 0,0090 USD.
+> Si se mandara a cada cliente solo el catálogo de sus ciudades y se recordaran los últimos 5 turnos, las 10 conversaciones habrían costado 0,0953 USD en lugar de 0,2130 USD, un 55 % menos. A 1.000 conversaciones al mes con Haiku, de unos 21 USD a unos 10 USD.
+
+

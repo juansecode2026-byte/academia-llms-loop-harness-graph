@@ -70,7 +70,7 @@ Tiene la misma forma que el catálogo de turismo de candyCRM (nombre, región, p
 
 **A propósito no publica** disponibilidad ni cupos, tarifas de temporada alta, descuentos, información sobre alergias y dietas, clima ni precios de vuelos. Son justo las cosas que piden los clientes con trampa, y el asesor debe decir que no las sabe en vez de inventarlas.
 
-**Pesa unos 7.900 tokens** (6.500 si se guarda en formato compacto). Como va dentro del mensaje de sistema, esos tokens se reenvían en cada llamada: es lo que más pesa en el costo del asesor.
+**Pesa unos 7.900 tokens** (6.478 en formato compacto, que es el que se usa). Como va dentro del mensaje de sistema, esos tokens se reenvían en cada llamada: es lo que más pesa en el costo del asesor.
 
 | Tipo | Cantidad | Ejemplo de lo que tendría |
 |---|---|---|
@@ -99,7 +99,7 @@ Las conversaciones van de 10 a 40 turnos, con mensajes tipo WhatsApp («hola bue
 
 #### La base de datos del piloto
 
-SQLite, un archivo dentro del proyecto.
+SQLite, un archivo dentro del proyecto. **Ya está creada** (2026-10-13, tema 3.4): `chat-consola/datos-simulados/piloto-simulado.db`, que git ignora; se genera con `etapas/simulador_clientes.py`. Contiene los 10 clientes, los 184 mensajes de sus conversaciones y la medición de las 184 llamadas.
 
 > **Decisión: una sola base, y nace antes que el laboratorio**
 > La base se crea en el tema 3.7 (paso C.3), porque el chat con memoria ya la necesita: guarda el historial de cada cliente y cada llamada a Claude. La guía construye su «registro de experimentos» recién en el tema 3.16, pero ahí **no se crea otra base**: se amplía la misma con las columnas y tablas que pide la guía (configuración del experimento y calificación de cada respuesta). Así no hay dos bases distintas ni datos duplicados, y las llamadas del chat desde el primer día quedan medidas con el mismo formato que usará el laboratorio.
@@ -144,7 +144,7 @@ Los temas 3.2 a 3.4 se **hacen con el caso de viajes**, con el catálogo cargado
 | A.1 | Entorno, bibliotecas y clave (ya hecho, no cambia) | [3.1 Preparación](../resultados/resultados-proceso-manual.html#s3-1) |
 | A.2 | Primera llamada con la conversación de un cliente del caso («hola buenas, cuanto vale ir a cartagena 4 noches?» y después una insistencia en un precio aproximado), con el catálogo cargado | [3.2 Primera llamada a la API](../resultados/resultados-proceso-manual.html#s3-2) |
 | A.3 | Respuesta por pedazos y razonamiento con el primer mensaje del cliente, con el catálogo cargado | [3.3 Ver cómo el modelo predice tokens](../resultados/resultados-proceso-manual.html#s3-3) |
-| A.4 | Medir cuánto pesa el catálogo en tokens y cuánto cuesta cargarlo en cada llamada; contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación del caso, catálogo incluido | [3.4 Tokens, ventana de contexto y costos](../resultados/resultados-proceso-manual.html#s3-4) |
+| A.4 | Radiografía del contexto sobre las conversaciones de los 10 clientes: de qué está hecha cada llamada, cuánto es redundante, cuánto catálogo sobra y cuánto bajaría el costo con cada palanca | [3.4 Tokens, ventana de contexto y costos](../resultados/resultados-proceso-manual.html#s3-4) |
 ## 7. Fase B · Parámetros y modelos con el caso
 
 Se siguen los temas de la guía y, donde encaja, se prueban con una pregunta del caso de viajes.
@@ -161,9 +161,9 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 | Paso | Qué se hace | Checklist |
 |---|---|---|
 | C.1 | Crear el catálogo ficticio (JSON). **Adelantado: ya está creado**, desde el tema 3.2 | [3.7 Primer chat con memoria](../resultados/resultados-proceso-manual.html#s3-7) |
-| C.2 | Crear los 10 clientes y sus guiones tipo WhatsApp | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
-| C.3 | Crear la base SQLite del piloto: es la base única, que el tema 3.16 más adelante amplía | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
-| C.4 | Construir el simulador que entrega los mensajes | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
+| C.2 | Crear los 10 clientes y sus guiones tipo WhatsApp. **Adelantado en el tema 3.4: ya está creado** | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
+| C.3 | Crear la base SQLite del piloto: es la base única, que el tema 3.16 más adelante amplía. **Adelantado en el tema 3.4: ya está creado** | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
+| C.4 | Construir el simulador que entrega los mensajes. **Adelantado en el tema 3.4: ya está creado** | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.5 | Chat con memoria por cliente: cada cliente con su historial | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 
 ## 9. Fase D · Limitaciones, chat final y pruebas
@@ -243,3 +243,4 @@ Lo que queda como estándar para otros proyectos no es el caso de viajes, sino e
 | 2026-10-13 | Las Partes 3 y 4 se siguen dentro del checklist del manual (temas 3.27 a 3.43); los pasos F.1 a F.17 enlazan allí. |
 | 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1): ya existe en `chat-consola/datos-simulados/`; los pasos A.3 y A.4 pasan a usarlo. |
 | 2026-10-13 | Los pasos A.2 y A.3 se hacen con el catálogo cargado. |
+| 2026-10-13 | Tema 3.4 hecho con 10 conversaciones reales: se adelantan los pasos C.2 (clientes y guiones), C.3 (base SQLite) y C.4 (simulador), y se registra la radiografía del contexto. |

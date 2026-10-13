@@ -5,3 +5,4 @@ historial.tmp
 __pycache__/
 .pytest_cache/
 laboratorio.db
+datos-simulados/*.db
