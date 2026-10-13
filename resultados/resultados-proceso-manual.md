@@ -195,19 +195,23 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.7 Primer chat con memoria {ref=e6:E6}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e6) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e6) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 6: chat con memoria"`
 - [x] Ejercicio C.1: crear el catálogo ficticio (JSON); adelantado, ya está creado en `chat-consola/datos-simulados/` ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [x] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp; adelantado en el tema 3.4, ya está creado ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [x] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones); es la base única, el tema 3.16 la amplía; adelantado en el tema 3.4, ya está creado ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [x] Ejercicio C.4: construir el simulador que entrega los mensajes; adelantado en el tema 3.4, ya está creado ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
-- [ ] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [x] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Script: `chat-consola/etapas/e6_chat_memoria.py`. Es un chat de consola donde **cada cliente tiene su propia lista de mensajes** (`/cliente NOMBRE` cambia de cliente) y donde, en cada turno, se hacen cuatro pasos: agregar el mensaje del cliente, enviar **toda** su lista, recordar la respuesta del asesor y mostrar cuánto creció la entrada. No escribe en la base del piloto, para no tocar las 184 llamadas medidas en 3.4. Con `--demo` corre una prueba guionada (5 llamadas, 0,00483 USD).
+> 1. **La memoria funciona:** Laura dijo «nos casamos el 14 de febrero» y recibió los precios del catálogo; en el turno siguiente preguntó qué fecha había dicho y qué precio le dieron, y el asesor respondió «14 de febrero» y repitió los precios exactos ($120.000, $360.000 y $480.000 por noche, y los dos tours). La entrada pasó de 6.599 a 6.988 tokens: la memoria sumó 389 tokens (5,9 %).
+> 2. **Cada cliente tiene la suya:** Camilo, con su lista vacía, preguntó «¿en qué fecha nos casamos?» y el asesor contestó que no tiene acceso a conversaciones anteriores y ofreció ayuda; no mezcló los datos de Laura ni inventó una fecha.
+> 3. **Experimento de ruptura:** se repitió el caso de Laura sin guardar las respuestas del asesor. En el segundo turno el asesor solo vio los dos mensajes de la cliente (`user`, `user`) y dijo «no veo un precio anterior en esta conversación», después volvió a listar los precios base. Es una buena respuesta (no inventó), pero perdió el hilo: la conversación ya no continúa lo que se había dicho. Además **no se ahorró casi nada**: la entrada fue 6.613 contra 6.988 tokens.
+> **Para pensar** (¿qué pasa con esta memoria al cerrar el programa? ¿y después de 500 turnos?): al cerrar el programa la lista vive solo en la memoria del proceso y se pierde; por eso en el piloto el historial se guarda en la tabla `mensajes` de la base única. Después de 500 turnos, cada llamada reenvía todo: con el crecimiento medido en 3.4 (unos 250 tokens por turno) la entrada llegaría a unos 131.000 tokens en el turno 500 y la conversación entera costaría cerca de 3,5 USD solo en entrada con Haiku, contra unos 0,4 USD con una ventana de 5 turnos (cifras estimadas). Ambos problemas se resuelven al ensamblar el chat final (3.9).
 
 ### 3.8 Limitaciones de los LLM {ref=e7:E7}
 
@@ -991,6 +995,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | La entrada 3.4 suma la tabla «Tokens ahorrados en dólares» (medido contra optimizado) y se agrega un hook que pide esa tabla en cada entrada del análisis. |
 | 2026-10-13 | Tema 3.5 completo con el asesor y el catálogo (8 llamadas, 0,00737 USD): max_tokens, effort, system y temperatura; entrada del análisis con la tabla de ahorro. |
 | 2026-10-13 | Tema 3.6 completo con el asesor y el catálogo (3 llamadas, una por modelo, 0,0533 USD): lista de modelos de la API, comparación Haiku, Sonnet y Opus y entrada del análisis con la tabla de ahorro. |
+| 2026-10-13 | Tema 3.7 completo con una memoria por cliente (5 llamadas, 0,00483 USD): memoria, aislamiento entre clientes y experimento de ruptura; entrada del análisis con la tabla de ahorro. Se marca el paso C.5. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1033,7 +1038,7 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 |---|---|---|---|---|---|
 | Catálogo completo | Los datos de la agencia que se mandan en cada mensaje | 6.478 tokens por llamada: 68,2 % de la entrada y 56 % del costo (3.4, 184 llamadas) | Mandar solo el catálogo de interés | Medido | 3.4, 3.25, 3.30 |
 | Catálogo innecesario | La parte del catálogo que no sirve para lo que preguntó el cliente | 70 %: con solo sus ciudades, 1.953 tokens en promedio (3.4) | Filtrar por ciudades de interés: −39 % del costo | Medido; ahorro calculado | 3.25, 3.30 |
-| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | 2.936 tokens por llamada en promedio; la entrada va de 6.565 (turno 1) a 12.480 (turnos 21 a 28) (3.4) | Ventana de 5 turnos (−16 %); resumen de lo viejo | Medido; ahorro calculado; resumen por medir | 3.25 |
+| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | 2.936 tokens por llamada en promedio; la entrada va de 6.565 (turno 1) a 12.480 (turnos 21 a 28) (3.4) |  Ventana de 5 turnos (−16 %); resumen de lo viejo | Medido; ahorro calculado; resumen por medir | 3.25 |
 | Texto redundante | Lo que se envía igual que en la llamada anterior | 96,7 % de la entrada (3.4) | Caché de prompts | Medido; tarifa por verificar | 3.4 en adelante |
 | Longitud de la conversación | Cuántos turnos dura | De 0,0090 USD (10 turnos) a 0,0317 USD (24 turnos) por conversación (3.4) | Ventana, resumen, filtrar catálogo | Medido | 3.25 |
 | Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida en el primer mensaje largo (3.3); 17 % en las conversaciones (3.4), cerca del 3 % del costo | Esfuerzo (effort) según el tipo de mensaje; sin efecto claro con 1 muestra por nivel (3.5) | Medido; efecto por medir | 3.32 |
@@ -1308,4 +1313,49 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 
 > **Ejemplo**
 > El cliente dijo: «somos 2, del 10 al 14 de diciembre, queremos ir a cartagena. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro». Los tres modelos recomendaron `casa-naranja-del-centro` (480.000 por noche, 4 noches, $1.920.000) y avisaron que diciembre es temporada alta. Haiku lo hizo por 0,00086 USD. Sonnet agregó `hotel-brisas-de-bocagrande` (desde $360.000) por 0,01691 USD, y Opus sumó también `hostal-la-muralla-viva` (desde $120.000) por 0,03555 USD. A 1.000 conversaciones con unos 18 mensajes cada una, la diferencia entre Haiku y Sonnet sería de cientos de dólares al mes por un cierre de respuesta mejor redactado.
+
+#### 3.7 · Primer chat con memoria (2026-10-13)
+
+**Qué se hizo:** se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
+
+**A qué nos conduce:** a entender que **el asesor no recuerda nada por sí mismo: recuerda lo que nosotros le volvemos a enviar**. Eso explica dos cosas del tema 3.4: por qué cada turno cuesta más que el anterior (se reenvía todo) y por qué cada cliente necesita su propio historial (si no, se mezclan). También mostró que quitar la memoria no ahorra casi nada, porque el peso es el catálogo.
+
+**En el ejercicio:** el paso C.5 queda hecho: cada cliente del piloto tiene su historial separado. En el piloto completo ese historial vive en la tabla `mensajes` de la base única, para que sobreviva si el programa se cierra.
+
+**Qué encareció el proceso:** cada llamada costó entre 0,00082 y 0,00107 USD, y 6.580 a 6.613 tokens de entrada eran el catálogo y el mensaje de sistema. La memoria de Laura sumó solo 389 tokens (5,9 %) en el segundo turno. Lo que más pesó en la salida fue la longitud de la respuesta: la primera respuesta de Laura fue de 789 tokens y otras llegaron a 817, porque el asesor listó todo el catálogo de Cartagena aunque la cliente no lo había pedido.
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Memoria del cliente | 389 tokens en el turno 2 (5,9 % de la entrada) | Pequeña al comienzo; crece con cada turno hasta 12.480 tokens en los turnos 21 a 28 (3.4) |
+| Catálogo | 6.580 tokens por llamada, constante | Es el 94 % de la entrada en el turno 2 |
+| Longitud de la respuesta | 256 a 817 tokens de salida; las respuestas largas listan todo el catálogo de la ciudad | Hasta 0,00107 USD por llamada contra 0,00083 la corta |
+| Guardar o no la respuesta del asesor | Sin guardarla, la entrada del turno 2 fue 6.613 contra 6.988 tokens | Ahorra 375 tokens (5 %), pero el asesor pierde el hilo |
+| Separación por cliente | Camilo no recibió datos de Laura | Sin separación se mezclarían los datos de los clientes |
+| Duración de la conversación | Estimado: con ~250 tokens de crecimiento por turno, 500 turnos costarían ~3,5 USD solo en entrada | El costo total crece con el cuadrado del número de turnos |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Memoria del cliente | Ventana de los últimos 5 turnos y resumen de lo viejo, guardando el historial completo en la base | −16 % en el piloto (3.4); conversaciones largas mucho menos costosas | **Calculado** (ventana); resumen **por medir** | 3.9, 3.25 y 3.26 |
+| Longitud de la respuesta | Reglas de prompt que pidan una sola opción y preguntar antes de listar (3.8) | Salidas más cortas, aunque en 3.5 la brevedad sola subió el razonamiento | **Por medir** | 3.8 y 3.32 |
+| Guardar la respuesta | Siempre guardarla; es 5 % de ahorro a cambio de perder el hilo | No es una optimización válida | **Medido** | — |
+| Separación por cliente | Una lista (y una fila de la tabla `mensajes`) por cliente | Evitar mezclar datos | **Medido** | 3.10 (pruebas) |
+| Duración de la conversación | Ventana más resumen para que el costo crezca de forma lineal, no cuadrática | ~0,4 USD en vez de ~3,5 USD por 500 turnos | **Estimado** | 3.25 y 3.26 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido y lo que habría costado con la optimización. La demo mide el turno 2 de Laura (6.988 tokens de entrada); el resto usa la línea base del piloto (184 llamadas, 1.747.598 tokens de entrada, 0,2130 USD).
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| No guardar la respuesta (turno 2) | 6.988 de entrada | 6.613 | 375 | 0,00004 (y el asesor pierde el hilo) | **Medido**; no es una optimización válida |
+| Ventana de 5 turnos en el piloto | 1.747.598 de entrada | ~1.406.600 | ~341.000 | 0,0341 (−16 %) | **Calculado** (de 3.4) |
+| Ventana más catálogo de interés | 1.747.598 de entrada | ~570.600 | ~1.177.000 | 0,1177 (−55 %) | **Calculado** (de 3.4) |
+| Conversación de 500 turnos: ventana de 5 turnos frente a historial completo | ~34,5 millones de entrada | ~3,9 millones | ~30,6 millones | ~3,06 de ~3,45 | **Estimado** (supone crecimiento lineal de 250 tokens por turno) |
+
+En palabras simples: en conversaciones cortas la memoria casi no se nota, pero en las largas se vuelve lo más caro después del catálogo. La ventana la mantiene a raya sin tocar lo que el asesor sabe del cliente, si el historial completo queda guardado aparte.
+
+> **Ejemplo**
+> Laura escribió «nos casamos el 14 de febrero y queremos viajar esa semana a cartagena. cuanto vale?». El asesor respondió con los precios del catálogo: `hostal-la-muralla-viva` desde $120.000, `hotel-brisas-de-bocagrande` desde $360.000 y `casa-naranja-del-centro` desde $480.000 por noche. Al preguntar en el turno siguiente qué fecha y qué precio le había dado, el asesor repitió «14 de febrero» y los mismos tres precios, por 0,00083 USD. Camilo, con su propia lista vacía, preguntó por la misma boda y el asesor respondió que no tenía esa información. Sin guardar sus respuestas, Laura recibió «no veo un precio anterior en esta conversación».
 
