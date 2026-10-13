@@ -59,17 +59,15 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [x] Commit: `git commit -m "etapa 1: primera llamada a la API"`
-- [x] Ejercicio A.2: primera llamada con un mensaje de cliente del caso, sin catálogo, para ver cómo inventa precios ([ver paso A.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [x] Ejercicio A.2: primera llamada con la conversación de un cliente del caso, con el catálogo cargado ([ver paso A.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
-> Archivo: `chat-consola/etapas/e1_primera_llamada.py`, reescrito con el caso (2026-10-13, `claude-haiku-5-5`, API real). Reemplaza la versión previa, que usaba la pregunta suelta «¿Qué es un modelo de lenguaje?».
-> Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente; `client.messages.create(...)` envía el mensaje del cliente («hola buenas, cuanto vale ir a cartagena 4 noches?») con un mensaje de sistema que le da el papel de asesor de «Turismo Colombia (simulada)», **sin catálogo ni reglas contra inventar**. Luego recorre `respuesta.content` (una lista de bloques) y une los de tipo `text`.
-> Lo observado en 3 ejecuciones del mensaje original: el asesor **no inventó cifras**; pidió datos (ciudad de salida, fechas, personas y tipo de hotel). Pero dijo «te armo una cotización exacta», algo que no podría hacer sin catálogo, y habló de zonas («centro amurallado», «Bocagrande») y categorías de hotel que no son las de nuestro catálogo. Las tres respuestas incluyeron un bloque `thinking` (razonamiento): 431, 588 y 497 tokens de salida, mientras que la pregunta suelta de la versión previa gastó unos 110. Eso es unas 4 veces más de salida y unos 0,00026 USD por respuesta.
-> Prueba extra, no guardada como archivo: un segundo turno con el cliente insistiendo («somos 2, del 10 al 14 de diciembre. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro»), 3 ejecuciones. **Ahí sí inventó**, con cifras en pesos distintas cada vez para el hotel de 4 noches: entre 2.400.000 y 4.800.000; entre 1.600.000 y 2.800.000; entre 1.600.000 y 3.600.000. Tokens: 228 de entrada (100 del primer turno más lo que se reenvía de la conversación) y entre 552 y 663 de salida. Costo de las 3: unos 0,001 USD.
-> Para pensar, «¿la respuesta es idéntica?»: no, y en el segundo turno la variación pasa de redacción a **contenido**: los números cambian.
-> **Con catálogo (2026-10-13).** El script ahora acepta `--catalogo` y corre una conversación de dos mensajes (la pregunta y la insistencia), con la respuesta real del asesor reenviada como memoria; la prueba extra de antes quedó incluida. Con el catálogo cargado (`python etapas/e1_primera_llamada.py --catalogo`), 3 ejecuciones: **el asesor usó siempre los precios del catálogo y no inventó ningún rango**. Respondió que Casa Naranja del Centro cuesta $480.000 por noche y $1.920.000 por las 4 noches, y en las tres ocasiones aclaró que ese es el precio base de temporada baja, que la tarifa de diciembre puede ser más alta y que la disponibilidad la confirma un asesor humano. Tokens: turno 1 con 6.578 de entrada y 612, 647 y 599 de salida; turno 2 con unos 7.000 de entrada y 340, 526 y 447 de salida.
-> Costo de una conversación de dos mensajes: unos 0,0019 USD con catálogo contra unos 0,0006 sin él (3,3 veces más), porque el catálogo, de unos 6.500 tokens, viaja en cada mensaje. Más caro, pero con precios correctos.
-> Conclusión del tema: el modelo no se niega solo a dar un precio que no conoce; hay que construir la protección (catálogo y reglas), y es lo que se hace en los temas 3.7 y 3.8.
+> Archivos: `chat-consola/etapas/e1_primera_llamada.py` y el módulo `chat-consola/etapas/caso_simulado.py` (2026-10-13, `claude-haiku-5-5`, API real).
+> Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente; `construir_system()` arma el mensaje de sistema: el papel de asesor de «Turismo Colombia (simulada)» más el catálogo en formato compacto. Luego el script corre una conversación de dos mensajes del cliente («hola buenas, cuanto vale ir a cartagena 4 noches?» y después «somos 2, del 10 al 14 de diciembre. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro»), reenviando como memoria la respuesta real del asesor, y en cada turno muestra los bloques de la respuesta (`thinking` y `text`), el texto y los tokens.
+> Lo observado en 3 ejecuciones: **el asesor usó siempre los precios del catálogo**. Respondió que Casa Naranja del Centro cuesta $480.000 por noche y $1.920.000 por las 4 noches, y en las tres ocasiones aclaró que ese es el precio base de temporada baja, que la tarifa de diciembre puede ser más alta y que la disponibilidad la confirma un asesor humano. Tokens: turno 1 con 6.578 de entrada y 612, 647 y 599 de salida; turno 2 con 7.002, 6.984 y 7.020 de entrada y 340, 526 y 447 de salida. Todas las respuestas incluyeron un bloque `thinking` (razonamiento).
+> Costo de una conversación de dos mensajes: unos 0,0019 USD (en promedio, 13.580 tokens de entrada y 1.057 de salida), y casi todo es el catálogo reenviado en cada mensaje.
+> Para pensar, «¿la respuesta es idéntica?»: no. La redacción cambia entre ejecuciones, pero las cifras no: las tres veces el total fue $1.920.000, tomado del registro `casa-naranja-del-centro` del catálogo.
+> Conclusión del tema: con el catálogo en el contexto, el asesor responde con datos verificables, y lo que el catálogo no tiene (tarifa de temporada alta, cupos, vuelos) lo dice en vez de inventarlo.
 
 ### 3.3 Ver cómo el modelo predice tokens {ref=e2:E2}
 
@@ -78,27 +76,27 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [x] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
-- [x] Ejercicio A.3: respuesta por pedazos y razonamiento con ese mismo mensaje, con el catálogo cargado, y compararla con la línea base del tema 3.2 ([ver paso A.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [x] Ejercicio A.3: respuesta por pedazos y razonamiento con el primer mensaje del cliente, con el catálogo cargado ([ver paso A.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
-> Archivos: `chat-consola/etapas/e2_ver_predecir_tokens.py`, reescrito con el caso (2026-10-13, `claude-haiku-5-5`, API real), y `chat-consola/etapas/caso_simulado.py`, un módulo nuevo con el mensaje de sistema, el catálogo y los mensajes del cliente, que ahora comparten las etapas. Reemplaza la versión previa (frase del café y acertijo de las cajas).
-> Qué hace: usa `client.messages.stream(...)` en vez de `create`, así los eventos llegan a medida que el modelo los genera. Imprime cada pedazo de texto seguido de `|` y, antes, el razonamiento resumido (`thinking={"type": "adaptive", "display": "summarized"}`). Al final `get_final_message()` entrega los tokens. Acepta `--catalogo` para cargar o no el catálogo.
-> Lo observado en la primera ejecución con catálogo: la respuesta llegó en 67 pedazos y varios cortan palabras («Con| g|usto», «dent|ro», «cu|entas»), porque el modelo trabaja con tokens, no con palabras. El resumen del razonamiento llegó en inglés aunque la respuesta salió en español: «I should present the three accommodation options with their per-night rates, noting these are base low-season prices without flights…».
+> Archivos: `chat-consola/etapas/e2_ver_predecir_tokens.py` y el módulo compartido `chat-consola/etapas/caso_simulado.py` (2026-10-13, `claude-haiku-5-5`, API real).
+> Qué hace: usa `client.messages.stream(...)` en vez de `create`, así los eventos llegan a medida que el modelo los genera. Imprime cada pedazo de texto seguido de `|` y, antes, el razonamiento resumido (`thinking={"type": "adaptive", "display": "summarized"}`). Al final `get_final_message()` entrega los tokens.
+> Lo observado en la primera ejecución: la respuesta llegó en 67 pedazos y varios cortan palabras («Con| g|usto», «dent|ro», «cu|entas»), porque el modelo trabaja con tokens, no con palabras. El resumen del razonamiento llegó en inglés aunque la respuesta salió en español: «I should present the three accommodation options with their per-night rates, noting these are base low-season prices without flights…».
 
-**Comparación, 3 ejecuciones con catálogo contra 3 sin catálogo (promedios):**
+**Resultado de las 3 ejecuciones con catálogo:**
 
-| | Sin catálogo | Con catálogo |
-|---|---|---|
-| Tokens de entrada | 100 | 6.578 |
-| Pedazos de texto | 65 | 78 |
-| Tokens de salida | 555 | 620 |
-| de razonamiento | 304 | 239 |
-| de respuesta | 251 | 380 |
-| Costo por respuesta (Haiku) | 0,00029 USD | 0,00097 USD |
+| | Ejecución 1 | Ejecución 2 | Ejecución 3 | Promedio |
+|---|---|---|---|---|
+| Tokens de entrada | 6.578 | 6.578 | 6.578 | 6.578 |
+| Pedazos de texto | 67 | 92 | 76 | 78 |
+| Tokens de salida | 613 | 679 | 567 | 620 |
+| de razonamiento | 268 | 266 | 184 | 239 |
+| de respuesta | 345 | 413 | 383 | 380 |
+| Costo de la respuesta (Haiku) | 0,00096 USD | 0,00100 USD | 0,00094 USD | 0,00097 USD |
 
 > **Qué dice la tabla**
-> Con catálogo la entrada se multiplica por 66 y el costo por 3,4; del costo de cada respuesta, el 68 % es el catálogo reenviado y no lo que el asesor escribe. A cambio razona menos (tiene datos de dónde apoyarse) y responde con más contenido, porque lista las opciones. Todo el tema costó unos 0,01 USD.
-> Para pensar, «¿por qué el razonamiento cuesta aunque solo veas un resumen?»: porque se cobran los tokens que el modelo genera, no los que se te muestran; sin catálogo, 304 de 555 tokens de salida fueron razonamiento (55 %). «¿Qué pasa con `max_tokens` si razona mucho?»: razonamiento y respuesta salen del mismo tope; si el razonamiento lo consume, la respuesta se corta. Aquí 2048 sobraron.
+> La entrada es idéntica en las tres ejecuciones porque es el mismo mensaje de sistema con el catálogo: 6.578 tokens, el 68 % del costo de cada respuesta. La salida varía de una a otra (de 567 a 679 tokens), y el razonamiento fue el 39 % de la salida en promedio. Todo el tema costó unos 0,003 USD.
+> Para pensar, «¿por qué el razonamiento cuesta aunque solo veas un resumen?»: porque se cobran los tokens que el modelo genera, no los que se te muestran; aquí fueron 239 de 620 tokens de salida. «¿Qué pasa con `max_tokens` si razona mucho?»: razonamiento y respuesta salen del mismo tope; si el razonamiento lo consume, la respuesta se corta. Aquí 2048 sobraron.
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
@@ -932,10 +930,11 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Se reescribe el texto general del «Análisis de resultados» con el ejercicio del asesor de viajes y se agrega «En el ejercicio» a cada entrada. Las filas de esta bitácora que habían quedado al final del archivo vuelven a esta tabla. |
 | 2026-10-13 | Tema 3.2 rehecho con el caso del asesor de viajes: casillas marcadas, notas nuevas y entrada del análisis reescrita. |
 | 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1, marcado): ya existe antes del tema 3.3; las casillas A.3 y A.4 pasan a usarlo. |
-| 2026-10-13 | Tema 3.2 repetido con el catálogo cargado (el asesor no inventa; la conversación cuesta 3,3 veces más). Tema 3.3 rehecho con el caso: 6 ejecuciones, casillas marcadas, notas y entrada del análisis reescritas. |
+| 2026-10-13 | Tema 3.2 repetido con el catálogo cargado. Tema 3.3 rehecho con el caso: 6 ejecuciones, casillas marcadas, notas y entrada del análisis reescritas. |
 | 2026-10-13 | Los ejemplos de las entradas 3.2 y 3.3 del análisis muestran las respuestas con catálogo y el registro del que sale cada cifra. |
 | 2026-10-13 | Las entradas del análisis suman «Qué encareció el proceso» y «Cómo se podría optimizar» (mirada de AI Engineer); aplicado a 3.2 y 3.3. |
 | 2026-10-13 | El análisis suma «Variables que afectaron el proceso» y «Cómo optimizar cada variable» (tablas con cifras) en 3.2 y 3.3, y un «resumen acumulado de variables» para decidir con datos. |
+| 2026-10-13 | Los temas 3.2 y 3.3 quedan enfocados solo en el asesor con el catálogo cargado (notas, tablas, análisis y resumen de variables). |
 
 ## Análisis de resultados {id=analisis}
 
@@ -977,13 +976,13 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 | Variable | Qué es, en simple | Dato más reciente | Cómo optimizarla | Estado del dato | Tema |
 |---|---|---|---|---|---|
 | Catálogo en el contexto | Los datos de la agencia que se mandan en cada mensaje | 6.578 tokens por mensaje; 68 % del costo de una respuesta (3.3) | Mandar solo lo relevante; caché de prompts | Medido; ahorro estimado; caché por verificar | 3.4, 3.25, 3.30 |
-| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | Unos 400 tokens más en el segundo mensaje (3.2); 47.600 tokens en 20 turnos simulados (versión previa del 3.4) | Ventana de los últimos N turnos; resumen de lo viejo | Medido en 2 turnos; calculado en 20 | 3.4 |
-| Razonamiento | Lo que el modelo piensa antes de responder | Entre el 39 % y el 55 % de la salida (3.3) | Esfuerzo (effort) según el tipo de mensaje | Medido | 3.5, 3.32 |
-| Longitud de la respuesta | Lo que el asesor escribe al cliente | Entre 251 y 380 tokens visibles (3.3) | Respuestas de chat; tope de `max_tokens` | Medido | 3.5 |
+| Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | En dos turnos, la entrada sube de 6.578 a unos 7.000 tokens (3.2); 47.600 tokens en 20 turnos simulados (versión previa del 3.4) | Ventana de los últimos N turnos; resumen de lo viejo | Medido en 2 turnos; calculado en 20 | 3.4 |
+| Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida: 239 de 620 tokens (3.3) | Esfuerzo (effort) según el tipo de mensaje | Medido | 3.5, 3.32 |
+| Longitud de la respuesta | Lo que el asesor escribe al cliente | 380 tokens visibles en promedio, entre 345 y 413 (3.3) | Respuestas de chat; tope de `max_tokens` | Medido | 3.5 |
 | Modelo | Haiku, Sonnet u Opus | Sonnet cuesta unas 20 veces más que Haiku por token | Elegir el modelo según la tarea | Calculado con los precios | 3.6 |
 | Formato de los datos | Cómo se escribe el catálogo | Compacto: 18 % menos tokens (7.923 a 6.469) | Ya aplicado | Medido | — |
 | Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 |
-| Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Sin catálogo, 0 de 3 cifras verificables; con catálogo, 3 de 3 (3.2) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
+| Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Con catálogo, 3 de 3 respuestas con la misma cifra verificable: $1.920.000 de `casa-naranja-del-centro` (3.2) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
 | Tiempo hasta el primer token | Cuánto tarda el asesor en empezar a responder | Sin medir | «Escribiendo…» y mensajes cortos | Por medir | 3.15 |
 
 #### Lo que vamos logrando
@@ -1015,34 +1014,33 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 
 #### 3.2 · Primera llamada a la API (2026-10-13)
 
-**Qué se hizo:** se escribió un programa de unas 30 líneas que le manda a Claude el mensaje de un cliente ficticio («hola buenas, cuanto vale ir a cartagena 4 noches?»), con el papel de asesor de viajes y sin catálogo, y muestra todo lo que devuelve. Se ejecutó tres veces, y después se hizo una prueba extra con un cliente que insiste en un precio.
+**Qué se hizo:** se escribió un programa de unas 35 líneas que le manda a Claude la conversación de un cliente ficticio (dos mensajes, el segundo insistiendo en un precio aproximado) con el papel de asesor de viajes y el catálogo de la agencia cargado, y muestra todo lo que devuelve. Se ejecutó tres veces.
 
-**A qué nos conduce:** a dos hallazgos que cambian el diseño. Primero, ante la pregunta inicial el modelo no inventó cifras: pidió datos (ciudad, fechas, personas, tipo de hotel). Pero prometió «una cotización exacta» que no podría dar y habló de zonas y hoteles que no son los de nuestro catálogo. Segundo, cuando el cliente insistió con un «dame un precio aproximado», sí inventó, con números distintos en cada intento. Conclusión: el modelo no se niega por sí solo a dar un dato que no tiene; la protección hay que construirla.
+**A qué nos conduce:** a comprobar que, con los datos delante, el asesor responde con cifras verificables. Las tres veces usó el precio del catálogo (480.000 por noche, 1.920.000 por las 4 noches) y aclaró lo que el catálogo no tiene: tarifa de temporada alta, disponibilidad y vuelos. Y a ver lo que cuesta darle esos datos: el catálogo viaja en cada mensaje.
 
-**Después, con el catálogo cargado:** se repitió exactamente la misma conversación, con el catálogo de la agencia en el mensaje de sistema. En las tres ejecuciones el asesor usó los precios del catálogo ($480.000 por noche, $1.920.000 por las 4 noches en Casa Naranja del Centro) y aclaró que son precios base, que la tarifa de diciembre puede ser más alta y que la disponibilidad la confirma una persona. No inventó ningún rango. Dar los datos al modelo fue suficiente para evitar la invención en esta conversación, aunque todavía no se han probado las trampas más difíciles.
-
-**En el ejercicio:** el resultado sin catálogo es la línea base de las trampas del tema 3.8, y el resultado con catálogo es la primera mejora medida. El precio de la mejora: la conversación cuesta unas 3,3 veces más (de 0,0006 a 0,0019 USD), porque el catálogo viaja en cada mensaje.
+**En el ejercicio:** es la base del asesor. Todo lo que sigue (memoria, parámetros, modelos y trampas) se construye sobre un asesor que consulta el catálogo, y cada cifra de sus respuestas se puede rastrear a un registro.
 
 **Qué encareció el proceso:** dos cosas, y las dos son contexto, es decir, texto que se le manda al modelo antes de que responda.
 
-- **El catálogo viajando en cada mensaje.** Con catálogo, cada mensaje del cliente carga unos 6.500 tokens del catálogo completo, aunque el cliente pregunte solo por Cartagena. En la conversación de dos mensajes eso fue unos 13.000 de los 13.580 tokens de entrada (95 %), y cerca del 70 % de todo el costo.
-- **La memoria.** En el segundo mensaje se reenvía todo lo anterior: sin catálogo la entrada sube de 100 a 228 tokens, y con catálogo de 6.578 a unos 7.000. Con dos mensajes casi no se nota, pero en una conversación de 20 crece sin parar (se mide en el tema 3.4).
-- **Un costo menos visible: el razonamiento.** Más de la mitad de lo que el modelo escribe sin catálogo es razonamiento (medido en el tema 3.3), y se cobra aunque el cliente no lo vea.
+- **El catálogo viajando en cada mensaje.** Cada mensaje del cliente carga unos 6.500 tokens del catálogo completo, aunque el cliente pregunte solo por Cartagena. En la conversación de dos mensajes eso fue casi todo de los 13.580 tokens de entrada, y cerca del 72 % de todo el costo.
+- **La memoria.** En el segundo mensaje se reenvía todo lo anterior: la entrada sube de 6.578 a unos 7.000 tokens. Con dos mensajes casi no se nota, pero en una conversación de 20 crece sin parar (se mide en el tema 3.4).
+- **Un costo menos visible: el razonamiento.** Todas las respuestas incluyeron un bloque de razonamiento, que se cobra como salida aunque el cliente no lo vea (39 % de la salida, medido en el tema 3.3).
 
-| Conversación de dos mensajes (Haiku) | Tokens de entrada | Tokens de salida | Costo |
-|---|---|---|---|
-| Sin catálogo | 328 | unos 1.100 | 0,0006 USD |
-| Con catálogo | unos 13.580 | unos 1.060 | 0,0019 USD |
+| Conversación de dos mensajes (Haiku, promedio de 3) | Tokens | Costo |
+|---|---|---|
+| Entrada | 13.580 | 0,00136 USD |
+| Salida | 1.057 | 0,00053 USD |
+| **Total** | | **0,0019 USD** |
 
 **Variables que afectaron el proceso (mirada de AI Engineer):**
 
 | Variable | Dato | Efecto |
 |---|---|---|
-| Catálogo en el contexto | 6.578 tokens de entrada por mensaje con catálogo (6.469 son el catálogo compacto) | 95 % de la entrada y cerca del 70 % del costo de la conversación |
-| Memoria (historial reenviado) | En el segundo mensaje la entrada sube de 100 a 228 sin catálogo, y de 6.578 a unos 7.000 con catálogo | Crece en cada turno; con dos mensajes es poco, en 20 se dispara |
-| Razonamiento | Más de la mitad de la salida sin catálogo (304 de 555 tokens, medido en el tema 3.3) | Se cobra como salida aunque el cliente no lo vea |
-| Longitud de la respuesta | Con catálogo, el primer mensaje listó 3 hoteles y 2 tours: unos 600 tokens de salida con razonamiento | Más salida, que es la parte más cara por token, y más historial para el turno siguiente |
-| Fuente de los datos | Sin catálogo: 3 rangos de precio distintos e inventados. Con catálogo: la misma cifra en 3 de 3 intentos | Exactitud: de 0 a 3 respuestas verificables de 3 |
+| Catálogo en el contexto | 6.578 tokens de entrada por mensaje (6.469 son el catálogo compacto) | Cerca del 72 % del costo de la conversación |
+| Memoria (historial reenviado) | La entrada sube de 6.578 a unos 7.000 tokens en el segundo mensaje | Crece en cada turno; con dos mensajes es poco, en 20 se dispara |
+| Razonamiento | 39 % de la salida (tema 3.3) | Se cobra como salida aunque el cliente no lo vea |
+| Longitud de la respuesta | El primer mensaje listó 3 hoteles y 2 tours: entre 599 y 647 tokens de salida con razonamiento | Más salida, que es la parte más cara por token, y más historial para el turno siguiente |
+| Fuente de los datos | Las 3 ejecuciones dieron la misma cifra: $1.920.000, del registro `casa-naranja-del-centro` | Exactitud: 3 de 3 respuestas verificables |
 
 **Cómo optimizar cada variable (mirada de AI Engineer):** primero la que más pesa, una a la vez, midiendo costo **y** exactitud.
 
@@ -1057,16 +1055,15 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 
 > **Ejemplo**
 > El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado, un hotel bueno en el centro».
-> **Sin catálogo,** tres intentos, tres cifras distintas inventadas: «entre $2.400.000 y $4.800.000», «entre $1.600.000 y $2.800.000», «entre $1.600.000 y $3.600.000». Suenan igual de convincentes, pero se contradicen: es un vendedor que contesta de memoria sin mirar la lista de precios.
-> **Con catálogo,** tres intentos, la misma cifra: «Casa Naranja del Centro: $480.000 por noche, **$1.920.000** en total. Es el precio base de temporada baja; diciembre suele ser temporada alta, así que el precio final será más alto. Un asesor humano te confirma disponibilidad y precio exacto».
-> ¿De dónde sale cada dato? Del registro del catálogo `casa-naranja-del-centro`: `precio_desde` 480000, ubicación «Dentro del centro amurallado» (por eso es «el hotel del centro»). El total son 4 noches × 480.000 = 1.920.000. Lo que el catálogo no tiene, como la tarifa de diciembre y los cupos, el asesor lo dijo en vez de inventarlo. Cualquiera puede verificar la respuesta abriendo el archivo del catálogo.
-> El costo: una conversación de dos mensajes costó unos 0,0006 USD sin catálogo y unos 0,0019 USD con catálogo. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 5,8 USD sin catálogo y unos 19 USD con él (Haiku): se paga más, pero por cifras que sí se pueden cotizar.
+> El asesor, las tres veces: «Casa Naranja del Centro: $480.000 por noche, **$1.920.000** en total. Es el precio base de temporada baja; diciembre suele ser temporada alta, así que el precio final será más alto. Un asesor humano te confirma disponibilidad y precio exacto».
+> ¿De dónde sale cada dato? Del registro del catálogo `casa-naranja-del-centro`: `precio_desde` 480000 y ubicación «Dentro del centro amurallado» (por eso es «el hotel del centro»). El total son 4 noches × 480.000 = 1.920.000. Lo que el catálogo no tiene, como la tarifa de diciembre y los cupos, el asesor lo dijo en vez de inventarlo. Cualquiera puede verificar la respuesta abriendo el archivo del catálogo.
+> El costo: una conversación de dos mensajes costó unos 0,0019 USD. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 19 USD con Haiku.
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-13)
 
-**Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor al primer mensaje del cliente, con el razonamiento resumido a la vista. Se repitió tres veces sin catálogo y tres con catálogo, para comparar.
+**Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
 
-**A qué nos conduce:** a ver con números qué cuesta darle datos al asesor. Con el catálogo, lo que se envía pasa de 100 a 6.578 tokens, y el costo de cada respuesta de 0,00029 a 0,00097 USD, 3,4 veces más. Dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. A cambio, razona menos (239 tokens contra 304) y contesta con datos reales, así que es más caro pero más fiable. También se ve el streaming: la respuesta llega en 60 a 90 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
+**A qué nos conduce:** a ver en qué se va el costo de una respuesta del asesor: con el catálogo, lo que se envía son 6.578 tokens y el costo de cada respuesta ronda los 0,00097 USD, y dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. También se ve el streaming: la respuesta llega en 67 a 92 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
 
 **En el ejercicio:** la decisión de cuánto catálogo cargar (todo, o solo lo que el cliente pregunta) es la primera palanca de costo del asesor. Se mide en el tema 3.4, junto con cuántos turnos recuerda.
 
@@ -1079,16 +1076,16 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 | Lo que el asesor piensa antes de escribir | 239 | 0,00012 USD | 12 % |
 | **Total** | | **0,00097 USD** | 100 % |
 
-En palabras simples: dos de cada tres pesos se van en volver a mandarle al asesor el catálogo completo en cada mensaje, no en lo que contesta. Y una parte se paga por un razonamiento que el cliente nunca ve. Sin catálogo pasa lo contrario: lo que se envía es casi nada (100 tokens), pero el asesor piensa más (304 tokens), porque no tiene datos de dónde apoyarse.
+En palabras simples: dos de cada tres pesos se van en volver a mandarle al asesor el catálogo completo en cada mensaje, no en lo que contesta. Y una parte se paga por un razonamiento que el cliente nunca ve.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):** promedio de 3 ejecuciones con catálogo y 3 sin catálogo.
+**Variables que afectaron el proceso (mirada de AI Engineer):** promedio de 3 ejecuciones.
 
 | Variable | Dato | Efecto |
 |---|---|---|
-| Entrada (instrucciones y catálogo) | 6.578 tokens con catálogo contra 100 sin catálogo | 68 % del costo de la respuesta (0,00066 de 0,00097 USD) |
-| Respuesta visible | 380 tokens con catálogo, 251 sin catálogo | 20 % del costo |
-| Razonamiento | 239 tokens con catálogo (39 % de la salida), 304 sin catálogo (55 %) | 12 % del costo; con datos de dónde apoyarse, el asesor piensa menos |
-| Pedazos del streaming | 78 pedazos con catálogo, 65 sin catálogo; varios cortan palabras | No cambia el costo; permite mostrar la respuesta antes |
+| Entrada (instrucciones y catálogo) | 6.578 tokens | 68 % del costo de la respuesta (0,00066 de 0,00097 USD) |
+| Respuesta visible | 380 tokens (entre 345 y 413) | 20 % del costo |
+| Razonamiento | 239 tokens (39 % de la salida; entre 184 y 268) | 12 % del costo |
+| Pedazos del streaming | 78 pedazos (entre 67 y 92); varios cortan palabras | No cambia el costo; permite mostrar la respuesta antes |
 | Idioma del razonamiento | El resumen llegó en inglés aunque la respuesta salió en español | No afecta al cliente; sí a quien audita las conversaciones |
 
 **Cómo optimizar cada variable (mirada de AI Engineer):** el origen es la ficha que la API devuelve en cada llamada; se ataca primero lo que más pesa.
@@ -1102,9 +1099,9 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 | Razonamiento para auditar | Guardar el resumen del razonamiento en las trazas | Saber por qué el asesor recomendó algo | **Por construir** | 3.34 |
 
 > **Ejemplo**
-> Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero tarda y cuesta más.
-> La respuesta real de la primera ejecución con catálogo, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`); sin catálogo, la misma pregunta no podía devolver ninguno de esos nombres ni precios.
-> El costo: con 10.000 mensajes al mes con Haiku, sin catálogo serían unos 2,9 USD y con catálogo unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, se estima que pesaría unos 1.000 tokens y la respuesta costaría unos 0,0004 USD. Es una estimación: se mide en el tema 3.4.
+> Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero cuesta más.
+> La respuesta real de la primera ejecución, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`).
+> El costo: con 10.000 mensajes al mes con Haiku serían unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, se estima que pesaría unos 1.000 tokens y la respuesta costaría unos 0,0004 USD, es decir, unos 4 USD al mes. Es una estimación: se mide en el tema 3.4.
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
 

@@ -8,7 +8,7 @@ from pathlib import Path
 
 RUTA_CATALOGO = Path(__file__).resolve().parent.parent / "datos-simulados" / "catalogo-turismo-simulado.json"
 
-# Quién es el asesor. Sin reglas contra inventar: eso se construye en el tema 3.8.
+# Quién es el asesor. Las reglas contra inventar se construyen en el tema 3.8.
 SYSTEM_BASE = (
     "Eres el asesor de ventas de «Turismo Colombia (simulada)», una agencia de viajes. "
     "Atiendes por WhatsApp, en español, con mensajes cortos y cordiales."
@@ -21,10 +21,8 @@ MENSAJES_CLIENTE = [
 ]
 
 
-def construir_system(con_catalogo: bool) -> str:
-    """Mensaje de sistema del asesor; con catálogo en formato compacto (mismo contenido, menos tokens)."""
-    if not con_catalogo:
-        return SYSTEM_BASE
+def construir_system() -> str:
+    """Mensaje de sistema del asesor, con el catálogo en formato compacto (mismo contenido, menos tokens)."""
     catalogo = json.loads(RUTA_CATALOGO.read_text(encoding="utf-8"))
     return SYSTEM_BASE + "\n\nCatálogo de la agencia (JSON):\n" + json.dumps(
         catalogo, ensure_ascii=False, separators=(",", ":")

@@ -135,15 +135,15 @@ Tokens de entrada, salida y razonamiento; costo en dólares; tiempo de respuesta
 
 ## 6. Fase A · La base (se rehace con el caso)
 
-Los temas 3.2 a 3.4 ya se hicieron con ejemplos sueltos de la guía. Se **vuelven a hacer** usando el caso de viajes. El tema 3.1 (entorno, bibliotecas y clave) no depende del caso y queda como está.
+Los temas 3.2 a 3.4 se **hacen con el caso de viajes**, con el catálogo cargado. El tema 3.1 (entorno, bibliotecas y clave) no depende del caso y queda como está.
 
-**El catálogo (paso C.1) se adelantó:** ya existe antes del tema 3.3, porque los temas 3.4 a 3.6 dependen de él (pesa tokens, se usa para probar parámetros y para comparar modelos). El tema 3.2 se hizo sin catálogo a propósito: es la línea base del asesor sin defensas.
+**El catálogo (paso C.1) se adelantó:** ya existe desde el tema 3.2, porque todos los temas siguientes (tokens, parámetros, modelos) se miden con él: pesa tokens, se usa para probar parámetros y para comparar modelos.
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
 | A.1 | Entorno, bibliotecas y clave (ya hecho, no cambia) | [3.1 Preparación](../resultados/resultados-proceso-manual.html#s3-1) |
-| A.2 | Primera llamada con un mensaje de cliente del caso («hola buenas, cuanto vale ir a cartagena 4 noches?») **sin catálogo**, para ver cómo el modelo inventa precios | [3.2 Primera llamada a la API](../resultados/resultados-proceso-manual.html#s3-2) |
-| A.3 | Respuesta por pedazos y razonamiento con ese mismo mensaje, ahora **con el catálogo cargado**; comparar con la línea base del tema 3.2 | [3.3 Ver cómo el modelo predice tokens](../resultados/resultados-proceso-manual.html#s3-3) |
+| A.2 | Primera llamada con la conversación de un cliente del caso («hola buenas, cuanto vale ir a cartagena 4 noches?» y después una insistencia en un precio aproximado), con el catálogo cargado | [3.2 Primera llamada a la API](../resultados/resultados-proceso-manual.html#s3-2) |
+| A.3 | Respuesta por pedazos y razonamiento con el primer mensaje del cliente, con el catálogo cargado | [3.3 Ver cómo el modelo predice tokens](../resultados/resultados-proceso-manual.html#s3-3) |
 | A.4 | Medir cuánto pesa el catálogo en tokens y cuánto cuesta cargarlo en cada llamada; contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación del caso, catálogo incluido | [3.4 Tokens, ventana de contexto y costos](../resultados/resultados-proceso-manual.html#s3-4) |
 ## 7. Fase B · Parámetros y modelos con el caso
 
@@ -160,7 +160,7 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
-| C.1 | Crear el catálogo ficticio (JSON). **Adelantado: ya está creado**, antes del tema 3.3 | [3.7 Primer chat con memoria](../resultados/resultados-proceso-manual.html#s3-7) |
+| C.1 | Crear el catálogo ficticio (JSON). **Adelantado: ya está creado**, desde el tema 3.2 | [3.7 Primer chat con memoria](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.2 | Crear los 10 clientes y sus guiones tipo WhatsApp | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.3 | Crear la base SQLite del piloto: es la base única, que el tema 3.16 más adelante amplía | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.4 | Construir el simulador que entrega los mensajes | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
@@ -242,3 +242,4 @@ Lo que queda como estándar para otros proyectos no es el caso de viajes, sino e
 | 2026-10-13 | Se revierte el aplazamiento de los dashboards: la Fase E vuelve a cubrir toda la Parte 2 (pasos E.1 a E.15) y la Fase F toda la Parte 3 y 4 (F.1 a F.17). |
 | 2026-10-13 | Las Partes 3 y 4 se siguen dentro del checklist del manual (temas 3.27 a 3.43); los pasos F.1 a F.17 enlazan allí. |
 | 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1): ya existe en `chat-consola/datos-simulados/`; los pasos A.3 y A.4 pasan a usarlo. |
+| 2026-10-13 | Los pasos A.2 y A.3 se hacen con el catálogo cargado. |

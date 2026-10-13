@@ -2,13 +2,10 @@
 
 Concepto: el LLM predice un token, lo agrega al texto y vuelve a predecir.
 Con streaming recibes esos tokens en pedazos a medida que se generan.
-Caso: el primer mensaje del cliente de «Turismo Colombia (simulada)», con o sin catálogo.
+Caso: el primer mensaje del cliente de «Turismo Colombia (simulada)», con el catálogo cargado.
 
-Ejecuta:  python etapas/e2_ver_predecir_tokens.py              (sin catálogo)
-          python etapas/e2_ver_predecir_tokens.py --catalogo   (con catálogo)
+Ejecuta:  python etapas/e2_ver_predecir_tokens.py
 """
-import argparse
-
 import anthropic
 from dotenv import load_dotenv
 
@@ -17,19 +14,15 @@ from caso_simulado import MENSAJES_CLIENTE, construir_system
 load_dotenv()
 client = anthropic.Anthropic()
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--catalogo", action="store_true", help="cargar el catálogo ficticio en el mensaje de sistema")
-args = parser.parse_args()
-
 PREGUNTA = MENSAJES_CLIENTE[0]
-print("Cliente:", PREGUNTA, "| catálogo:", "sí" if args.catalogo else "no", "\n")
+print("Cliente:", PREGUNTA, "\n")
 pedazos = 0
 pensando = False
 
 with client.messages.stream(
     model="claude-haiku-5-5",
     max_tokens=2048,
-    system=construir_system(args.catalogo),
+    system=construir_system(),
     messages=[{"role": "user", "content": PREGUNTA}],
     thinking={"type": "adaptive", "display": "summarized"},  # muestra un resumen del razonamiento
 ) as stream:
