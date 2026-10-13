@@ -67,7 +67,8 @@ modifican desde aquí. Sigue la misma regla de `.md` fuente + HTML regenerado
 
 El Nivel 1 se construye sobre un caso simulado: un asesor de viajes («Turismo Colombia
 (simulada)») que atiende por WhatsApp a clientes ficticios, piloto de 10 clientes, con
-catálogo JSON y base SQLite (clientes, mensajes, ejecuciones). Explicación y fases en
+catálogo JSON y **una sola** base SQLite (clientes, mensajes, ejecuciones) que nace en el
+tema 3.7 y que el tema 3.16 amplía con el registro de experimentos, sin crear otra. Explicación y fases en
 `Documentación para la construcción del proyecto/ejercicio-simulado-chat-consola.md`.
 Sus pasos son casillas «Ejercicio X.N» dentro de los temas del manual: se marcan allí.
 La infraestructura de WhatsApp y Supabase quedan para candyCRM.

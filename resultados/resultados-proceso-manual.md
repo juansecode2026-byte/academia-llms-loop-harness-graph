@@ -131,7 +131,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
 - [ ] Ejercicio C.1: crear el catálogo ficticio (JSON) ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
-- [ ] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones) ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [ ] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones); es la base única, el tema 3.16 la amplía ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.4: construir el simulador que entrega los mensajes ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 
@@ -239,6 +239,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D4: registro en SQLite"`
+- [ ] Ejercicio E.0: ampliar la base del piloto, creada en el tema 3.7, con el registro de experimentos, sin crear otra base ([ver paso E.0](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -758,3 +759,4 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 > Y cuánto pesa la memoria: si el asistente solo recordara los últimos 5 turnos en vez de los 20, la entrada baja de 47.600 a 18.800 tokens por conversación (un 60 % menos) y las conversaciones largas dejan de encarecerse sin freno. Es como un vendedor que, antes de cada respuesta, no relee la libreta completa del cliente sino solo las últimas cinco notas.
 | 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
 | 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
+| 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |

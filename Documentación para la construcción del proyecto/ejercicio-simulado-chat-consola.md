@@ -93,7 +93,10 @@ Las conversaciones van de 10 a 40 turnos, con mensajes tipo WhatsApp («hola bue
 
 #### La base de datos del piloto
 
-SQLite, un archivo dentro del proyecto. Se alinea con el registro de experimentos que la guía construye en la Parte 2, para no tener dos bases distintas.
+SQLite, un archivo dentro del proyecto.
+
+> **Decisión: una sola base, y nace antes que el laboratorio**
+> La base se crea en el tema 3.7 (paso C.3), porque el chat con memoria ya la necesita: guarda el historial de cada cliente y cada llamada a Claude. La guía construye su «registro de experimentos» recién en el tema 3.16, pero ahí **no se crea otra base**: se amplía la misma con las columnas y tablas que pide la guía (configuración del experimento y calificación de cada respuesta). Así no hay dos bases distintas ni datos duplicados, y las llamadas del chat desde el primer día quedan medidas con el mismo formato que usará el laboratorio.
 
 | Tabla | Qué guarda |
 |---|---|
@@ -152,7 +155,7 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 |---|---|---|
 | C.1 | Crear el catálogo ficticio (JSON) | [3.7 Primer chat con memoria](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.2 | Crear los 10 clientes y sus guiones tipo WhatsApp | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
-| C.3 | Crear la base SQLite del piloto | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
+| C.3 | Crear la base SQLite del piloto: es la base única, que el tema 3.16 más adelante amplía | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.4 | Construir el simulador que entrega los mensajes | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 | C.5 | Chat con memoria por cliente: cada cliente con su historial | [3.7](../resultados/resultados-proceso-manual.html#s3-7) |
 
@@ -169,6 +172,7 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
+| E.0 | Ampliar la base del piloto (creada en C.3) con el registro de experimentos de la guía, sin crear otra base | [3.16 Registro de experimentos (SQLite)](../resultados/resultados-proceso-manual.html#s3-16) |
 | E.1 | La batería de preguntas y el modelo juez salen del caso | [3.17 Batería de preguntas y modelo juez](../resultados/resultados-proceso-manual.html#s3-17) |
 | E.2 | Correr la grilla del piloto: 10 clientes × 12 configuraciones | [3.25 Experimentos y cierre](../resultados/resultados-proceso-manual.html#s3-25) |
 | E.3 | Decidir modelo, effort y ventana con los datos | [3.26 Tablero de decisiones](../resultados/resultados-proceso-manual.html#s3-26) |
@@ -191,3 +195,4 @@ Lo que queda como estándar para otros proyectos no es el caso de viajes, sino e
 | Fecha | Cambio |
 |---|---|
 | 2026-10-12 | Creación del documento: caso, funcionamiento, datos del piloto (10 clientes), variables, fases y enlaces al checklist. |
+| 2026-10-13 | Decisión: la base SQLite nace en 3.7 (C.3) y es la única; el tema 3.16 la amplía con el registro de experimentos (paso E.0) en vez de crear otra. |
