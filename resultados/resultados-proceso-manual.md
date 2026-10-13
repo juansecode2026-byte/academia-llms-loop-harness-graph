@@ -1013,6 +1013,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.6 completo con el asesor y el catálogo (3 llamadas, una por modelo, 0,0533 USD): lista de modelos de la API, comparación Haiku, Sonnet y Opus y entrada del análisis con la tabla de ahorro. |
 | 2026-10-13 | Tema 3.7 completo con una memoria por cliente (5 llamadas, 0,00483 USD): memoria, aislamiento entre clientes y experimento de ruptura; entrada del análisis con la tabla de ahorro. Se marca el paso C.5. |
 | 2026-10-13 | Tema 3.8 completo con 8 trampas del catálogo (0,00850 USD): sin reglas contra con reglas del prompt; ninguna de las dos inventó. Se agregan las reglas a `caso_simulado.py` (opcionales) y se marca el paso D.1. |
+| 2026-10-13 | Cada entrada del análisis cierra con «CONCLUSIONES» (cuatro consejos de AI Engineer enfocados en solución, con otra letra en el HTML); el hook automático lo pide en cada entrada nueva. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1080,6 +1081,13 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 > **Ejemplo**
 > Funciona como la historia clínica de un paciente. Si dentro de seis meses alguien de un cliente de Minus pregunta «¿desde cuándo saben conectar sistemas a Claude?», no hace falta decir «hace un tiempo»: se abre GitHub y se ve el commit «etapa 1: primera llamada a la API», con fecha, código y resultado.
 
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Un commit por etapa con su cifra.** Que el mensaje lleve el dato clave (por ejemplo «184 llamadas, 0,213 USD»): el historial de GitHub se vuelve evidencia medible, no solo fechas.
+> 2. **Las mediciones viven en archivos, no en el chat.** Base del piloto, informes en `chat-consola/informes/` y este análisis: todo lo que se mide queda versionado y se puede volver a calcular.
+> 3. **Separar lo que gasta tokens de lo que no.** Código sin IA en `scripts/` y agentes aparte, como pide el laboratorio: así se sabe exactamente qué parte del sistema cuesta dinero.
+> 4. **Llevar el gasto por tema en la bitácora.** Cada tema anota cuántas llamadas y cuántos USD gastó; sumado, es el costo real de aprender y el presupuesto de referencia para candyCRM.
+
 #### 3.1 · Preparación (2026-10-12)
 
 **Qué se hizo:** se creó un entorno de Python aislado para el proyecto (así sus bibliotecas no se mezclan con las de otros), se instaló el SDK de Anthropic, que es el programa que permite hablar con Claude desde código, y se guardó la clave de acceso en un archivo `.env` que Git no sube. La clave es exclusiva de este proyecto y vence sola.
@@ -1092,6 +1100,13 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 > **Ejemplo**
 > El entorno virtual es como tener una caja de herramientas aparte para cada obra. Si el CRM necesita una versión de la biblioteca `anthropic` y esta Academia otra, cada uno usa la suya y ninguno rompe al otro.
 > La clave en `.env` es como la llave de la casa guardada en un cajón, no pegada en la puerta: el programa la usa, pero no queda a la vista. Cuando hoy la clave quedó escrita en `.env.example` (la plantilla que sí se sube a GitHub), fue como dejarla pegada en la puerta; por eso se cambió la cerradura: se revocó y se creó otra.
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Bloquear claves antes de que se suban.** Lo que pasó con `.env.example` se evita con una revisión automática en cada commit que rechace textos con forma de clave (`sk-ant-`), sin depender de la memoria de nadie.
+> 2. **Una clave por proyecto con límite de gasto.** Si la clave se filtra, el daño queda acotado al tope del espacio de trabajo y el gasto del ejercicio se ve aparte.
+> 3. **Tope de gasto en todo script que haga muchas llamadas.** Como el `--tope-usd` del simulador (3.4): una corrida con un error no puede vaciar el saldo.
+> 4. **Fijar versiones en `requirements.txt`.** El mismo código debe dar el mismo resultado en otra máquina; sin versiones fijas, una actualización del SDK cambia las mediciones.
 
 #### 3.2 · Primera llamada a la API (2026-10-13)
 
@@ -1140,6 +1155,13 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 > ¿De dónde sale cada dato? Del registro del catálogo `casa-naranja-del-centro`: `precio_desde` 480000 y ubicación «Dentro del centro amurallado» (por eso es «el hotel del centro»). El total son 4 noches × 480.000 = 1.920.000. Lo que el catálogo no tiene, como la tarifa de diciembre y los cupos, el asesor lo dijo en vez de inventarlo. Cualquiera puede verificar la respuesta abriendo el archivo del catálogo.
 > El costo: una conversación de dos mensajes costó unos 0,0019 USD. Si cada conversación tuviera esos dos mensajes, 10.000 conversaciones al mes costarían unos 19 USD con Haiku.
 
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Mandar solo el catálogo que sirve.** De 6.578 a unos 1.953 tokens por mensaje filtrando por las ciudades del cliente: −39 % del costo del piloto (**calculado**, 3.4). Se prueba en 3.25 y 3.26.
+> 2. **Que el código haga las cuentas.** 4 × 480.000 = 1.920.000 lo calcula Python y el modelo solo lo redacta: el total siempre exacto y menos razonamiento (**por medir**, 3.30).
+> 3. **Preguntar antes de listar.** La primera respuesta listó 3 hoteles y 2 tours (599 a 647 tokens de salida); con las reglas de «una opción» y «pregunta lo que falte», la salida bajó 23 % en 3.8 (**medido**).
+> 4. **Ordenar el prompt para la caché.** Rol, reglas y catálogo primero (lo fijo), conversación al final (lo que cambia): deja listo el ahorro de la caché cuando se verifique su tarifa.
+
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-13)
 
 **Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
@@ -1183,6 +1205,13 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 > Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero cuesta más.
 > La respuesta real de la primera ejecución, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`).
 > El costo: con 10.000 mensajes al mes con Haiku serían unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, en el tema 3.4 se calculó que pesaría en promedio unos 1.950 tokens (entre 1.069 y 2.615 según las ciudades) y que las conversaciones costarían un 39 % menos.
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Atacar la entrada antes que la salida.** La entrada es el 68 % del costo de cada respuesta; el catálogo de interés rinde más que cualquier ajuste de la respuesta (−39 %, **calculado**).
+> 2. **No recortar con `max_tokens`.** En 3.5 un tope de 40 o 150 dejó al asesor sin responder; la salida se acorta con instrucciones y `effort`, no con el tope.
+> 3. **Usar el streaming para la sensación de rapidez.** Medir el tiempo hasta el primer token y mostrar «escribiendo…»: no baja el costo, pero el cliente lee a los pocos segundos (3.15).
+> 4. **Guardar el resumen del razonamiento en las trazas.** Es el 12 % del costo y explica por qué el asesor recomendó algo; guardarlo permite auditar sin repetir la llamada (3.34).
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-13)
 
@@ -1241,6 +1270,13 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 > Lo mismo con Camilo, que solo pregunta por Medellín: su catálogo útil son 1.069 tokens y la conversación de 10 turnos costó 0,0090 USD.
 > Si se mandara a cada cliente solo el catálogo de sus ciudades y se recordaran los últimos 5 turnos, las 10 conversaciones habrían costado 0,0953 USD en lugar de 0,2130 USD, un 55 % menos. A 1.000 conversaciones al mes con Haiku, de unos 21 USD a unos 10 USD.
 
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Primero el catálogo de interés.** Es la palanca más grande y ya está calculada: de 0,2130 a 0,1296 USD en las 184 llamadas (−39 %). Se prueba en 3.25 y 3.26.
+> 2. **Ventana de 5 turnos con ficha del cliente.** La ventana corta el historial y una ficha de 3 a 5 líneas (personas, fechas, restricciones) protege los 13 de 14 recuerdos; junto con el catálogo de interés, −55 % (0,0953 USD, **calculado**).
+> 3. **Verificar la caché antes de prometerla.** El 96,7 % de lo enviado se repite; confirmar la tarifa de caché de los modelos 5.5 y medirla con 2 o 3 conversaciones reales antes de dar una cifra.
+> 4. **Usar las 184 llamadas como línea base fija.** Cada cambio se mide con los mismos 10 clientes y se compara costo **y** exactitud; nunca se acepta un ahorro sin revisar que el asesor siga recordando y citando el catálogo.
+
 #### 3.5 · Parámetros de generación (2026-10-13)
 
 **Qué se hizo:** se probaron los cuatro mandos de la generación sobre el asesor con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
@@ -1285,6 +1321,13 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 
 > **Ejemplo**
 > Al cliente que pregunta «cuanto vale ir a cartagena 4 noches?» el asesor respondió, con los mismos datos del catálogo en todas las pruebas: `hostal-la-muralla-viva` $480.000, `hotel-brisas-de-bocagrande` $1.440.000 y `casa-naranja-del-centro` $1.920.000 (120.000, 360.000 y 480.000 por noche). Con `max_tokens=150` esa respuesta nunca salió: el asesor gastó los 150 tokens pensando y el cliente se quedó sin respuesta, por 0,00073 USD. Con la regla «máximo 2 frases», la respuesta fue un solo párrafo con los tres precios, pero costó más (0,00110 USD) porque el asesor razonó 697 tokens para resumir.
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Tope holgado y alarma en código.** `max_tokens` en 2.048 y una alerta si `stop_reason` es `max_tokens`: las 2 llamadas cortadas tiraron 0,00141 USD sin dar respuesta (**medido**).
+> 2. **Brevedad y `effort` bajo juntos.** Pedir respuestas cortas sola subió el razonamiento y el costo 12 %; combinadas podrían bajar la salida a ~350 tokens (−15 %, **estimado**). Se prueba en 3.25 y 3.32.
+> 3. **Decidir `effort` con muchas muestras.** Con una muestra por nivel la variación fue ±5 % sin orden (ruido); se necesitan 10 o más por nivel (3.32).
+> 4. **Poner el esfuerzo donde está el dinero.** Estos mandos ahorran cerca del 8 % (**estimado**); el contexto (68 % del costo) ahorra el 39 % o más. El orden de trabajo es contexto primero, parámetros después.
 
 #### 3.6 · Panorama de modelos de Anthropic (2026-10-13)
 
@@ -1331,6 +1374,13 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 > **Ejemplo**
 > El cliente dijo: «somos 2, del 10 al 14 de diciembre, queremos ir a cartagena. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro». Los tres modelos recomendaron `casa-naranja-del-centro` (480.000 por noche, 4 noches, $1.920.000) y avisaron que diciembre es temporada alta. Haiku lo hizo por 0,00086 USD. Sonnet agregó `hotel-brisas-de-bocagrande` (desde $360.000) por 0,01691 USD, y Opus sumó también `hostal-la-muralla-viva` (desde $120.000) por 0,03555 USD. A 1.000 conversaciones con unos 18 mensajes cada una, la diferencia entre Haiku y Sonnet sería de cientos de dólares al mes por un cierre de respuesta mejor redactado.
 
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Haiku por defecto.** La misma consulta costó 0,00086 USD en Haiku, 0,01691 en Sonnet y 0,03555 en Opus, con la misma cifra correcta del catálogo (**medido**, 1 muestra).
+> 2. **Enrutar por tipo de mensaje.** Un clasificador barato (reglas en código o Haiku) que envíe a Sonnet solo reclamos y cotizaciones con muchas condiciones; medir qué porcentaje de mensajes lo necesita.
+> 3. **Calidad con rúbrica antes de fijar el modelo.** Correr las 10 conversaciones en los tres modelos y calificar con criterios fijos (exactitud, cita del registro, tono); la nota de 4 contra 5 fue un juicio con una muestra (3.26 y 3.32).
+> 4. **Si se usa un modelo grande, optimizar el contexto primero.** El catálogo de interés ahorra 20 a 40 veces más dólares en Sonnet u Opus que en Haiku (**calculado** con las tarifas).
+
 #### 3.7 · Primer chat con memoria (2026-10-13)
 
 **Qué se hizo:** se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
@@ -1375,6 +1425,13 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 
 > **Ejemplo**
 > Laura escribió «nos casamos el 14 de febrero y queremos viajar esa semana a cartagena. cuanto vale?». El asesor respondió con los precios del catálogo: `hostal-la-muralla-viva` desde $120.000, `hotel-brisas-de-bocagrande` desde $360.000 y `casa-naranja-del-centro` desde $480.000 por noche. Al preguntar en el turno siguiente qué fecha y qué precio le había dado, el asesor repitió «14 de febrero» y los mismos tres precios, por 0,00083 USD. Camilo, con su propia lista vacía, preguntó por la misma boda y el asesor respondió que no tenía esa información. Sin guardar sus respuestas, Laura recibió «no veo un precio anterior en esta conversación».
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Historial completo en la base, ventana en la llamada.** Guardar todo en la tabla `mensajes` y enviar solo los últimos 5 turnos: el costo de una conversación larga pasa de crecer con el cuadrado a crecer de forma lineal (~0,4 contra ~3,5 USD en 500 turnos, **estimado**). Se construye en 3.9.
+> 2. **Nunca quitar la respuesta del asesor para ahorrar.** Ahorra solo 375 tokens (5 %) y el asesor pierde el hilo (**medido**).
+> 3. **Memoria separada por cliente, con prueba automática.** Una lista por teléfono o id y una prueba que confirme que Camilo nunca ve los datos de Laura (3.10).
+> 4. **Resumir lo viejo cuando la conversación crece.** Pasar los turnos antiguos a una ficha corta y medir con los 14 «¿qué te dije?» que no se pierda ningún dato (3.25 y 3.26).
 
 #### 3.8 · Limitaciones de los LLM (2026-10-13)
 
@@ -1422,3 +1479,9 @@ En palabras simples: las reglas pagan su propio costo y dejan una ganancia míni
 > **Ejemplo**
 > Valentina, que no come carne, preguntó si el almuerzo de los tours tiene opción vegetariana. El catálogo no publica nada de comidas (`tayrona-senderismo` y `minca-y-cascadas` no traen ese dato). Sin reglas, el asesor dijo «no tengo información publicada sobre el almuerzo» y envió a un asesor humano; con reglas, dijo lo mismo y sugirió llevar un snack. Con la Familia Ortiz, cuya hermana es alérgica al maní, ninguna versión prometió nada y las dos pasaron el caso a un asesor humano; la versión sin reglas, además, recomendó llevar adrenalina autoinyectable, un consejo médico que el catálogo no respalda, y la versión con reglas lo reemplazó por «consulte al médico de su hermana». Y en el caso de Sofía, sobre temporada alta, la respuesta con reglas bajó de 269 a 169 tokens de salida diciendo lo mismo.
 
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Reestructurar el prompt y cerrar el hueco de los deslices.** Bloques fijos `<rol>`, `<reglas>`, `<ejemplos>` y `<catalogo>`; una regla nueva: «no agregues conocimiento general (clima, salud, vida nocturna) aunque sea cierto»; y una frase fija para lo que no está («eso no lo tengo publicado; te lo confirma un asesor»). Meta: 0 deslices en las 8 trampas (hoy 1 con reglas y 2 sin ellas). Se prueba en 3.26 y 3.32.
+> 2. **Validar cada respuesta en código.** Revisar que cada precio y cada nombre de hotel o tour existan en el catálogo y marcar palabras de riesgo (clima, adrenalina, garantía, descuento, %): 0 tokens y detección automática de deslices sin leer a mano (3.10 y 3.11).
+> 3. **Empaquetar el contexto en vez de enviar todo.** Catálogo de interés, ventana de 5 turnos y ficha del cliente: −55 % del costo (**calculado**, 3.4). Para 37 registros no hace falta un RAG con vectores: un filtro por ciudad es más barato y exacto; el RAG con vectores conviene cuando el catálogo crezca o se busque por descripción.
+> 4. **Caché para la parte fija.** Reglas y catálogo (~6.700 tokens) se repiten en cada llamada; con el prompt ordenado (lo fijo primero) la caché los cobra más barato. Ahorro **por verificar** hasta confirmar la tarifa de los modelos 5.5.

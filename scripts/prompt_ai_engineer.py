@@ -32,7 +32,10 @@ PROMPT = (
     "(«Qué encareció el proceso» y «Cómo se podría optimizar»), marcando cada cifra como medida, calculada o estimada. "
     "Además, muestra el TOTAL DE TOKENS AHORRADOS expresado en dólares: diferencia entre el resultado obtenido "
     "(tokens y USD medidos) y el resultado con la optimización (tokens y USD calculados o estimados), "
-    "en una tabla: concepto, tokens antes, tokens después, tokens ahorrados, USD ahorrados, estado del dato."
+    "en una tabla: concepto, tokens antes, tokens después, tokens ahorrados, USD ahorrados, estado del dato. "
+    "Y cierra la entrada con el apartado CONCLUSIONES (nota `> **CONCLUSIONES**`, que el HTML muestra con otra letra): "
+    "DESDE EL PUNTO DE VISTA DE UN AI ENGINEER, 4 consejos enfocados en solución, basados SOLO en los datos de ese "
+    "análisis (qué hacer, cómo, cifra esperada con su estado y en qué tema se prueba), ordenados por prioridad."
 )
 
 try:

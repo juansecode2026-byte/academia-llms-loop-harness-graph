@@ -88,7 +88,9 @@ def render_blocks(lines, prefix):
                     continue
                 v = re.fullmatch(r"_(.+)_", p)
                 ps += f'<p class="vacio">{inline(v.group(1))}</p>' if v else f"<p>{inline(p)}</p>"
-            out.append(f'<div class="nota"><b>{label.group(1) if label else "Notas"}</b>{ps}</div>')
+            titulo = label.group(1) if label else "Notas"
+            clase = "nota conclusiones" if titulo.upper() == "CONCLUSIONES" else "nota"
+            out.append(f'<div class="{clase}"><b>{titulo}</b>{ps}</div>')
         elif ln.startswith("#### "):
             txt = ln[5:]
             m = re.match(r"(\d+)(?:\.(\d+))? · ", txt)
