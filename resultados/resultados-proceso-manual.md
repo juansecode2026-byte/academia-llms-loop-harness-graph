@@ -268,6 +268,10 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > 3. **Las trampas siguen bien:** en el chat final, 0 de 8 trampas inventadas. En la de Andrés hizo bien la cuenta: 6 personas en cabañas de 3 (`ecohostal-selva-tayrona`, `huespedes_max` 3) son 2 cabañas, «$380.000 por noche».
 > **Para pensar** (de la guía: ¿qué pasa al cerrar y después de 500 turnos?): al cerrar ya no se pierde nada (vive en la base), y la entrada ya no crece: con la ventana, la llamada más grande pesó 8.165 tokens en vez de 14.845. El costo que queda es el catálogo, y el precio de la ventana es la memoria: hace falta una ficha del cliente que conserve los datos clave fuera de la ventana.
 
+> **IMPORTANTE**
+> **Se acortó la ventana de contexto a 5 turnos, pero se sacrificó contexto que se necesitaba para dar respuestas efectivas.** Fue el cambio que más ahorró (~16,6 de los 23,4 puntos de costo, medido), y también el que hizo olvidar: el asesor recordó el dato clave de solo 6 de 10 clientes, contra 10 de 10 con el historial completo (las edades de los niños Ramírez, las fechas de Camilo, la dieta de Valentina y el presupuesto de Julián).
+> **Solución propuesta: separar la memoria en capas** en vez de acortar a ciegas: (1) una **ficha del cliente** de 3 a 5 líneas (personas, fechas, presupuesto, restricciones, destino elegido), que viaja siempre y se actualiza cuando el cliente da un dato nuevo; (2) la **ventana de 5 turnos** solo para lo reciente; (3) el **catálogo de interés** (solo las ciudades del cliente) en lugar del completo. Contexto esperado: unos 3.500 tokens por llamada contra 7.575 hoy, con los datos críticos siempre presentes. Estado: **estimado**; se prueba con la misma pregunta de cierre en los temas 3.25 y 3.26 (meta: 10 de 10 recuerdos).
+
 ### 3.10 Pruebas automáticas sin gastar tokens {ref=e9:E9}
 
 - [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e9) y explica qué se va a hacer y por qué
@@ -1030,6 +1034,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.8 completo con 8 trampas del catálogo (0,00850 USD): sin reglas contra con reglas del prompt; ninguna de las dos inventó. Se agregan las reglas a `caso_simulado.py` (opcionales) y se marca el paso D.1. |
 | 2026-10-13 | Cada entrada del análisis cierra con «CONCLUSIONES» (cuatro consejos de AI Engineer enfocados en solución, con otra letra en el HTML); el hook automático lo pide en cada entrada nueva. |
 | 2026-10-13 | Tema 3.9 completo: `chat.py` con memoria en la base (columna `config` en `mensajes`) y ventana de 5 turnos; paso D.2 con los 10 clientes (194 llamadas, 0,1725 USD) y sonda con historial completo (0,01415 USD): −23,4 % de costo, pero recuerda el dato clave en 6 de 10 clientes contra 10 de 10. |
+| 2026-10-13 | Se destaca en el tema 3.9 y en su análisis la advertencia «IMPORTANTE»: la ventana de 5 turnos sacrificó contexto necesario (6 de 10 recuerdos) y se propone la memoria en capas (ficha del cliente, ventana y catálogo de interés). El HTML muestra estas notas en recuadro naranja con el texto clave subrayado. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1557,6 +1562,10 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 
 > **Ejemplo**
 > Valentina dijo al comienzo «no como carne, soy vegetariana». Veinte turnos después, al preguntarle qué datos tenía de su viaje, el asesor con la ventana de 5 turnos respondió: «Restricción de comida o alergia: no me has dicho cuál es» y corrigió una suposición suya («yo dije que ibas sola, pero tú no lo mencionaste»). No inventó, pero olvidó lo más importante para recomendarle un tour. Con el historial completo, el mismo asesor sí lo recordó. En cambio, a Andrés, que pidió un descuento para 6 personas, el chat final le respondió bien: no hay descuentos publicados, y por el `ecohostal-selva-tayrona` (máximo 3 huéspedes, desde $190.000) serían 2 cabañas, «$380.000 por noche».
+
+> **IMPORTANTE**
+> **Se acortó la ventana de contexto a 5 turnos, pero se sacrificó contexto que se necesitaba para dar respuestas efectivas.** Fue el cambio que más ahorró (~16,6 de los 23,4 puntos de costo, medido), y también el que hizo olvidar: el asesor recordó el dato clave de solo 6 de 10 clientes, contra 10 de 10 con el historial completo (las edades de los niños Ramírez, las fechas de Camilo, la dieta de Valentina y el presupuesto de Julián).
+> **Solución propuesta: separar la memoria en capas** en vez de acortar a ciegas: (1) una **ficha del cliente** de 3 a 5 líneas (personas, fechas, presupuesto, restricciones, destino elegido), que viaja siempre y se actualiza cuando el cliente da un dato nuevo; (2) la **ventana de 5 turnos** solo para lo reciente; (3) el **catálogo de interés** (solo las ciudades del cliente) en lugar del completo. Contexto esperado: unos 3.500 tokens por llamada contra 7.575 hoy, con los datos críticos siempre presentes. Estado: **estimado**; se prueba con la misma pregunta de cierre en los temas 3.25 y 3.26 (meta: 10 de 10 recuerdos).
 
 > **CONCLUSIONES**
 > _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._

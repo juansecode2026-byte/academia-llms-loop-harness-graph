@@ -138,7 +138,7 @@ Bloque inicial `---` con `doc`, `titulo`, `fecha`, `gemelo` y `lead`. Luego:
 `# título`; `## N. Sección` (con `{nivel=K}` para los niveles); `### N.M Tema`
 (con `{ref=idguia:E1 etiqueta="..."}` o `{proyecto}`); `#### subtítulo`; listas
 `- [ ]` / `- [x]`; `1.` listas numeradas; tablas con `|`; notas con `> **Título**`
-y `> _texto_`; `⏱` línea de duración y herramientas; `🛠` línea del proyecto. Una sección sin número
+y `> _texto_`; una nota `> **IMPORTANTE**` se muestra en recuadro naranja con el texto en negrita subrayado (para advertencias y soluciones clave); `⏱` línea de duración y herramientas; `🛠` línea del proyecto. Una sección sin número
 (`## Título {id=x}`) se muestra destacada: título grande y otra tipografía. La
 marca `<!-- parte: n | Título | Subtítulo | pN -->` antes de un tema agrupa el
 índice de la guía. Los números de sección y de tema se escriben a mano y deben
