@@ -1,22 +1,35 @@
-"""Etapa 2 · Ver cómo el modelo genera la respuesta pedazo a pedazo (streaming).
+"""Etapa 2 · Ver cómo el modelo genera la respuesta pedazo a pedazo (streaming), con el caso.
 
 Concepto: el LLM predice un token, lo agrega al texto y vuelve a predecir.
 Con streaming recibes esos tokens en pedazos a medida que se generan.
-Ejecuta:  python etapas/e2_ver_predecir_tokens.py
+Caso: el primer mensaje del cliente de «Turismo Colombia (simulada)», con o sin catálogo.
+
+Ejecuta:  python etapas/e2_ver_predecir_tokens.py              (sin catálogo)
+          python etapas/e2_ver_predecir_tokens.py --catalogo   (con catálogo)
 """
+import argparse
+
 import anthropic
 from dotenv import load_dotenv
+
+from caso_simulado import MENSAJES_CLIENTE, construir_system
 
 load_dotenv()
 client = anthropic.Anthropic()
 
-PREGUNTA = "Completa la frase con 3 opciones distintas: 'El café de Colombia es...'"
+parser = argparse.ArgumentParser()
+parser.add_argument("--catalogo", action="store_true", help="cargar el catálogo ficticio en el mensaje de sistema")
+args = parser.parse_args()
+
+PREGUNTA = MENSAJES_CLIENTE[0]
+print("Cliente:", PREGUNTA, "| catálogo:", "sí" if args.catalogo else "no", "\n")
 pedazos = 0
 pensando = False
 
 with client.messages.stream(
     model="claude-haiku-5-5",
     max_tokens=2048,
+    system=construir_system(args.catalogo),
     messages=[{"role": "user", "content": PREGUNTA}],
     thinking={"type": "adaptive", "display": "summarized"},  # muestra un resumen del razonamiento
 ) as stream:
@@ -37,6 +50,7 @@ with client.messages.stream(
 u = final.usage
 razon = getattr(getattr(u, "output_tokens_details", None), "thinking_tokens", 0) or 0
 print("\n\n== Lo que pasó por dentro ==")
+print(f"Tokens de entrada:          {u.input_tokens}")
 print(f"Pedazos de texto recibidos: {pedazos}")
 print(f"Tokens de salida totales:   {u.output_tokens}")
 print(f"  de razonamiento:          {razon}")
