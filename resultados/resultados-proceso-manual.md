@@ -934,6 +934,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1, marcado): ya existe antes del tema 3.3; las casillas A.3 y A.4 pasan a usarlo. |
 | 2026-10-13 | Tema 3.2 repetido con el catálogo cargado (el asesor no inventa; la conversación cuesta 3,3 veces más). Tema 3.3 rehecho con el caso: 6 ejecuciones, casillas marcadas, notas y entrada del análisis reescritas. |
 | 2026-10-13 | Los ejemplos de las entradas 3.2 y 3.3 del análisis muestran las respuestas con catálogo y el registro del que sale cada cifra. |
+| 2026-10-13 | Las entradas del análisis suman «Qué encareció el proceso» y «Cómo se podría optimizar» (mirada de AI Engineer); aplicado a 3.2 y 3.3. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -966,7 +967,7 @@ En lugar de practicar con preguntas sueltas, todo el checklist se vive sobre un 
 
 #### Cómo leer cada entrada
 
-Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con cuatro partes: **qué se hizo**, **a qué nos conduce**, **en el ejercicio** (qué significa ese resultado para el asesor de viajes) y un **ejemplo** concreto con números cuando los hay. Desde que existe el catálogo, los ejemplos muestran las respuestas del asesor **ancladas en los registros del catálogo** (con el nombre del registro de donde sale cada cifra), para poder verificarlas. El número y el título de cada tema, más arriba, llevan directo a su entrada.
+Cada vez que se marca un tema como hecho, aquí se agrega una entrada con estas partes: **qué se hizo**, **a qué nos conduce**, **en el ejercicio** (qué significa ese resultado para el asesor de viajes), **qué encareció el proceso** (en qué se fueron los tokens, explicado en palabras simples), **cómo se podría optimizar** (mirada de AI Engineer: qué cambiar primero y dónde se prueba) y un **ejemplo** concreto con números cuando los hay. Desde que existe el catálogo, los ejemplos muestran las respuestas del asesor **ancladas en los registros del catálogo** (con el nombre del registro de donde sale cada cifra), para poder verificarlas. El número y el título de cada tema, más arriba, llevan directo a su entrada.
 
 #### Lo que vamos logrando
 
@@ -1005,6 +1006,24 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con 
 
 **En el ejercicio:** el resultado sin catálogo es la línea base de las trampas del tema 3.8, y el resultado con catálogo es la primera mejora medida. El precio de la mejora: la conversación cuesta unas 3,3 veces más (de 0,0006 a 0,0019 USD), porque el catálogo viaja en cada mensaje.
 
+**Qué encareció el proceso:** dos cosas, y las dos son contexto, es decir, texto que se le manda al modelo antes de que responda.
+
+- **El catálogo viajando en cada mensaje.** Con catálogo, cada mensaje del cliente carga unos 6.500 tokens del catálogo completo, aunque el cliente pregunte solo por Cartagena. En la conversación de dos mensajes eso fue unos 13.000 de los 13.580 tokens de entrada (95 %), y cerca del 70 % de todo el costo.
+- **La memoria.** En el segundo mensaje se reenvía todo lo anterior: sin catálogo la entrada sube de 100 a 228 tokens, y con catálogo de 6.578 a unos 7.000. Con dos mensajes casi no se nota, pero en una conversación de 20 crece sin parar (se mide en el tema 3.4).
+- **Un costo menos visible: el razonamiento.** Más de la mitad de lo que el modelo escribe sin catálogo es razonamiento (medido en el tema 3.3), y se cobra aunque el cliente no lo vea.
+
+| Conversación de dos mensajes (Haiku) | Tokens de entrada | Tokens de salida | Costo |
+|---|---|---|---|
+| Sin catálogo | 328 | unos 1.100 | 0,0006 USD |
+| Con catálogo | unos 13.580 | unos 1.060 | 0,0019 USD |
+
+**Cómo se podría optimizar (mirada de AI Engineer):** se ataca primero lo que más pesa, se cambia una cosa a la vez y se vuelve a medir costo **y** exactitud, porque ahorrar no sirve si el asesor vuelve a inventar.
+
+1. **Mandar solo la parte del catálogo que sirve.** Si el cliente pregunta por Cartagena, se envían los 5 registros de Cartagena (3 alojamientos y 2 tours) y no los 37. Se estima que el catálogo bajaría de 6.500 a unos 1.000 tokens por mensaje. Es la palanca más grande; se prueba en el laboratorio (temas 3.25 y 3.26) y la hace una herramienta del agente (tema 3.30).
+2. **Caché de prompts para lo que se repite.** El catálogo y las instrucciones son iguales en todos los mensajes; la API puede guardarlos y cobrar menos la segunda vez. Su tarifa con los modelos 5.5 todavía no está verificada: se mide antes de dar un número.
+3. **Que el código calcule los totales.** $1.920.000 son 4 × 480.000: es aritmética, no redacción. Si lo calcula el código, el resultado siempre es exacto y el modelo razona menos (tema 3.30, herramientas).
+4. **Respuestas del tamaño de un chat.** El primer mensaje listó 3 hoteles y 2 tours; a veces basta con preguntar primero cuántas personas y qué fechas. Menos texto de respuesta es menos salida, que es la parte más cara por token, y menos historial que se reenvía después.
+
 > **Ejemplo**
 > El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado, un hotel bueno en el centro».
 > **Sin catálogo,** tres intentos, tres cifras distintas inventadas: «entre $2.400.000 y $4.800.000», «entre $1.600.000 y $2.800.000», «entre $1.600.000 y $3.600.000». Suenan igual de convincentes, pero se contradicen: es un vendedor que contesta de memoria sin mirar la lista de precios.
@@ -1019,6 +1038,24 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con 
 **A qué nos conduce:** a ver con números qué cuesta darle datos al asesor. Con el catálogo, lo que se envía pasa de 100 a 6.578 tokens, y el costo de cada respuesta de 0,00029 a 0,00097 USD, 3,4 veces más. Dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. A cambio, razona menos (239 tokens contra 304) y contesta con datos reales, así que es más caro pero más fiable. También se ve el streaming: la respuesta llega en 60 a 90 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
 
 **En el ejercicio:** la decisión de cuánto catálogo cargar (todo, o solo lo que el cliente pregunta) es la primera palanca de costo del asesor. Se mide en el tema 3.4, junto con cuántos turnos recuerda.
+
+**Qué encareció el proceso:** en una respuesta con catálogo, el costo se reparte así:
+
+| Parte de la respuesta | Tokens | Costo (Haiku) | % del costo |
+|---|---|---|---|
+| Lo que se envía: instrucciones y catálogo | 6.578 | 0,00066 USD | 68 % |
+| Lo que el asesor escribe al cliente | 380 | 0,00019 USD | 20 % |
+| Lo que el asesor piensa antes de escribir | 239 | 0,00012 USD | 12 % |
+| **Total** | | **0,00097 USD** | 100 % |
+
+En palabras simples: dos de cada tres pesos se van en volver a mandarle al asesor el catálogo completo en cada mensaje, no en lo que contesta. Y una parte se paga por un razonamiento que el cliente nunca ve. Sin catálogo pasa lo contrario: lo que se envía es casi nada (100 tokens), pero el asesor piensa más (304 tokens), porque no tiene datos de dónde apoyarse.
+
+**Cómo se podría optimizar (mirada de AI Engineer):** el origen de toda optimización es la ficha que la API devuelve en cada llamada (tokens de entrada, de salida, de razonamiento y motivo de parada). Con esa ficha se ataca primero lo que más pesa:
+
+1. **Lo que se envía (68 %).** Mandar solo los registros del catálogo que sirven para la pregunta, o guardar en caché la parte que se repite. Es el mayor ahorro posible.
+2. **Lo que escribe (20 %).** Mensajes cortos, como en un chat de WhatsApp, con una instrucción clara y un tope de `max_tokens` (tema 3.5).
+3. **Lo que piensa (12 %).** Que piense poco ante un «hola buenas» y más ante una cotización para 5 personas con niños: el nivel de esfuerzo se ajusta según el tipo de mensaje (temas 3.5 y 3.32).
+4. **Partir la respuesta en mensajes cortos.** WhatsApp no muestra la respuesta mientras se escribe, así que el streaming sirve para mostrar «escribiendo…» desde el primer token y enviar cada párrafo apenas está listo. No baja el costo, pero el cliente siente que el asesor responde rápido; se mide el tiempo al primer token (tema 3.15).
 
 > **Ejemplo**
 > Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero tarda y cuesta más.

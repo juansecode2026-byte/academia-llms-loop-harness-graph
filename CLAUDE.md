@@ -99,6 +99,10 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   «Qué se hizo», «A qué nos conduce» y un `> **Ejemplo**` concreto (con números reales
   cuando los haya), en palabras simples para alguien que empieza. El título del tema
   enlaza solo a esa entrada: el formato `#### N.M · ` es lo que lo activa.
+  Cuando el tema gasta tokens, la entrada lleva también **«Qué encareció el proceso»**
+  (en qué se fueron los tokens, en palabras simples, con tabla de reparto si ayuda) y
+  **«Cómo se podría optimizar»** (mirada de AI Engineer: palancas ordenadas por peso,
+  dónde se prueba cada una, sin perder exactitud; estimaciones marcadas como tales).
   Los ejemplos usan **las respuestas reales del asesor y los registros del catálogo** de
   los que sale cada cifra (por su `slug`), no ejemplos genéricos.
   Cada entrada lleva además una línea **«En el ejercicio:»** que explica qué significa ese
