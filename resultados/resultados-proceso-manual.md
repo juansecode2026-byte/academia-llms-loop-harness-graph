@@ -155,15 +155,20 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.5 Parámetros de generación {ref=e4:E4}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e4) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 4: parámetros de generación"`
-- [ ] Ejercicio B.1: probar los parámetros con una pregunta del caso de viajes y confirmar qué se puede variar ([ver paso B.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e4) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 4: parámetros de generación"`
+- [x] Ejercicio B.1: probar los parámetros con una pregunta del caso de viajes y confirmar qué se puede variar ([ver paso B.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Script: `chat-consola/etapas/e4_parametros.py`, con el catálogo cargado y el primer mensaje de un cliente («cuanto vale ir a cartagena 4 noches?»). Cada prueba mide tokens, razonamiento, segundos y costo. Gasto total de la etapa: 0,00737 USD.
+> 1. **`max_tokens` (el tope de salida):** con 40 y con 150 el asesor **no alcanzó a escribir nada** (`stop_reason = max_tokens`): todo el tope se fue en razonamiento (40 de 40 y 150 de 150). Con 2.048 respondió completo (634 tokens, 228 de razonamiento). El razonamiento cuenta dentro del tope, así que un tope bajo no abarata: se paga igual y no se obtiene respuesta (0,00068 y 0,00073 USD tirados).
+> 2. **`effort`:** low 630 tokens de salida (233 de razonamiento, 0,00097 USD), medium 709 (330, 0,00101), high 530 (222, 0,00092). **No subió en orden**: con una sola muestra por nivel, la variación (±5 % en costo) es ruido, no efecto. En una pregunta de precios el esfuerzo casi no cambia nada; el efecto real se mide con muchas muestras en el laboratorio (3.32).
+> 3. **`system` (comportamiento):** agregar «máximo 2 frases, usa solo precios del catálogo y di de qué registro salen» produjo una respuesta mucho más corta (un párrafo con los 3 precios) pero **el razonamiento se disparó a 697 tokens** (contra 238) y la llamada costó más: 0,00110 USD contra 0,00098. Una instrucción de brevedad ahorra texto, no necesariamente tokens.
+> 4. **Temperatura:** la API devolvió 400: `temperature is deprecated for this model`. En Claude 5.5 no se puede variar; se controlan `max_tokens`, `effort` y `system`.
+> **Para pensar** (¿qué effort para un chat de ventas?): para preguntas frecuentes con datos en el catálogo, `low` o el valor por defecto, porque el catálogo ya trae la respuesta y razonar más no cambió las cifras (todas salieron de `casa-naranja-del-centro`, `hotel-brisas-de-bocagrande` y `hostal-la-muralla-viva`). Para analizar un contrato, `high`, porque ahí razonar sí cambia la calidad.
 
 ### 3.6 Panorama de modelos de Anthropic {ref=e5:E5}
 
@@ -973,6 +978,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Los temas 3.2 y 3.3 quedan enfocados solo en el asesor con el catálogo cargado (notas, tablas, análisis y resumen de variables). |
 | 2026-10-13 | Tema 3.4 completo con 10 conversaciones reales (184 llamadas, 0,213 USD): radiografía del contexto, palancas calculadas y entrada del análisis. Se adelantan los pasos C.2, C.3 y C.4 (clientes, base SQLite y simulador). Las estimaciones de 3.2 y 3.3 pasan a cifras calculadas. |
 | 2026-10-13 | La entrada 3.4 suma la tabla «Tokens ahorrados en dólares» (medido contra optimizado) y se agrega un hook que pide esa tabla en cada entrada del análisis. |
+| 2026-10-13 | Tema 3.5 completo con el asesor y el catálogo (8 llamadas, 0,00737 USD): max_tokens, effort, system y temperatura; entrada del análisis con la tabla de ahorro. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1018,8 +1024,8 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 | Memoria (historial) | La conversación anterior, que se reenvía en cada mensaje | 2.936 tokens por llamada en promedio; la entrada va de 6.565 (turno 1) a 12.480 (turnos 21 a 28) (3.4) | Ventana de 5 turnos (−16 %); resumen de lo viejo | Medido; ahorro calculado; resumen por medir | 3.25 |
 | Texto redundante | Lo que se envía igual que en la llamada anterior | 96,7 % de la entrada (3.4) | Caché de prompts | Medido; tarifa por verificar | 3.4 en adelante |
 | Longitud de la conversación | Cuántos turnos dura | De 0,0090 USD (10 turnos) a 0,0317 USD (24 turnos) por conversación (3.4) | Ventana, resumen, filtrar catálogo | Medido | 3.25 |
-| Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida en el primer mensaje largo (3.3); 17 % en las conversaciones (3.4), cerca del 3 % del costo | Esfuerzo (effort) según el tipo de mensaje | Medido | 3.5, 3.32 |
-| Longitud de la respuesta | Lo que el asesor escribe al cliente | 416 tokens de salida por respuesta en promedio, 18 % del costo (3.4) | Respuestas de chat; tope de `max_tokens` | Medido | 3.5 |
+| Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida en el primer mensaje largo (3.3); 17 % en las conversaciones (3.4), cerca del 3 % del costo | Esfuerzo (effort) según el tipo de mensaje; sin efecto claro con 1 muestra por nivel (3.5) | Medido; efecto por medir | 3.32 |
+| Longitud de la respuesta | Lo que el asesor escribe al cliente | 416 tokens de salida por respuesta en promedio, 18 % del costo (3.4) | Respuestas de chat; un tope bajo corta sin abaratar (3.5) | Medido | 3.5, 3.32 |
 | Modelo | Haiku, Sonnet u Opus | Sonnet cuesta unas 20 veces más que Haiku por token | Elegir el modelo según la tarea | Calculado con los precios | 3.6 |
 | Formato de los datos | Cómo se escribe el catálogo | Compacto: 18 % menos tokens (7.923 a 6.469) | Ya aplicado | Medido | — |
 | Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 en adelante |
@@ -1201,4 +1207,47 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 > Lo mismo con Camilo, que solo pregunta por Medellín: su catálogo útil son 1.069 tokens y la conversación de 10 turnos costó 0,0090 USD.
 > Si se mandara a cada cliente solo el catálogo de sus ciudades y se recordaran los últimos 5 turnos, las 10 conversaciones habrían costado 0,0953 USD en lugar de 0,2130 USD, un 55 % menos. A 1.000 conversaciones al mes con Haiku, de unos 21 USD a unos 10 USD.
 
+#### 3.5 · Parámetros de generación (2026-10-13)
 
+**Qué se hizo:** se probaron los cuatro mandos de la generación sobre el asesor con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
+
+**A qué nos conduce:** a dos hallazgos que van contra la intuición. Primero, **un tope de salida bajo no ahorra: deja al asesor sin respuesta**, porque el razonamiento se come el tope antes de escribir. Segundo, **pedir respuestas cortas no baja necesariamente el costo**: el asesor escribió menos pero razonó casi tres veces más. Y un tercero confirmado: la temperatura ya no se controla en Claude 5.5 (error 400), así que el comportamiento se gobierna con el catálogo, el mensaje de sistema y el `effort`.
+
+**En el ejercicio:** el asesor responde siempre con los precios del catálogo ($480.000, $1.440.000 y $1.920.000 por 4 noches), sin importar `effort` ni tope. Para el piloto, el tope debe dejarse holgado (2.048 como hoy) y el ahorro buscarse en el contexto, no en estos mandos.
+
+**Qué encareció el proceso:** cada llamada costó cerca de 0,00097 USD, y 0,00066 USD de eso (68 %) fue el catálogo de 6.578 tokens, igual que en 3.4. Lo propio de este tema fueron dos gastos inútiles: las dos llamadas con tope bajo (40 y 150) costaron 0,00141 USD en conjunto y no entregaron ninguna respuesta; y la instrucción de brevedad subió el razonamiento a 697 tokens y el costo en un 12 % (0,00110 contra 0,00098 USD).
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Tope de salida (`max_tokens`) | 40 y 150 → sin respuesta; 2.048 → 634 tokens y respuesta completa | Un tope menor que el razonamiento más la respuesta deja 100 % del gasto sin uso |
+| Razonamiento | 222 a 330 tokens de 530 a 709 de salida (35 % a 47 %) en las respuestas completas; 697 de 869 (80 %) con la instrucción de brevedad | Es la parte de la salida que más varía y no se ve en el chat |
+| Esfuerzo (`effort`) | low 0,00097; medium 0,00101; high 0,00092 USD (1 muestra por nivel) | Variación de ±5 % en costo sin orden: ruido, no efecto |
+| Mensaje de sistema | Con reglas de brevedad: 869 tokens de salida (697 razonando) contra 647 (238) | Texto más corto, costo +12 % |
+| Catálogo | 6.578 tokens por llamada, 68 % del costo | Sigue siendo lo que más pesa, por encima de todos estos mandos |
+| Temperatura | Error 400 (`temperature is deprecated for this model`) | No es una palanca disponible |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Tope de salida | Dejarlo holgado (2.048) y no usarlo para ahorrar; si se baja, comprobar que `stop_reason` sea `end_turn` | Evitar la pérdida total de las llamadas cortadas | **Medido** | 3.5 (hecho) y 3.26 |
+| Razonamiento + mensaje de sistema | Pedir brevedad **y** `effort` bajo juntos, para que el asesor no razone de más | Salida de unos 350 tokens en vez de 634: −0,00014 USD por llamada (−15 %) | **Estimado** (supone ~230 de razonamiento y ~120 de texto) | 3.25 y 3.32 |
+| Esfuerzo | Medir con 10 o más muestras por nivel antes de decidir | Decidir con datos y no con una sola muestra | **Por medir** | 3.32 |
+| Catálogo | Mandar solo el de interés (palanca ya calculada en 3.4) | −39 % del costo | **Calculado** | 3.25 y 3.26 |
+| Temperatura | Ninguna: no existe; fijar el comportamiento con catálogo y mensaje de sistema | — | **Medido** (error 400) | — |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido y lo que habría costado con la optimización. Referencia medida en esta etapa: una llamada completa de 6.578 tokens de entrada y 634 de salida, 0,00097 USD. El piloto completo gastó 0,2130 USD en 184 llamadas (1.747.598 tokens de entrada y 76.523 de salida).
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Llamadas con tope bajo (40 y 150) | 13.156 de entrada y 190 de salida, sin respuesta | 0 (no se hacen) | 13.346 | 0,00141 (100 % del gasto de esas llamadas) | **Medido** |
+| Brevedad con `effort` bajo, por llamada | 634 de salida | ~350 de salida | ~284 de salida | ~0,00014 (−15 %) | **Estimado** |
+| Lo anterior en las 184 llamadas del piloto | 76.523 de salida | ~42.500 | ~34.000 | ~0,017 de 0,2130 (−8 %) | **Estimado** (supone la misma proporción en todas) |
+| Catálogo de interés (de 3.4) | 1.747.598 de entrada | ~913.600 | ~834.000 | 0,0834 (−39 %) | **Calculado** |
+
+En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo sale como se estima); el ahorro grande sigue estando en no reenviar el catálogo entero, y lo único seguro de esta etapa es no poner topes bajos.
+
+> **Ejemplo**
+> Al cliente que pregunta «cuanto vale ir a cartagena 4 noches?» el asesor respondió, con los mismos datos del catálogo en todas las pruebas: `hostal-la-muralla-viva` $480.000, `hotel-brisas-de-bocagrande` $1.440.000 y `casa-naranja-del-centro` $1.920.000 (120.000, 360.000 y 480.000 por noche). Con `max_tokens=150` esa respuesta nunca salió: el asesor gastó los 150 tokens pensando y el cliente se quedó sin respuesta, por 0,00073 USD. Con la regla «máximo 2 frases», la respuesta fue un solo párrafo con los tres precios, pero costó más (0,00110 USD) porque el asesor razonó 697 tokens para resumir.
