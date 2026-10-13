@@ -274,15 +274,33 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.10 Pruebas automáticas sin gastar tokens {ref=e9:E9}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e9) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 9: pruebas automáticas"`
-- [ ] Ejercicio D.3: pruebas sin gastar tokens del simulador y de la memoria por cliente ([ver paso D.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e9) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 9: pruebas automáticas"`
+- [x] Ejercicio D.3: pruebas sin gastar tokens del simulador y de la memoria por cliente ([ver paso D.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Archivo: `chat-consola/test_chat.py` (`pytest -q`). Un **cliente falso** reemplaza a la API: devuelve respuestas fijas y anota lo que se le envió, así las pruebas son gratis (0 tokens, 0 USD), rápidas (14 pruebas en unos 3 segundos) y siempre dan lo mismo. Funcionan porque `chat.py` recibe el cliente como parámetro. Usan una base temporal con el mismo esquema y los 10 clientes; nunca tocan la base del piloto ni la API real, y no necesitan la clave.
+>
+> | Qué se prueba | Pruebas | Resultado |
+> |---|---|---|
+> | Ventana: conserva los últimos 5 turnos y empieza en `user` | 2 | pasan |
+> | Memoria por cliente: ida y vuelta con tildes, un cliente no ve la memoria de otro, y la configuración final no pisa lo medido en 3.4 | 3 | pasan |
+> | Costos de Haiku, Sonnet y Opus | 2 | pasan |
+> | Un turno completo: el modelo recibe solo la ventana (9 mensajes tras 8 turnos), Haiku, `effort` bajo, sin `temperature`, las reglas y el catálogo en cada llamada, y la memoria completa queda guardada | 1 | pasa |
+> | Cada llamada queda registrada en `ejecuciones` con tokens y costo | 1 | pasa |
+> | Un error de la API no guarda nada y el turno siguiente funciona | 1 | pasa |
+> | Comandos de consola (`/tokens`, `/historial`, `/cliente`, `/reset`) | 1 | pasa |
+> | **Paso D.3, memoria con historial completo:** las 10 respuestas de cierre guardadas recuerdan el dato clave | 1 | pasa (10 de 10) |
+> | **Paso D.3, memoria con ventana de 5 turnos:** lo mismo con el chat final | 1 | **falla a propósito** (`xfail`): 6 de 10 |
+> | **Paso D.3, precios:** cada monto en pesos de las 194 respuestas del chat final es un precio del catálogo, un múltiplo o una suma revisada | 1 | pasa |
+>
+> Resultado: `13 passed, 1 xfailed` en 2,6 s.
+> 1. **La prueba que falla es la que más vale.** `test_la_ventana_de_5_turnos_recuerda_los_10_datos_clave` está marcada `xfail(strict=True)`: hoy «falla» porque el chat final olvida 4 de 10 datos clave, y la marca documenta el problema en lugar de esconderlo. Cuando se implemente la ficha del cliente y la prueba pase, `strict` la volverá roja hasta que se quite la marca: el sistema avisa solo que el problema quedó resuelto.
+> 2. **La prueba de precios revisó 270 montos:** 262 se explican solos como precio o múltiplo del catálogo, y 8 eran sumas o divisiones que el asesor hizo bien (por ejemplo $2.060.000 = $1.440.000 + $440.000 + $180.000 en Julián, o $1.280.000 = $1.020.000 + $260.000 en la Pareja Torres). Se revisaron uno por uno y quedaron en una lista; **un monto nuevo hace fallar la prueba** hasta que alguien lo mire. Ningún precio resultó inventado.
+> 3. **Límite:** estas pruebas vigilan la lógica y lo ya guardado, no la calidad de una respuesta nueva. Para saber si un cambio de prompt, ventana o catálogo mejora o empeora al asesor hay que hacer una corrida real (0,17 USD); las pruebas sirven para no gastarla cuando el error es de código.
 
 ### 3.11 Cierre del nivel {ref=e10:E10}
 
@@ -1035,6 +1053,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Cada entrada del análisis cierra con «CONCLUSIONES» (cuatro consejos de AI Engineer enfocados en solución, con otra letra en el HTML); el hook automático lo pide en cada entrada nueva. |
 | 2026-10-13 | Tema 3.9 completo: `chat.py` con memoria en la base (columna `config` en `mensajes`) y ventana de 5 turnos; paso D.2 con los 10 clientes (194 llamadas, 0,1725 USD) y sonda con historial completo (0,01415 USD): −23,4 % de costo, pero recuerda el dato clave en 6 de 10 clientes contra 10 de 10. |
 | 2026-10-13 | Se destaca en el tema 3.9 y en su análisis la advertencia «IMPORTANTE»: la ventana de 5 turnos sacrificó contexto necesario (6 de 10 recuerdos) y se propone la memoria en capas (ficha del cliente, ventana y catálogo de interés). El HTML muestra estas notas en recuadro naranja con el texto clave subrayado. |
+| 2026-10-13 | Tema 3.10 completo: `test_chat.py` con 14 pruebas sin gastar tokens (13 pasan, 1 `xfail` documenta el olvido de la ventana de 5 turnos); paso D.3 marcado y entrada del análisis. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1573,4 +1592,55 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 > 2. **Filtrar el catálogo: ahora es el 73 % del costo.** Con la ventana, el catálogo completo quedó como casi todo el gasto (6.478 de 7.575 tokens por llamada). Mandar solo las ciudades del cliente bajaría el chat final de 0,1631 a ~0,080 USD (**estimado**), −62 % frente a la línea base. Se prueba en 3.25, 3.26 y como herramienta en 3.30.
 > 3. **Convertir la pregunta de cierre en prueba automática.** El patrón del dato clave por cliente ya detecta olvidos sin leer a mano (6 de 10 contra 10 de 10). Llevarlo a las pruebas del 3.10, junto con las 8 trampas, para que ningún cambio de ventana, catálogo o prompt se acepte si baja la memoria o aparece un invento.
 > 4. **Elegir el tamaño de la ventana con datos.** Probar 5, 8 y 10 turnos, con y sin ficha, midiendo costo y recuerdos en las mismas 10 conversaciones; quedarse con la combinación más barata que mantenga 10 de 10. La caché de la parte fija (catálogo y reglas, ~75 % de la entrada) se suma después, cuando se verifique su tarifa.
+
+#### 3.10 · Pruebas automáticas sin gastar tokens (2026-10-13)
+
+**Qué se hizo:** se escribieron 14 pruebas que comprueban el chat sin llamar a la API: un cliente falso hace de Claude, y una base temporal hace de la base del piloto. Además, tres pruebas leen las respuestas ya guardadas del piloto para vigilar la memoria y los precios sin volver a gastar. Gasto: 0 tokens, 0 USD; se ejecutan en unos 3 segundos.
+
+**A qué nos conduce:** a poder cambiar el asesor sin miedo y sin pagar. Cada vez que se toque el prompt, la ventana o el catálogo, estas pruebas dicen en 3 segundos si algo de la lógica se rompió: que cada cliente conserve su memoria, que el modelo reciba solo la ventana, que los costos se calculen bien y que un error de la API no deje basura. Y dejan por escrito el problema abierto: la ventana de 5 turnos olvida el dato clave de 4 de 10 clientes.
+
+**En el ejercicio:** el paso D.3 queda hecho: la memoria por cliente y el registro de cada llamada están cubiertos. La prueba del dato clave, escrita a partir de la pregunta de cierre del 3.9, es la señal que debe ponerse verde cuando se implemente la ficha del cliente (temas 3.25 y 3.26).
+
+**Qué encareció el proceso:** nada en tokens, porque el tema no llamó a la API. Lo que sí tiene un costo es **no tener estas pruebas**: cada verificación real del piloto cuesta 0,1725 USD (194 llamadas, medido en 3.9). Con ellas, los errores de código se detectan gratis y las corridas reales quedan para lo que solo se ve con el modelo.
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Cliente falso | 0 llamadas a la API | 0 tokens, 0 USD y resultado siempre igual |
+| Tiempo de ejecución | 14 pruebas en ~3 s | Se pueden correr en cada cambio |
+| Corrida real equivalente | 194 llamadas, 0,1725 USD (medido en 3.9) | Es lo que evita cada ejecución de las pruebas |
+| Cobertura | Memoria, ventana, costos, errores, comandos, memoria del piloto y precios | No cubre la calidad de una respuesta nueva |
+| Datos del piloto guardados | 194 respuestas del chat final y 10 de la sonda con historial completo | Permiten vigilar memoria y precios sin gasto nuevo |
+| Montos sin explicar | 8 de 270 (3 %), todos sumas correctas | La revisión manual fue corta; un monto nuevo obliga a revisar |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Corridas reales de regresión | Correr las pruebas antes de cada corrida real y gastar solo si pasan | Cada error de código detectado ahorra 0,17 USD y tiempo de espera | **Calculado** (tarifa y llamadas medidas) | Siempre, desde ahora |
+| Cobertura de calidad | Corrida real pequeña con 3 clientes (los que tienen trampa y dato crítico) en vez de los 10 | ~0,05 USD en lugar de 0,17 USD, con las respuestas que más importan | **Estimado** | 3.25 y 3.26 |
+| Detección de olvidos | Que la prueba del dato clave use la ficha del cliente cuando exista | Pasa de `xfail` a verde: 10 de 10 | **Por medir** | 3.25 y 3.26 |
+| Validación de precios | Ampliar el validador a sumas y divisiones (hoy requiere una lista de 8 montos revisados) | Dejar de revisar a mano cada suma legítima | **Por construir** | 3.30 |
+| Pruebas de trampas | Agregar al validador las 8 trampas del catálogo con la respuesta esperada («no lo tengo») | Detectar un invento sin leer 8 respuestas | **Por construir** | 3.26 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** el ahorro no está en tokens sino en las corridas reales que las pruebas evitan. Referencia medida: una corrida completa del piloto con el chat final son 194 llamadas, 1.469.517 tokens de entrada, 51.114 de salida y 0,1725 USD.
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Una verificación de código con corrida real contra con pruebas | 1.520.631 (1.469.517 de entrada y 51.114 de salida) | 0 | 1.520.631 | 0,1725 | **Medido** (la corrida real) |
+| 10 verificaciones durante los temas 3.25 y 3.26 | ~15,2 millones | 0 | ~15,2 millones | ~1,73 | **Estimado** (supone 10 iteraciones) |
+| Corrida real reducida a 3 clientes con trampa o dato crítico | 1.520.631 | ~456.000 | ~1.064.000 | ~0,12 por corrida | **Estimado** (supone un 30 % de las llamadas) |
+
+En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las veces que habría que repetir todo el piloto para descubrir un error de código, y cada una de esas repeticiones cuesta 0,17 USD.
+
+> **Ejemplo**
+> Después de 8 turnos de Laura (Cliente 1), la prueba del turno completo comprueba que al modelo le llegaron 9 mensajes (los 4 turnos anteriores más el nuevo, es decir la ventana de 5), que el mensaje de sistema incluía las reglas y el registro `casa-naranja-del-centro` del catálogo, y que la memoria completa, 16 mensajes, quedó guardada en la base. Todo sin llamar a Claude. En cambio, la prueba de la memoria del piloto lee la respuesta real de Valentina a la pregunta de cierre y verifica que mencione la dieta: con el historial completo la menciona; con la ventana de 5 turnos no, y esa prueba está marcada como «falla esperada» hasta que exista la ficha del cliente.
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Correr `pytest` antes de toda corrida real.** Cada error de código atrapado gratis ahorra 0,1725 USD (**medido**); con 10 iteraciones en 3.25 y 3.26, ~1,73 USD (**estimado**). Hacerlo regla del flujo de trabajo, no costumbre.
+> 2. **Implementar la ficha del cliente y quitar el `xfail`.** La prueba de memoria con ventana ya existe y falla a propósito (6 de 10). Pasarla a verde es la meta medible de la solución propuesta en 3.9: 10 de 10 con la ventana de 5 turnos. Se hace en 3.25 y 3.26.
+> 3. **Hacer del validador de precios una herramienta de producción.** Hoy funciona sobre respuestas guardadas y exige revisar 8 sumas a mano; ampliarlo a sumas y divisiones y sumarle las 8 trampas lo convierte en un filtro automático sobre cada respuesta, a 0 tokens (**por construir**, 3.26 y 3.30).
+> 4. **Reducir la corrida real a lo que las pruebas no ven.** Cuando haya que medir calidad, correr solo los 3 clientes con trampa o dato crítico (~0,05 USD, **estimado**) y reservar los 10 para el cierre de cada decisión; así se mide mejor y se gasta una tercera parte.
 
