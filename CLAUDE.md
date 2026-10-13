@@ -119,6 +119,11 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   los que sale cada cifra (por su `slug`), no ejemplos genéricos.
   Cada entrada lleva además una línea **«En el ejercicio:»** que explica qué significa ese
   resultado para el asesor de viajes.
+- **Hook del análisis:** `.claude/settings.json` registra un hook PreToolUse (Edit|Write|Bash) que
+  ejecuta `scripts/prompt_ai_engineer.py` (determinístico, sin llamar a Claude) cada vez que una
+  herramienta toca `resultados-proceso-manual`. Inyecta el prompt de AI Engineer (factores que
+  encarecieron el gasto de tokens y cómo optimizarlo); **su respuesta se agrega a la entrada del
+  tema** en «Qué encareció el proceso» y «Cómo se podría optimizar».
 - **Las filas de la bitácora van dentro de la tabla de la sección 9**, no al final del
   archivo (en el manual, el «Análisis de resultados» va después de la bitácora).
 
