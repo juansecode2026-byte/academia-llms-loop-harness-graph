@@ -127,17 +127,16 @@ Tokens de entrada, salida y razonamiento; costo en dólares; tiempo de respuesta
 
 2 modelos × 2 niveles de effort × 3 ventanas = **12 configuraciones**. 10 clientes × 12 configuraciones = **120 corridas**, unas 2.400 llamadas. Con Haiku, el costo estimado es menor de 1 USD; Sonnet se corre solo en una muestra. El saldo de la cuenta hoy es de 1,04 USD, así que conviene recargar antes de la Parte 2.
 
-## 6. Fase A · La base (completada)
+## 6. Fase A · La base (se rehace con el caso)
 
-Conceptos básicos con los scripts de la guía. Ya está hecha.
+Los temas 3.2 a 3.4 ya se hicieron con ejemplos sueltos de la guía. Se **vuelven a hacer** usando el caso de viajes. El tema 3.1 (entorno, bibliotecas y clave) no depende del caso y queda como está.
 
-| Paso | Qué se hizo | Checklist |
+| Paso | Qué se hace | Checklist |
 |---|---|---|
-| A.1 | Entorno, bibliotecas y clave | [3.1 Preparación](../resultados/resultados-proceso-manual.html#s3-1) |
-| A.2 | Primera llamada a Claude | [3.2 Primera llamada a la API](../resultados/resultados-proceso-manual.html#s3-2) |
-| A.3 | Respuesta por pedazos y razonamiento | [3.3 Ver cómo el modelo predice tokens](../resultados/resultados-proceso-manual.html#s3-3) |
-| A.4 | Tokens, memoria y costos | [3.4 Tokens, ventana de contexto y costos](../resultados/resultados-proceso-manual.html#s3-4) |
-
+| A.1 | Entorno, bibliotecas y clave (ya hecho, no cambia) | [3.1 Preparación](../resultados/resultados-proceso-manual.html#s3-1) |
+| A.2 | Primera llamada con un mensaje de cliente del caso («hola buenas, cuanto vale ir a cartagena 4 noches?») **sin catálogo**, para ver cómo el modelo inventa precios | [3.2 Primera llamada a la API](../resultados/resultados-proceso-manual.html#s3-2) |
+| A.3 | Respuesta por pedazos y razonamiento con ese mismo mensaje | [3.3 Ver cómo el modelo predice tokens](../resultados/resultados-proceso-manual.html#s3-3) |
+| A.4 | Contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación de ejemplo del caso | [3.4 Tokens, ventana de contexto y costos](../resultados/resultados-proceso-manual.html#s3-4) |
 ## 7. Fase B · Parámetros y modelos con el caso
 
 Se siguen los temas de la guía y, donde encaja, se prueban con una pregunta del caso de viajes.
@@ -168,31 +167,57 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 | D.3 | Pruebas sin gastar tokens del simulador y de la memoria por cliente | [3.10 Pruebas automáticas](../resultados/resultados-proceso-manual.html#s3-10) |
 | D.4 | Informe del piloto: tokens, costo y alucinaciones por cliente | [3.11 Cierre del nivel](../resultados/resultados-proceso-manual.html#s3-11) |
 
-## 10. Fase E · El laboratorio sobre el caso (Parte 2)
+## 10. Fase E · El laboratorio sobre el caso (Parte 2, sin dashboard)
+
+Se construyen las piezas de medición del laboratorio de la guía y se corren sobre el caso. **No se construye la aplicación web** (Streamlit): los resultados salen como archivos y tablas (ver la sección 12).
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
-| E.0 | Ampliar la base del piloto (creada en C.3) con el registro de experimentos de la guía, sin crear otra base | [3.16 Registro de experimentos (SQLite)](../resultados/resultados-proceso-manual.html#s3-16) |
-| E.1 | La batería de preguntas y el modelo juez salen del caso | [3.17 Batería de preguntas y modelo juez](../resultados/resultados-proceso-manual.html#s3-17) |
-| E.2 | Correr la grilla del piloto: 10 clientes × 12 configuraciones | [3.25 Experimentos y cierre](../resultados/resultados-proceso-manual.html#s3-25) |
-| E.3 | Decidir modelo, effort y ventana con los datos | [3.26 Tablero de decisiones](../resultados/resultados-proceso-manual.html#s3-26) |
+| E.1 | Definir qué se va a medir del asesor de viajes y con qué objetivo | [3.12 Qué vas a construir (laboratorio)](../resultados/resultados-proceso-manual.html#s3-12) |
+| E.2 | Fijar los controles (modelo, effort, ventana de memoria, mensaje de sistema) y las mediciones sobre el caso | [3.13 Qué controlamos y qué medimos](../resultados/resultados-proceso-manual.html#s3-13) |
+| E.3 | Preparar la estructura del laboratorio, sin Streamlit | [3.14 Preparación del laboratorio](../resultados/resultados-proceso-manual.html#s3-14) |
+| E.4 | Construir el motor de medición: una llamada medida con la configuración del caso | [3.15 Motor de medición](../resultados/resultados-proceso-manual.html#s3-15) |
+| E.5 | Ampliar la base única del piloto (creada en C.3) con el registro de experimentos de la guía, sin crear otra | [3.16 Registro de experimentos (SQLite)](../resultados/resultados-proceso-manual.html#s3-16) |
+| E.6 | Armar la batería de preguntas con trampas y el modelo juez desde el caso | [3.17 Batería de preguntas y modelo juez](../resultados/resultados-proceso-manual.html#s3-17) |
+| E.7 | Pruebas sin gastar tokens del motor, el registro y la batería | [3.24 Pruebas del laboratorio](../resultados/resultados-proceso-manual.html#s3-24) |
+| E.8 | Correr la grilla del piloto con un script: 10 clientes × 12 configuraciones | [3.25 Experimentos y cierre](../resultados/resultados-proceso-manual.html#s3-25) |
+| E.9 | Decidir modelo, effort y ventana con los datos, en un informe | [3.26 Tablero de decisiones](../resultados/resultados-proceso-manual.html#s3-26) |
+## 11. Fase F · El agente sobre el caso (Partes 3 y 4, sin dashboard)
 
-## 11. Lo que queda para después
+Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente con herramientas, un ciclo (loop), un grafo y un harness con límites. Es donde se prueban y comparan las diferencias entre estas piezas. El tablero de la Parte 4 queda aplazado (sección 12).
+
+| Paso | Qué se hace | Checklist |
+|---|---|---|
+| F.1 | Definir qué hará el agente asesor y qué quedará siempre en manos de un humano | [3.1 Qué vas a construir (agente)](../resultados/resultados-proceso-agentizando.html#s3-1) |
+| F.2 | Aplicar al caso los conceptos de harness, loop y graph | [3.2 Conceptos: harness, loop y graph](../resultados/resultados-proceso-agentizando.html#s3-2) |
+| F.3 | Medir la línea base (lo que hace un asesor humano) y fijar los casos de prueba con los 10 clientes | [3.3 Proceso, línea base y casos de prueba](../resultados/resultados-proceso-agentizando.html#s3-3) |
+| F.4 | Herramientas: buscar en el catálogo, estimar un precio, escalar a un humano | [3.4 Herramientas](../resultados/resultados-proceso-agentizando.html#s3-4) |
+| F.5 | Loop: el agente consulta el catálogo cuantas veces haga falta, con límite de vueltas | [3.5 Loop](../resultados/resultados-proceso-agentizando.html#s3-5) |
+| F.6 | Graph: clasificar, consultar, responder y verificar, enrutando por modelo según el costo | [3.6 Graph](../resultados/resultados-proceso-agentizando.html#s3-6) |
+| F.7 | Harness: tope de gasto por conversación y aprobación humana antes de dar un precio final | [3.7 Harness](../resultados/resultados-proceso-agentizando.html#s3-7) |
+| F.8 | Trazas: cada paso del agente guardado en la base única | [3.8 Trazas](../resultados/resultados-proceso-agentizando.html#s3-8) |
+| F.9 | Evaluar las variantes (sin loop, con loop, con graph, con harness) sobre los casos y comparar | [3.9 Evaluación y optimización](../resultados/resultados-proceso-agentizando.html#s3-9) |
+| F.10 | Pruebas sin gastar tokens y cierre | [3.10 Pruebas y cierre](../resultados/resultados-proceso-agentizando.html#s3-10) |
+## 12. Lo que queda para después
 
 | Qué | Por qué no va ahora | Cuándo |
 |---|---|---|
 | La infraestructura de WhatsApp (webhook de Meta, ventana de 24 h, plantillas) | Es infraestructura, no concepto de LLMs | Al llevarlo a candyCRM |
 | Supabase y multi-tenant | SQLite alcanza para el piloto local | Al llevarlo a candyCRM |
 | Cliente simulado por Claude (un segundo modelo que hace de cliente) | Llama a Claude, así que cuenta como agente | Partes 2 o 3 |
+| Dashboard del laboratorio (aplicación web con Streamlit: estructura, controles y cuatro vistas, temas 3.18 a 3.23 del manual) | El objetivo por ahora es entender el proceso; los resultados salen como archivos y tablas | Más adelante, evaluando juntar **todos los resultados en un solo archivo** para ir directo al punto |
+| Tablero del agente (Parte 4: temas 3.11 a 3.17 del agentizando) | Mismo motivo | Igual que el anterior |
 | Ampliar a 30 clientes | Primero validar el proceso con 10 | Después del piloto |
 
-## 12. Cómo se estandariza
+## 13. Cómo se estandariza
 
 Lo que queda como estándar para otros proyectos no es el caso de viajes, sino el **proceso**: el simulador de clientes, la forma de la base (clientes, mensajes, ejecuciones), el formato de la batería de casos con trampas, las métricas y el checklist. Para otro proyecto se cambia el catálogo y los clientes: una inmobiliaria, una constructora o un call center.
 
-## 13. Bitácora de cambios
+## 14. Bitácora de cambios
 
 | Fecha | Cambio |
 |---|---|
 | 2026-10-12 | Creación del documento: caso, funcionamiento, datos del piloto (10 clientes), variables, fases y enlaces al checklist. |
-| 2026-10-13 | Decisión: la base SQLite nace en 3.7 (C.3) y es la única; el tema 3.16 la amplía con el registro de experimentos (paso E.0) en vez de crear otra. |
+| 2026-10-13 | Decisión: la base SQLite nace en 3.7 (C.3) y es la única; el tema 3.16 la amplía con el registro de experimentos (paso E.5) en vez de crear otra. |
+| 2026-10-13 | Se reinicia el checklist sobre el ejercicio: la Fase A se rehace con el caso, la Fase E cubre todo el laboratorio sin dashboard (pasos E.1 a E.9, antes E.0 a E.3), nueva Fase F para las Partes 3 y 4, y se aplazan los dashboards. |
+

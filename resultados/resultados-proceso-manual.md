@@ -54,13 +54,15 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.2 Primera llamada a la API {ref=e1:E1}
 
-- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1) y explica qué se va a hacer y por qué
-- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [x] Commit: `git commit -m "etapa 1: primera llamada a la API"`
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e1) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit: `git commit -m "etapa 1: primera llamada a la API"`
+- [ ] Ejercicio A.2: primera llamada con un mensaje de cliente del caso, sin catálogo, para ver cómo inventa precios ([ver paso A.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
+> _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
 > Archivo: `chat-consola/etapas/e1_primera_llamada.py`. Se ejecutó 3 veces con `claude-haiku-5-5` y la API real (2026-10-12). Las tres terminaron con `end_turn`.
 > Qué hace, línea por línea: `load_dotenv()` carga la clave desde `.env`; `anthropic.Anthropic()` crea el cliente que habla con la API; `client.messages.create(...)` envía el mensaje con tres datos obligatorios (modelo, tope de salida `max_tokens` y la lista de mensajes); luego el script recorre `respuesta.content`, que es una lista de bloques, y une los de tipo `text`.
 > Lo observado: la respuesta trae una lista de bloques, no un texto suelto. En estas ejecuciones vino solo el bloque `text`: el modelo decidió no razonar para una pregunta tan simple. Tokens: 34 de entrada y 116, 108 y 113 de salida. Costo de las tres llamadas juntas: unos 0,0002 USD.
@@ -68,13 +70,15 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.3 Ver cómo el modelo predice tokens {ref=e2:E2}
 
-- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2) y explica qué se va a hacer y por qué
-- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [x] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e2) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
+- [ ] Ejercicio A.3: respuesta por pedazos y razonamiento con ese mismo mensaje ([ver paso A.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
+> _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
 > Archivo: `chat-consola/etapas/e2_ver_predecir_tokens.py` (2026-10-12, `claude-haiku-5-5`, API real).
 > Qué hace: usa `client.messages.stream(...)` en vez de `create`, así los eventos llegan a medida que el modelo los genera. Imprime cada pedazo de texto seguido de `|` para ver dónde corta el servidor, y al final `get_final_message()` entrega el mensaje completo con el conteo de tokens. El parámetro `thinking={"type": "adaptive", "display": "summarized"}` pide un resumen del razonamiento, que por defecto viene oculto.
 > Lo observado con la frase del café: 40 pedazos de texto para 172 tokens de salida; los pedazos cortan en medio de palabras («Reconoc|ido m|undialmente»), porque el modelo trabaja con tokens, no con palabras. Razonamiento: 0 tokens, el modelo decidió no pensar en una pregunta tan simple.
@@ -83,13 +87,15 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.4 Tokens, ventana de contexto y costos {ref=e3:E3}
 
-- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
-- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [x] Commit: `git commit -m "etapa 3: tokens y costos"`
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e3) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit: `git commit -m "etapa 3: tokens y costos"`
+- [ ] Ejercicio A.4: contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación de ejemplo del caso ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
+> _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
 > Archivo: `chat-consola/etapas/e3_tokens_costos.py` (2026-10-12, `claude-haiku-5-5`, API real para la parte A; las partes B y C son aritmética).
 > Qué hace: la parte A usa `client.messages.count_tokens(...)`, que cuenta tokens sin generar respuesta (no cobra generación), y resta el conteo de un «.» para quitar el formato del mensaje. La parte B simula 20 turnos de un chat con memoria: en cada turno se suma el mensaje del usuario, se reenvía todo el historial y se suma la respuesta. La parte C pasa esos totales a dólares con los precios de cada modelo.
 > Parte A, lo observado: español 64 caracteres → 21 tokens; inglés 57 caracteres → 14 tokens; código 32 caracteres → 13; números 29 caracteres → 13; emoji 4 caracteres → 9. El mismo contenido en español ocupa cerca de 1,5 veces más tokens que en inglés, y cuatro emojis ocupan más tokens que una frase corta de código.
@@ -195,6 +201,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.1: definir qué se va a medir del asesor de viajes y con qué objetivo ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -206,6 +213,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.2: fijar los controles (modelo, effort, ventana, mensaje de sistema) y las mediciones sobre el caso ([ver paso E.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -217,6 +225,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D2: preparación del laboratorio"`
+- [ ] Ejercicio E.3: preparar la estructura del laboratorio, sin Streamlit ([ver paso E.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -228,6 +237,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D3: motor de medición"`
+- [ ] Ejercicio E.4: construir el motor de medición con la configuración del caso ([ver paso E.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -239,7 +249,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D4: registro en SQLite"`
-- [ ] Ejercicio E.0: ampliar la base del piloto, creada en el tema 3.7, con el registro de experimentos, sin crear otra base ([ver paso E.0](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.5: ampliar la base del piloto, creada en el tema 3.7, con el registro de experimentos, sin crear otra base ([ver paso E.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -251,76 +261,40 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D5: batería y juez"`
-- [ ] Ejercicio E.1: armar la batería y el modelo juez desde el caso de viajes ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.6: armar la batería y el modelo juez desde el caso de viajes ([ver paso E.6](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
 
-### 3.18 Estructura de la app {ref=d6:D6}
+### 3.18 Estructura de la app {ref=d6:D6 etiqueta="Aplazado: dashboard"}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d6) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "D6: estructura de la app"`
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
-> **Notas del proceso**
-> _Pendiente de documentar._
+### 3.19 Controles {ref=d7:D7 etiqueta="Aplazado: dashboard"}
 
-### 3.19 Controles {ref=d7:D7}
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d7) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+### 3.20 Vista Playground {ref=d8:D8 etiqueta="Aplazado: dashboard"}
 
-> **Notas del proceso**
-> _Pendiente de documentar._
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
-### 3.20 Vista Playground {ref=d8:D8}
+### 3.21 Vista Comparador {ref=d9:D9 etiqueta="Aplazado: dashboard"}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d8) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
-> **Notas del proceso**
-> _Pendiente de documentar._
+### 3.22 Vista Batería de alucinaciones {ref=d10:D10 etiqueta="Aplazado: dashboard"}
 
-### 3.21 Vista Comparador {ref=d9:D9}
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d9) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+### 3.23 Vista Métricas {ref=d11:D11 etiqueta="Aplazado: dashboard"}
 
-> **Notas del proceso**
-> _Pendiente de documentar._
-
-### 3.22 Vista Batería de alucinaciones {ref=d10:D10}
-
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d10) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-
-> **Notas del proceso**
-> _Pendiente de documentar._
-
-### 3.23 Vista Métricas {ref=d11:D11}
-
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d11) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-
-> **Notas del proceso**
-> _Pendiente de documentar._
+> **Aplazado**
+> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
 
 ### 3.24 Pruebas del laboratorio {ref=d12:D12}
 
@@ -329,6 +303,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D12: pruebas del laboratorio"`
+- [ ] Ejercicio E.7: pruebas sin gastar tokens del motor, el registro y la batería ([ver paso E.7](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -340,7 +315,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-- [ ] Ejercicio E.2: correr la grilla del piloto: 10 clientes × 12 configuraciones ([ver paso E.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.8: correr la grilla del piloto: 10 clientes × 12 configuraciones ([ver paso E.8](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -352,7 +327,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D14: tablero de decisiones"`
-- [ ] Ejercicio E.3: decidir modelo, effort y ventana con los datos del piloto ([ver paso E.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.9: decidir modelo, effort y ventana con los datos del piloto, en un informe ([ver paso E.9](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -730,6 +705,8 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 #### 3.2 · Primera llamada a la API (2026-10-12)
 
+**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
+
 **Qué se hizo:** se escribió un programa de 25 líneas que le hace una pregunta a Claude y muestra todo lo que devuelve: la respuesta, por qué terminó y cuántos tokens usó. Se ejecutó tres veces con la API real.
 
 **A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
@@ -739,6 +716,8 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 > Y la variación: es como preguntarle lo mismo a una persona tres veces. Las tres respuestas dicen que un modelo de lenguaje «predice y genera palabras de forma coherente», pero cambian el final: «responder preguntas, traducir, resumir» en una, «redactar textos» en otra.
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-12)
+
+**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
 
 **Qué se hizo:** se recibió la respuesta de Claude «en vivo», pedazo por pedazo, como cuando ChatGPT va escribiendo en pantalla. Cada pedazo se separó con una barra para ver cómo llegan. También se pidió ver el razonamiento resumido del modelo.
 
@@ -750,6 +729,8 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
 
+**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
+
 **Qué se hizo:** se contaron los tokens de distintos tipos de texto y se simuló una conversación de 20 turnos para ver cuánto crece lo que se envía en cada mensaje, y cuánto costaría esa conversación con cada modelo.
 
 **A qué nos conduce:** a entender de dónde sale la factura. Un modelo no recuerda nada entre llamadas: para que «recuerde», hay que reenviarle toda la conversación cada vez, y todo lo que se reenvía se cobra de nuevo. Por eso una conversación de 20 turnos cuesta casi 24 veces más que 20 mensajes sueltos. También se ve que el idioma importa (el español usa más tokens que el inglés) y que la elección del modelo mueve el costo muchísimo: el mismo chat cuesta 0,0068 USD con Haiku y 0,2704 USD con Opus. Esas cuentas son las que permiten cotizar un proyecto antes de construirlo.
@@ -760,3 +741,4 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 | 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
 | 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
 | 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |
+| 2026-10-13 | Se reinicia el checklist sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso (casillas desmarcadas, notas previas conservadas); nuevas casillas «Ejercicio» en 3.12 a 3.15 y 3.24; renumerados los pasos E.5, E.6, E.8 y E.9; temas 3.18 a 3.23 (dashboard) aplazados. |
