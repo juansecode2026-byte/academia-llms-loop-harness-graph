@@ -972,6 +972,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | El análisis suma «Variables que afectaron el proceso» y «Cómo optimizar cada variable» (tablas con cifras) en 3.2 y 3.3, y un «resumen acumulado de variables» para decidir con datos. |
 | 2026-10-13 | Los temas 3.2 y 3.3 quedan enfocados solo en el asesor con el catálogo cargado (notas, tablas, análisis y resumen de variables). |
 | 2026-10-13 | Tema 3.4 completo con 10 conversaciones reales (184 llamadas, 0,213 USD): radiografía del contexto, palancas calculadas y entrada del análisis. Se adelantan los pasos C.2, C.3 y C.4 (clientes, base SQLite y simulador). Las estimaciones de 3.2 y 3.3 pasan a cifras calculadas. |
+| 2026-10-13 | La entrada 3.4 suma la tabla «Tokens ahorrados en dólares» (medido contra optimizado) y se agrega un hook que pide esa tabla en cada entrada del análisis. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1183,6 +1184,17 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 | Texto redundante | Caché de prompts: se guarda la parte que se repite y se cobra más barata | Potencial: el 97 % de la entrada se repite | **Por verificar** (la tarifa de los modelos 5.5 no está confirmada) | 3.4 en adelante |
 | Historial | Resumir lo viejo en pocas líneas en lugar de recortarlo | Conserva los datos del cliente con menos tokens | **Por medir** | 3.25 y 3.26 |
 | Salida y razonamiento | Respuestas del tamaño de un chat y esfuerzo (effort) según el tipo de mensaje | Reducir ese 18 % del costo | **Por medir** | 3.5 y 3.32 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y lo que habría costado con cada optimización. Como las palancas solo recortan la entrada (a 0,10 USD por millón en Haiku 5,5), los tokens ahorrados salen de dividir los dólares ahorrados por esa tarifa.
+
+| Concepto | Tokens de entrada antes | Tokens de entrada después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Catálogo de interés | 1.747.598 | ~913.600 | ~834.000 | 0,0834 (0,2130 → 0,1296) | **Calculado** |
+| Ventana de 5 turnos | 1.747.598 | ~1.406.600 | ~341.000 | 0,0341 (16 %) | **Calculado** |
+| Las dos juntas | 1.747.598 | ~570.600 | ~1.177.000 | 0,1177 (0,2130 → 0,0953) | **Calculado** |
+| Las dos juntas, a 1.000 conversaciones | ~175 millones | ~57 millones | ~118 millones | ~11,8 (de 21,3 a 9,5) | **Estimado** (se asume que las 10 conversaciones son representativas) |
+
+En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 millones (el 67 %) se podían no enviar, y eso es 0,12 USD de los 0,21 USD gastados.
 
 > **Ejemplo**
 > Julián, el cliente que dudaba entre Santa Marta y San Andrés, tuvo la conversación más larga de las que comparaban destinos: 24 turnos. En su último mensaje se enviaron 14.845 tokens, de los cuales 6.478 eran el catálogo completo, aunque Julián solo preguntó por Santa Marta y San Andrés, cuyos registros (por ejemplo `posada-playa-dorada`, `hotel-coral-sereno`, `tayrona-senderismo`) pesan 1.941 tokens: el 30 % del catálogo. Su conversación costó 0,0317 USD.
