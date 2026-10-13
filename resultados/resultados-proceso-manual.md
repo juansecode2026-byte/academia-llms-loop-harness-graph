@@ -76,7 +76,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 2: streaming y razonamiento"`
-- [ ] Ejercicio A.3: respuesta por pedazos y razonamiento con ese mismo mensaje ([ver paso A.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [ ] Ejercicio A.3: respuesta por pedazos y razonamiento con ese mismo mensaje, con el catálogo cargado, y compararla con la línea base del tema 3.2 ([ver paso A.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
 > _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
@@ -93,7 +93,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 3: tokens y costos"`
-- [ ] Ejercicio A.4: contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación de ejemplo del caso ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
+- [ ] Ejercicio A.4: medir cuánto pesa el catálogo en tokens y su costo en cada llamada; contar tokens de mensajes tipo WhatsApp y simular la memoria con una conversación del caso ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
 > _Versión previa (2026-10-12), hecha con ejemplos sueltos de la guía. Se rehace con el caso del ejercicio._
@@ -136,7 +136,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "etapa 6: chat con memoria"`
-- [ ] Ejercicio C.1: crear el catálogo ficticio (JSON) ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
+- [x] Ejercicio C.1: crear el catálogo ficticio (JSON); adelantado, ya está creado en `chat-consola/datos-simulados/` ([ver paso C.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.2: crear los 10 clientes ficticios y sus guiones tipo WhatsApp ([ver paso C.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.3: crear la base SQLite del piloto (clientes, mensajes, ejecuciones); es la base única, el tema 3.16 la amplía ([ver paso C.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 - [ ] Ejercicio C.4: construir el simulador que entrega los mensajes ([ver paso C.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
@@ -917,6 +917,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Las Partes 3 y 4 (agente y tablero) pasan a este documento como los temas 3.27 a 3.43, con las casillas «Ejercicio F.1 a F.17»; el proyecto del nivel pasa a ser el 3.44. El agentizando queda como segundo pase opcional. |
 | 2026-10-13 | Se reescribe el texto general del «Análisis de resultados» con el ejercicio del asesor de viajes y se agrega «En el ejercicio» a cada entrada. Las filas de esta bitácora que habían quedado al final del archivo vuelven a esta tabla. |
 | 2026-10-13 | Tema 3.2 rehecho con el caso del asesor de viajes: casillas marcadas, notas nuevas y entrada del análisis reescrita. |
+| 2026-10-13 | Se adelanta la creación del catálogo ficticio (paso C.1, marcado): ya existe antes del tema 3.3; las casillas A.3 y A.4 pasan a usarlo. |
 
 ## Análisis de resultados {id=analisis}
 
