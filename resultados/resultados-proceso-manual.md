@@ -1054,6 +1054,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.9 completo: `chat.py` con memoria en la base (columna `config` en `mensajes`) y ventana de 5 turnos; paso D.2 con los 10 clientes (194 llamadas, 0,1725 USD) y sonda con historial completo (0,01415 USD): −23,4 % de costo, pero recuerda el dato clave en 6 de 10 clientes contra 10 de 10. |
 | 2026-10-13 | Se destaca en el tema 3.9 y en su análisis la advertencia «IMPORTANTE»: la ventana de 5 turnos sacrificó contexto necesario (6 de 10 recuerdos) y se propone la memoria en capas (ficha del cliente, ventana y catálogo de interés). El HTML muestra estas notas en recuadro naranja con el texto clave subrayado. |
 | 2026-10-13 | Tema 3.10 completo: `test_chat.py` con 14 pruebas sin gastar tokens (13 pasan, 1 `xfail` documenta el olvido de la ventana de 5 turnos); paso D.3 marcado y entrada del análisis. |
+| 2026-10-13 | El análisis suma «Para qué sirve cada dato» (objetivo, decisión y ejemplo de cada variable) y la tabla «Resumen: cada dato y su decisión»; aplicado a 3.10 y pedido por el hook para las entradas nuevas. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1613,6 +1614,26 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 | Cobertura | Memoria, ventana, costos, errores, comandos, memoria del piloto y precios | No cubre la calidad de una respuesta nueva |
 | Datos del piloto guardados | 194 respuestas del chat final y 10 de la sonda con historial completo | Permiten vigilar memoria y precios sin gasto nuevo |
 | Montos sin explicar | 8 de 270 (3 %), todos sumas correctas | La revisión manual fue corta; un monto nuevo obliga a revisar |
+
+**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+
+- **Cliente falso (0 llamadas a la API).** *Objetivo:* poder revisar el programa todas las veces que haga falta sin pagar y sin depender del modelo. *Decisión:* correr las pruebas sin límite. *Ejemplo:* si un desarrollador corre las pruebas 30 veces al día, con el cliente falso son 0 USD; con una corrida real de los 10 clientes serían unos 5 USD al día (30 × 0,17, **estimado**).
+- **Tiempo de ejecución (~3 s).** *Objetivo:* saber si la revisión es tan rápida que se puede hacer en cada cambio. *Decisión:* dónde poner las pruebas: en cada cambio y antes de cada commit si tardan segundos; solo antes de subir si tardan minutos. *Ejemplo:* si mañana hubiera 200 pruebas y el tiempo subiera a 2 minutos, ese dato avisaría que hay que separar las rápidas de las lentas.
+- **Corrida real equivalente (194 llamadas, 0,1725 USD).** *Objetivo:* conocer el precio de la alternativa cara, para medir el valor de las pruebas en dinero. *Decisión:* correr primero las pruebas gratis y gastar una corrida real solo si pasan; presupuestar las pruebas de 3.25 y 3.26. *Ejemplo:* si en esos temas se prueban 10 configuraciones, las corridas reales costarían unos 1,73 USD (**estimado**), una cifra que se puede defender ante un socio.
+- **Cobertura (qué revisan y qué no).** *Objetivo:* saber en qué se puede confiar a ciegas y en qué no, para no tener falsa seguridad. *Decisión:* si cambia el código (guardar, recortar, calcular), bastan las pruebas; si cambia el prompt, el modelo o el catálogo, hace falta además una corrida real. *Ejemplo:* al agregar las reglas del 3.8 las pruebas habrían pasado igual; lo que mostró que las respuestas eran 23 % más cortas fue la corrida real de las 8 trampas.
+- **Datos del piloto guardados (204 respuestas).** *Objetivo:* reaprovechar lo que ya se pagó. *Decisión:* guardar siempre cada respuesta y cada medición, y preguntarse antes de pagar una corrida nueva si lo que se quiere revisar ya está guardado. *Ejemplo:* la revisión de precios del 3.10 leyó las 194 respuestas guardadas y comprobó 270 montos por 0 USD; sin ellas habría costado otros 0,17 USD.
+- **Montos sin explicar (8 de 270, 3 %).** *Objetivo:* saber si el asesor inventa precios y cuánto trabajo manual deja el revisor. *Decisión:* como las 8 eran sumas correctas, se confía en el asesor y se mejora el revisor para que entienda sumas antes de crecer. *Ejemplo:* a Julián el asesor le dijo «$2.060.000»; no está en el catálogo, pero es 1.440.000 + 440.000 + 180.000. Si el porcentaje subiera al 20 % en una corrida futura sería una alarma: o el asesor empezó a inventar o empezó a hacer cuentas más complicadas.
+
+**Resumen: cada dato y su decisión**
+
+| Dato | Pregunta que responde | Decisión que permite |
+|---|---|---|
+| 0 llamadas a la API | ¿Revisar me cuesta plata? | Revisar sin límite |
+| ~3 segundos | ¿Cada cuánto puedo revisar? | En cada cambio y antes de cada commit |
+| 0,1725 USD por corrida real | ¿Cuánto me ahorra revisar gratis? | Gastar solo si las pruebas pasan; presupuestar |
+| Cobertura | ¿En qué puedo confiar? | Pruebas para el código; corrida real para prompt, modelo o catálogo |
+| 204 respuestas guardadas | ¿Necesito pagar para revisar esto? | Guardar siempre; revisar primero lo guardado |
+| 8 de 270 sin explicar | ¿El asesor inventa? ¿Cuánto trabajo manual queda? | Confiar en el asesor y mejorar el revisor antes de crecer |
 
 **Cómo optimizar cada variable (mirada de AI Engineer):**
 

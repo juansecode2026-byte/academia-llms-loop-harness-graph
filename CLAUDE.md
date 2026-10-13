@@ -125,6 +125,9 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   encarecieron el gasto de tokens y cómo optimizarlo); **su respuesta se agrega a la entrada del
   tema** en «Qué encareció el proceso» y «Cómo se podría optimizar», junto con la tabla
   «Tokens ahorrados en dólares» (medido contra optimizado, con estado del dato).
+- **«Para qué sirve cada dato»:** tras la tabla de variables, una viñeta por variable con objetivo,
+  decisión que permite y ejemplo concreto con números, y la tabla «Resumen: cada dato y su decisión»
+  (Dato | Pregunta que responde | Decisión que permite). Cada número se mide para decidir algo.
 - **Cada entrada del análisis cierra con «CONCLUSIONES»** (`> **CONCLUSIONES**`; el HTML la
   muestra con otra letra y recuadro): cuatro consejos de AI Engineer enfocados en solución,
   basados solo en los datos de ese análisis (qué hacer, cómo, cifra esperada con su estado y
