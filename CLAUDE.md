@@ -73,12 +73,10 @@ tema 3.7 y que el tema 3.16 amplía con el registro de experimentos, sin crear o
 Sus pasos son casillas «Ejercicio X.N» dentro de los temas del manual: se marcan allí.
 La infraestructura de WhatsApp y Supabase quedan para candyCRM.
 
-**Dashboards aplazados (decisión del 2026-10-13):** la aplicación web del laboratorio
-(temas 3.18 a 3.23 del manual) y el tablero del agente (3.11 a 3.17 del agentizando) se
-dejan fuera por ahora, porque el objetivo es entender el proceso: los resultados salen
-como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo
-archivo. El checklist se reinició sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso;
-la Fase E (3.12 a 3.26) y la Fase F (agente, Partes 3 y 4) cubren el resto.
+**Nada se aplaza (decisión del 2026-10-13):** el checklist se reinició sobre el ejercicio y
+cubre todo el Nivel 1, dashboards incluidos: 3.2 a 3.4 se rehacen con el caso, la Fase E
+(3.12 a 3.26, pasos E.1 a E.15) cubre el laboratorio y la Fase F (F.1 a F.17) el agente y su
+tablero. Más adelante se puede evaluar juntar todos los resultados en un solo archivo.
 
 ## Fuente de verdad: los .md
 

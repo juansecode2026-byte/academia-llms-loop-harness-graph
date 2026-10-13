@@ -225,7 +225,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D2: preparación del laboratorio"`
-- [ ] Ejercicio E.3: preparar la estructura del laboratorio, sin Streamlit ([ver paso E.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.3: preparar la estructura del laboratorio (carpetas y dependencias, incluido Streamlit) ([ver paso E.3](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -266,35 +266,77 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > **Notas del proceso**
 > _Pendiente de documentar._
 
-### 3.18 Estructura de la app {ref=d6:D6 etiqueta="Aplazado: dashboard"}
+### 3.18 Estructura de la app {ref=d6:D6}
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d6) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit: `git commit -m "D6: estructura de la app"`
+- [ ] Ejercicio E.7: construir la estructura del dashboard del laboratorio ([ver paso E.7](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
-### 3.19 Controles {ref=d7:D7 etiqueta="Aplazado: dashboard"}
+> **Notas del proceso**
+> _Pendiente de documentar._
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+### 3.19 Controles {ref=d7:D7}
 
-### 3.20 Vista Playground {ref=d8:D8 etiqueta="Aplazado: dashboard"}
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d7) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.8: los controles del laboratorio: modelo, effort, memoria y mensaje de sistema del caso ([ver paso E.8](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+> **Notas del proceso**
+> _Pendiente de documentar._
 
-### 3.21 Vista Comparador {ref=d9:D9 etiqueta="Aplazado: dashboard"}
+### 3.20 Vista Playground {ref=d8:D8}
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d8) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.9: vista Playground: probar una conversación del caso con cualquier configuración ([ver paso E.9](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
-### 3.22 Vista Batería de alucinaciones {ref=d10:D10 etiqueta="Aplazado: dashboard"}
+> **Notas del proceso**
+> _Pendiente de documentar._
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+### 3.21 Vista Comparador {ref=d9:D9}
 
-### 3.23 Vista Métricas {ref=d11:D11 etiqueta="Aplazado: dashboard"}
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d9) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.10: vista Comparador: la misma pregunta de un cliente con varias configuraciones lado a lado ([ver paso E.10](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.22 Vista Batería de alucinaciones {ref=d10:D10}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d10) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.11: vista Batería: correr las trampas del catálogo y calificar si inventó ([ver paso E.11](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
+
+### 3.23 Vista Métricas {ref=d11:D11}
+
+- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d11) y explica qué se va a hacer y por qué
+- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [ ] Ejercicio E.12: vista Métricas: tokens, costo y alucinaciones por configuración ([ver paso E.12](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+
+> **Notas del proceso**
+> _Pendiente de documentar._
 
 ### 3.24 Pruebas del laboratorio {ref=d12:D12}
 
@@ -303,7 +345,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D12: pruebas del laboratorio"`
-- [ ] Ejercicio E.7: pruebas sin gastar tokens del motor, el registro y la batería ([ver paso E.7](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.13: pruebas sin gastar tokens del motor, el registro y la batería ([ver paso E.13](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -315,7 +357,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-- [ ] Ejercicio E.8: correr la grilla del piloto: 10 clientes × 12 configuraciones ([ver paso E.8](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.14: correr la grilla del piloto: 10 clientes × 12 configuraciones ([ver paso E.14](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -327,7 +369,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
 - [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
 - [ ] Commit: `git commit -m "D14: tablero de decisiones"`
-- [ ] Ejercicio E.9: decidir modelo, effort y ventana con los datos del piloto, en un informe ([ver paso E.9](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [ ] Ejercicio E.15: decidir modelo, effort y ventana con los datos del piloto, en un informe ([ver paso E.15](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
 > _Pendiente de documentar._
@@ -742,3 +784,4 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 | 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
 | 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |
 | 2026-10-13 | Se reinicia el checklist sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso (casillas desmarcadas, notas previas conservadas); nuevas casillas «Ejercicio» en 3.12 a 3.15 y 3.24; renumerados los pasos E.5, E.6, E.8 y E.9; temas 3.18 a 3.23 (dashboard) aplazados. |
+| 2026-10-13 | Se revierte el aplazamiento: los temas 3.18 a 3.23 (dashboard) vuelven al checklist, con sus casillas «Ejercicio E.7 a E.12»; las pruebas, los experimentos y las decisiones pasan a E.13, E.14 y E.15. |

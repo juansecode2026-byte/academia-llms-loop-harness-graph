@@ -174,40 +174,96 @@ lead: Academia LLMs — módulo LLMs del Pensum AI Engineer. Aquí se repite cad
 
 <!-- parte: 4 | Parte 4 · Tablero de operación agéntica | 7 apartados | p4 -->
 
-### 3.11 Qué vas a construir (tablero agéntico) {ref=da0:DA0 etiqueta="Aplazado: dashboard"}
+### 3.11 Qué vas a construir (tablero agéntico) {ref=da0:DA0 etiqueta="En plan en la guía"}
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da0) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.11: definir qué indicadores del agente se van a ver y qué decisión habilita cada uno ([ver paso F.11](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
 
-### 3.12 Encabezado {ref=da1:DA1 etiqueta="Aplazado: dashboard"}
+> **Brief usado y resultado**
+> _Pendiente de documentar._
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+### 3.12 Encabezado {ref=da1:DA1 etiqueta="En plan en la guía"}
 
-### 3.13 Indicadores {ref=da2:DA2 etiqueta="Aplazado: dashboard"}
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da1) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.12: encabezado del tablero: qué agente, qué variante y qué periodo se mira ([ver paso F.12](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+> **Brief usado y resultado**
+> _Pendiente de documentar._
 
-### 3.14 Vistas {ref=da3:DA3 etiqueta="Aplazado: dashboard"}
+### 3.13 Indicadores {ref=da2:DA2 etiqueta="En plan en la guía"}
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da2) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.13: calcular los indicadores del agente asesor de viajes: éxito, costo por tarea, inventó, escalado ([ver paso F.13](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
 
-### 3.15 Reglas de decisión · ciclo de mejora {ref=da4:DA4 etiqueta="Aplazado: dashboard"}
+> **Brief usado y resultado**
+> _Pendiente de documentar._
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+### 3.14 Vistas {ref=da3:DA3 etiqueta="En plan en la guía"}
 
-### 3.16 Bibliotecas y construcción {ref=da5:DA5 etiqueta="Aplazado: dashboard"}
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da3) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.14: vistas del tablero: resumen, variantes, grafo, ejecuciones y decisiones ([ver paso F.14](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+> **Brief usado y resultado**
+> _Pendiente de documentar._
 
-### 3.17 Pruebas y cierre {ref=da6:DA6 etiqueta="Aplazado: dashboard"}
+### 3.15 Reglas de decisión · ciclo de mejora {ref=da4:DA4 etiqueta="En plan en la guía"}
 
-> **Aplazado**
-> Decisión del 2026-10-13: el dashboard se deja fuera por ahora, porque el objetivo es entender el proceso. Los resultados salen como archivos y tablas. Más adelante se evalúa juntar todos los resultados en un solo archivo.
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da4) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.15: reglas «si… entonces…» para ajustar el agente y volver a evaluarlo ([ver paso F.15](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Brief usado y resultado**
+> _Pendiente de documentar._
+
+### 3.16 Bibliotecas y construcción {ref=da5:DA5 etiqueta="En plan en la guía"}
+
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da5) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.16: construir el tablero con las bibliotecas de la guía ([ver paso F.16](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Brief usado y resultado**
+> _Pendiente de documentar._
+
+### 3.17 Pruebas y cierre {ref=da6:DA6 etiqueta="En plan en la guía"}
+
+- [ ] Releer el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#da6) y confirmar que el Nivel 1 manual está cerrado ([ver manual](resultados-proceso-manual.html#s3))
+- [ ] Redactar el brief para el agente: objetivo, contexto, restricciones y formato de salida
+- [ ] Elegir la forma: Claude Code, subagente, skill o script con Agent SDK
+- [ ] Ejecutar, revisar la salida y corregir; nunca aceptar sin leer
+- [ ] Medir contra la línea base: tiempo, costo en tokens y calidad (sección 7)
+- [ ] Commit con la evidencia (prompt usado + resultado)
+- [ ] Ejercicio F.17: pruebas sin gastar tokens del tablero y cierre ([ver paso F.17](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s11))
+
+> **Brief usado y resultado**
+> _Pendiente de documentar._
 
 ### 3.18 Proyecto del nivel {proyecto}
 
@@ -556,3 +612,4 @@ Procesos que se repitieron. Se trasladan a `DECISIONES.md` como candidatos aplaz
 | 2026-10-12 | Creación del documento con índice y checklist de los 4 niveles. Pensum v1.1 copiado a docs/ y enlazado. Documentos movidos a resultados/; Nivel 1 rehecho con las etapas de la guía v7; agregado el índice de la guía; índices con casilla de avance por tema; códigos de la guía (F0, E1…) reemplazados por nombres; secciones reordenadas (niveles = 3 a 6); «manual» redefinido como guiado con Claude; carpeta docs/ renombrada a «Documentación para la construcción del proyecto». |
 | 2026-10-12 | Los .md pasan a ser la fuente de verdad: se edita el .md y el HTML se regenera con scripts/md_a_html.py. |
 | 2026-10-13 | Nuevas casillas «Ejercicio F.1 a F.10» en los temas 3.1 a 3.10 (agente sobre el caso de viajes); temas 3.11 a 3.17 (tablero del agente) aplazados. |
+| 2026-10-13 | Se revierte el aplazamiento: los temas 3.11 a 3.17 (tablero del agente) vuelven al checklist, con sus casillas «Ejercicio F.11 a F.17». |

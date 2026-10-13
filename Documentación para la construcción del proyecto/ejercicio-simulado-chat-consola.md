@@ -167,24 +167,30 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 | D.3 | Pruebas sin gastar tokens del simulador y de la memoria por cliente | [3.10 Pruebas automáticas](../resultados/resultados-proceso-manual.html#s3-10) |
 | D.4 | Informe del piloto: tokens, costo y alucinaciones por cliente | [3.11 Cierre del nivel](../resultados/resultados-proceso-manual.html#s3-11) |
 
-## 10. Fase E · El laboratorio sobre el caso (Parte 2, sin dashboard)
+## 10. Fase E · El laboratorio sobre el caso (Parte 2)
 
-Se construyen las piezas de medición del laboratorio de la guía y se corren sobre el caso. **No se construye la aplicación web** (Streamlit): los resultados salen como archivos y tablas (ver la sección 12).
+Se construye el laboratorio de la guía completo, con su dashboard (Streamlit), y se corre sobre el caso. Nada de esta fase se aplaza.
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
 | E.1 | Definir qué se va a medir del asesor de viajes y con qué objetivo | [3.12 Qué vas a construir (laboratorio)](../resultados/resultados-proceso-manual.html#s3-12) |
 | E.2 | Fijar los controles (modelo, effort, ventana de memoria, mensaje de sistema) y las mediciones sobre el caso | [3.13 Qué controlamos y qué medimos](../resultados/resultados-proceso-manual.html#s3-13) |
-| E.3 | Preparar la estructura del laboratorio, sin Streamlit | [3.14 Preparación del laboratorio](../resultados/resultados-proceso-manual.html#s3-14) |
+| E.3 | Preparar la estructura del laboratorio: carpetas y dependencias, incluido Streamlit | [3.14 Preparación del laboratorio](../resultados/resultados-proceso-manual.html#s3-14) |
 | E.4 | Construir el motor de medición: una llamada medida con la configuración del caso | [3.15 Motor de medición](../resultados/resultados-proceso-manual.html#s3-15) |
 | E.5 | Ampliar la base única del piloto (creada en C.3) con el registro de experimentos de la guía, sin crear otra | [3.16 Registro de experimentos (SQLite)](../resultados/resultados-proceso-manual.html#s3-16) |
 | E.6 | Armar la batería de preguntas con trampas y el modelo juez desde el caso | [3.17 Batería de preguntas y modelo juez](../resultados/resultados-proceso-manual.html#s3-17) |
-| E.7 | Pruebas sin gastar tokens del motor, el registro y la batería | [3.24 Pruebas del laboratorio](../resultados/resultados-proceso-manual.html#s3-24) |
-| E.8 | Correr la grilla del piloto con un script: 10 clientes × 12 configuraciones | [3.25 Experimentos y cierre](../resultados/resultados-proceso-manual.html#s3-25) |
-| E.9 | Decidir modelo, effort y ventana con los datos, en un informe | [3.26 Tablero de decisiones](../resultados/resultados-proceso-manual.html#s3-26) |
-## 11. Fase F · El agente sobre el caso (Partes 3 y 4, sin dashboard)
+| E.7 | Estructura del dashboard del laboratorio | [3.18 Estructura de la app](../resultados/resultados-proceso-manual.html#s3-18) |
+| E.8 | Controles: modelo, effort, memoria y mensaje de sistema del caso | [3.19 Controles](../resultados/resultados-proceso-manual.html#s3-19) |
+| E.9 | Vista Playground: probar una conversación del caso con cualquier configuración | [3.20 Vista Playground](../resultados/resultados-proceso-manual.html#s3-20) |
+| E.10 | Vista Comparador: la misma pregunta de un cliente con varias configuraciones lado a lado | [3.21 Vista Comparador](../resultados/resultados-proceso-manual.html#s3-21) |
+| E.11 | Vista Batería de alucinaciones: correr las trampas y calificar si inventó | [3.22 Vista Batería de alucinaciones](../resultados/resultados-proceso-manual.html#s3-22) |
+| E.12 | Vista Métricas: tokens, costo y alucinaciones por configuración | [3.23 Vista Métricas](../resultados/resultados-proceso-manual.html#s3-23) |
+| E.13 | Pruebas sin gastar tokens del motor, el registro, la batería y el dashboard | [3.24 Pruebas del laboratorio](../resultados/resultados-proceso-manual.html#s3-24) |
+| E.14 | Correr la grilla del piloto: 10 clientes × 12 configuraciones | [3.25 Experimentos y cierre](../resultados/resultados-proceso-manual.html#s3-25) |
+| E.15 | Decidir modelo, effort y ventana con los datos, en el tablero de decisiones | [3.26 Tablero de decisiones](../resultados/resultados-proceso-manual.html#s3-26) |
+## 11. Fase F · El agente sobre el caso (Partes 3 y 4)
 
-Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente con herramientas, un ciclo (loop), un grafo y un harness con límites. Es donde se prueban y comparan las diferencias entre estas piezas. El tablero de la Parte 4 queda aplazado (sección 12).
+Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente con herramientas, un ciclo (loop), un grafo y un harness con límites. Es donde se prueban y comparan las diferencias entre estas piezas. La Parte 4 construye el tablero que mide al agente.
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
@@ -198,6 +204,13 @@ Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente c
 | F.8 | Trazas: cada paso del agente guardado en la base única | [3.8 Trazas](../resultados/resultados-proceso-agentizando.html#s3-8) |
 | F.9 | Evaluar las variantes (sin loop, con loop, con graph, con harness) sobre los casos y comparar | [3.9 Evaluación y optimización](../resultados/resultados-proceso-agentizando.html#s3-9) |
 | F.10 | Pruebas sin gastar tokens y cierre | [3.10 Pruebas y cierre](../resultados/resultados-proceso-agentizando.html#s3-10) |
+| F.11 | Definir qué indicadores del agente se ven y qué decisión habilita cada uno | [3.11 Qué vas a construir (tablero agéntico)](../resultados/resultados-proceso-agentizando.html#s3-11) |
+| F.12 | Encabezado del tablero: qué agente, qué variante y qué periodo | [3.12 Encabezado](../resultados/resultados-proceso-agentizando.html#s3-12) |
+| F.13 | Calcular los indicadores: éxito, costo por tarea, información inventada, escalado | [3.13 Indicadores](../resultados/resultados-proceso-agentizando.html#s3-13) |
+| F.14 | Vistas: resumen, variantes, grafo, ejecuciones y decisiones | [3.14 Vistas](../resultados/resultados-proceso-agentizando.html#s3-14) |
+| F.15 | Reglas de decisión y ciclo de mejora del agente | [3.15 Reglas de decisión · ciclo de mejora](../resultados/resultados-proceso-agentizando.html#s3-15) |
+| F.16 | Construir el tablero con las bibliotecas de la guía | [3.16 Bibliotecas y construcción](../resultados/resultados-proceso-agentizando.html#s3-16) |
+| F.17 | Pruebas sin gastar tokens del tablero y cierre | [3.17 Pruebas y cierre](../resultados/resultados-proceso-agentizando.html#s3-17) |
 ## 12. Lo que queda para después
 
 | Qué | Por qué no va ahora | Cuándo |
@@ -205,8 +218,6 @@ Con las decisiones de la Fase E, el asesor de viajes se convierte en un agente c
 | La infraestructura de WhatsApp (webhook de Meta, ventana de 24 h, plantillas) | Es infraestructura, no concepto de LLMs | Al llevarlo a candyCRM |
 | Supabase y multi-tenant | SQLite alcanza para el piloto local | Al llevarlo a candyCRM |
 | Cliente simulado por Claude (un segundo modelo que hace de cliente) | Llama a Claude, así que cuenta como agente | Partes 2 o 3 |
-| Dashboard del laboratorio (aplicación web con Streamlit: estructura, controles y cuatro vistas, temas 3.18 a 3.23 del manual) | El objetivo por ahora es entender el proceso; los resultados salen como archivos y tablas | Más adelante, evaluando juntar **todos los resultados en un solo archivo** para ir directo al punto |
-| Tablero del agente (Parte 4: temas 3.11 a 3.17 del agentizando) | Mismo motivo | Igual que el anterior |
 | Ampliar a 30 clientes | Primero validar el proceso con 10 | Después del piloto |
 
 ## 13. Cómo se estandariza
@@ -220,4 +231,4 @@ Lo que queda como estándar para otros proyectos no es el caso de viajes, sino e
 | 2026-10-12 | Creación del documento: caso, funcionamiento, datos del piloto (10 clientes), variables, fases y enlaces al checklist. |
 | 2026-10-13 | Decisión: la base SQLite nace en 3.7 (C.3) y es la única; el tema 3.16 la amplía con el registro de experimentos (paso E.5) en vez de crear otra. |
 | 2026-10-13 | Se reinicia el checklist sobre el ejercicio: la Fase A se rehace con el caso, la Fase E cubre todo el laboratorio sin dashboard (pasos E.1 a E.9, antes E.0 a E.3), nueva Fase F para las Partes 3 y 4, y se aplazan los dashboards. |
-
+| 2026-10-13 | Se revierte el aplazamiento de los dashboards: la Fase E vuelve a cubrir toda la Parte 2 (pasos E.1 a E.15) y la Fase F toda la Parte 3 y 4 (F.1 a F.17). |
