@@ -172,15 +172,26 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.6 Panorama de modelos de Anthropic {ref=e5:E5}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e5) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit: `git commit -m "etapa 5: panorama de modelos"`
-- [ ] Ejercicio B.2: comparar Haiku, Sonnet y Opus con una pregunta de un cliente del caso ([ver paso B.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e5) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit: `git commit -m "etapa 5: panorama de modelos"`
+- [x] Ejercicio B.2: comparar Haiku, Sonnet y Opus con una pregunta de un cliente del caso ([ver paso B.2](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s7))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Script: `chat-consola/etapas/e5_modelos_anthropic.py`. Parte A: la API lista 14 modelos disponibles para la cuenta; los tres de la familia 5.5 (Haiku, Sonnet y Opus) tienen contexto de 1.000.000 de tokens y salida máxima de 128.000; también aparecen Fable 5.1, Opus 5, Sonnet 5, Fable 5 y versiones anteriores (algunas de 200.000 de contexto). Parte B: la misma consulta de un cliente, con el catálogo cargado y `effort` bajo: «somos 2, del 10 al 14 de diciembre, queremos ir a cartagena. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro». Una sola muestra por modelo.
+>
+> | Modelo | Segundos | Tokens de salida (razonamiento) | Costo (USD) | Calidad (1–5, juicio de Claude) |
+> |---|---|---|---|---|
+> | Haiku 5.5 | 2,6 | 391 (182) | 0,00086 | 4 |
+> | Sonnet 5.5 | 4,1 | 367 (0) | 0,01691 | 5 |
+> | Opus 5.5 | 4,7 | 454 (110) | 0,03555 | 5 |
+>
+> 1. **Los tres usaron el mismo dato del catálogo:** `casa-naranja-del-centro`, 480.000 por noche, 4 noches = $1.920.000. Ninguno inventó un precio; los tres avisaron que diciembre es temporada alta y que un asesor confirma la tarifa. La exactitud de la cifra es igual en los tres.
+> 2. **La diferencia está en el estilo, no en los datos:** Haiku dio una respuesta corta con una sola opción y ofreció buscar algo más económico. Sonnet y Opus agregaron alternativas del catálogo (`hotel-brisas-de-bocagrande` desde $360.000; Opus también `hostal-la-muralla-viva` desde $120.000) y cerraron proponiendo pasar con un asesor. Por eso les doy 5 y a Haiku 4: es un juicio mío con una muestra, no una medición.
+> 3. **El costo sí cambia mucho:** Sonnet costó 19,7 veces lo de Haiku y Opus 41 veces, con los mismos 6.618 tokens de entrada. El tiempo cambió poco (de 2,6 a 4,7 s). El razonamiento fue distinto sin seguir el orden de precio (Sonnet 0, Opus 110, Haiku 182).
+> **Para pensar** (¿la diferencia de calidad justifica la de costo? ¿cuál usar en el chat final?): para esta consulta no. La cifra que le importa al cliente es idéntica y la diferencia es de estilo, a un costo 20 a 41 veces mayor. El chat del piloto debería correr en Haiku, y Sonnet o Opus quedarían para casos que lo exijan (consultas complejas o reclamos), lo que se confirma con la calidad medida en el laboratorio (3.25, 3.26 y 3.32).
 
 ### 3.7 Primer chat con memoria {ref=e6:E6}
 
@@ -979,6 +990,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.4 completo con 10 conversaciones reales (184 llamadas, 0,213 USD): radiografía del contexto, palancas calculadas y entrada del análisis. Se adelantan los pasos C.2, C.3 y C.4 (clientes, base SQLite y simulador). Las estimaciones de 3.2 y 3.3 pasan a cifras calculadas. |
 | 2026-10-13 | La entrada 3.4 suma la tabla «Tokens ahorrados en dólares» (medido contra optimizado) y se agrega un hook que pide esa tabla en cada entrada del análisis. |
 | 2026-10-13 | Tema 3.5 completo con el asesor y el catálogo (8 llamadas, 0,00737 USD): max_tokens, effort, system y temperatura; entrada del análisis con la tabla de ahorro. |
+| 2026-10-13 | Tema 3.6 completo con el asesor y el catálogo (3 llamadas, una por modelo, 0,0533 USD): lista de modelos de la API, comparación Haiku, Sonnet y Opus y entrada del análisis con la tabla de ahorro. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1026,7 +1038,7 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 | Longitud de la conversación | Cuántos turnos dura | De 0,0090 USD (10 turnos) a 0,0317 USD (24 turnos) por conversación (3.4) | Ventana, resumen, filtrar catálogo | Medido | 3.25 |
 | Razonamiento | Lo que el modelo piensa antes de responder | 39 % de la salida en el primer mensaje largo (3.3); 17 % en las conversaciones (3.4), cerca del 3 % del costo | Esfuerzo (effort) según el tipo de mensaje; sin efecto claro con 1 muestra por nivel (3.5) | Medido; efecto por medir | 3.32 |
 | Longitud de la respuesta | Lo que el asesor escribe al cliente | 416 tokens de salida por respuesta en promedio, 18 % del costo (3.4) | Respuestas de chat; un tope bajo corta sin abaratar (3.5) | Medido | 3.5, 3.32 |
-| Modelo | Haiku, Sonnet u Opus | Sonnet cuesta unas 20 veces más que Haiku por token | Elegir el modelo según la tarea | Calculado con los precios | 3.6 |
+| Modelo | Haiku, Sonnet u Opus | La misma consulta costó 0,00086 (Haiku), 0,01691 (Sonnet, 19,7 veces) y 0,03555 USD (Opus, 41 veces) con el mismo precio correcto del catálogo (3.6) | Haiku por defecto; Sonnet u Opus solo si la tarea lo exige | Medido (1 muestra); calidad por medir | 3.6, 3.26 |
 | Formato de los datos | Cómo se escribe el catálogo | Compacto: 18 % menos tokens (7.923 a 6.469) | Ya aplicado | Medido | — |
 | Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 en adelante |
 | Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Con catálogo, 3 de 3 respuestas con la misma cifra verificable: $1.920.000 de `casa-naranja-del-centro` (3.2); 13 de 14 recuerdos correctos con el historial completo (3.4) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
@@ -1251,3 +1263,49 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 
 > **Ejemplo**
 > Al cliente que pregunta «cuanto vale ir a cartagena 4 noches?» el asesor respondió, con los mismos datos del catálogo en todas las pruebas: `hostal-la-muralla-viva` $480.000, `hotel-brisas-de-bocagrande` $1.440.000 y `casa-naranja-del-centro` $1.920.000 (120.000, 360.000 y 480.000 por noche). Con `max_tokens=150` esa respuesta nunca salió: el asesor gastó los 150 tokens pensando y el cliente se quedó sin respuesta, por 0,00073 USD. Con la regla «máximo 2 frases», la respuesta fue un solo párrafo con los tres precios, pero costó más (0,00110 USD) porque el asesor razonó 697 tokens para resumir.
+
+#### 3.6 · Panorama de modelos de Anthropic (2026-10-13)
+
+**Qué se hizo:** se consultó a la API qué modelos puede usar la cuenta (14 en total) y se puso a los tres de la familia 5.5, Haiku, Sonnet y Opus, a responder la misma consulta de un cliente con el catálogo cargado. Se midieron tiempo, tokens y costo. Fueron 3 llamadas por 0,0533 USD.
+
+**A qué nos conduce:** a que **elegir modelo es la decisión de costo más grande que hay**, mucho más que `effort` o la longitud de la respuesta. Con los mismos datos del catálogo, los tres dieron el mismo precio correcto, y la diferencia fue de estilo: Sonnet y Opus ofrecieron alternativas y cerraron mejor. Esa mejora de estilo cuesta de 20 a 41 veces más. Con una sola muestra no se concluye la calidad, pero sí que no se justifica pagar más por el precio de una cotización simple.
+
+**En el ejercicio:** el piloto del asesor debería correr en Haiku. Si más adelante un tipo de consulta exige más (un reclamo, una cotización con muchas condiciones), se le puede enviar a un modelo más grande, y eso se decide con la calidad medida en el laboratorio.
+
+**Qué encareció el proceso:** la entrada fue la misma en los tres (6.618 tokens, casi todo catálogo), así que **el precio por token fue lo único que movió el costo**. Haiku cobra 0,10 USD por millón de tokens de entrada, Sonnet 2,00 y Opus 4,00. En los tres, la entrada con el catálogo fue la mayor parte: 77 % del costo en Haiku, 78 % en Sonnet y 74 % en Opus.
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Modelo | 0,00086 USD (Haiku), 0,01691 (Sonnet), 0,03555 (Opus) | Sonnet cuesta 19,7 veces y Opus 41,3 veces lo de Haiku por la misma consulta |
+| Tokens de entrada | 6.618 en los tres | Igual para todos; es el catálogo reenviado |
+| Tiempo de respuesta | 2,6 s, 4,1 s y 4,7 s | Sonnet y Opus tardan 1,6 y 1,8 veces más, una diferencia pequeña frente al costo |
+| Razonamiento | 182, 0 y 110 tokens | No sigue el orden de precio; es parte de la salida y se paga a la tarifa de salida |
+| Calidad de la cifra | Los tres: $1.920.000, de `casa-naranja-del-centro` | Idéntica; el modelo más caro no mejora el dato |
+| Estilo de la respuesta | Haiku una opción; Sonnet y Opus agregan alternativas | Es lo único que se compra al pagar más |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Modelo | Haiku por defecto y modelo grande solo para casos que lo exijan (enrutar por tipo de consulta) | Costo del piloto 20 veces menor que con Sonnet | **Calculado** con los precios y los tokens medidos; la calidad, **por medir** | 3.26 y 3.32 |
+| Calidad por modelo | Medir con las 10 conversaciones y una rúbrica, no con una sola muestra | Decidir si el estilo de Sonnet u Opus justifica su precio | **Por medir** | 3.26 y 3.32 |
+| Tokens de entrada | Filtrar el catálogo por ciudad de interés | Con Haiku −39 %; con un modelo grande el ahorro en dólares sería 20 a 40 veces mayor | **Calculado** | 3.25 y 3.30 |
+| Tiempo de respuesta | Medir primer token y tiempos con más muestras | Saber si la diferencia de 2,1 s pesa en WhatsApp | **Por medir** | 3.15 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** el ahorro de elegir modelo no está en tokens, que son los mismos, sino en el precio de cada uno. Comparación entre la consulta medida en cada modelo y el piloto completo (184 llamadas, 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD en Haiku).
+
+| Concepto | Tokens | Costo en Sonnet (USD) | Costo en Haiku (USD) | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Una consulta (6.618 de entrada y ~400 de salida) | Igual en ambos | 0,01691 | 0,00086 | 0,01605 (−95 %) | **Medido** (1 muestra) |
+| Una consulta en Opus frente a Haiku | Igual | 0,03555 | 0,00086 | 0,03469 (−98 %) | **Medido** (1 muestra) |
+| Las 184 llamadas del piloto, en Sonnet frente a Haiku | 1.747.598 de entrada y 76.523 de salida | ~4,26 | 0,2130 | ~4,05 | **Calculado** (tokens y tarifa medidos; supone el mismo comportamiento) |
+| Las 184 llamadas del piloto, en Opus frente a Haiku | Igual | ~8,52 | 0,2130 | ~8,31 | **Calculado** (mismo supuesto) |
+| Haiku con catálogo filtrado, frente a Sonnet con catálogo completo | 1.747.598 de entrada a ~570.600 | ~4,26 | ~0,0953 | ~4,16 | **Calculado** |
+
+En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente a Sonnet y unos 8 frente a Opus por cada 10 conversaciones, y la cifra que ve el cliente es la misma. Falta confirmar con las 10 conversaciones que Haiku no pierda calidad en los casos difíciles.
+
+> **Ejemplo**
+> El cliente dijo: «somos 2, del 10 al 14 de diciembre, queremos ir a cartagena. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro». Los tres modelos recomendaron `casa-naranja-del-centro` (480.000 por noche, 4 noches, $1.920.000) y avisaron que diciembre es temporada alta. Haiku lo hizo por 0,00086 USD. Sonnet agregó `hotel-brisas-de-bocagrande` (desde $360.000) por 0,01691 USD, y Opus sumó también `hostal-la-muralla-viva` (desde $120.000) por 0,03555 USD. A 1.000 conversaciones con unos 18 mensajes cada una, la diferencia entre Haiku y Sonnet sería de cientos de dólares al mes por un cierre de respuesta mejor redactado.
+
