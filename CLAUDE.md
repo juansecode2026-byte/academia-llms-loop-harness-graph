@@ -99,6 +99,10 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   «Qué se hizo», «A qué nos conduce» y un `> **Ejemplo**` concreto (con números reales
   cuando los haya), en palabras simples para alguien que empieza. El título del tema
   enlaza solo a esa entrada: el formato `#### N.M · ` es lo que lo activa.
+  Cada entrada lleva además una línea **«En el ejercicio:»** que explica qué significa ese
+  resultado para el asesor de viajes.
+- **Las filas de la bitácora van dentro de la tabla de la sección 9**, no al final del
+  archivo (en el manual, el «Análisis de resultados» va después de la bitácora).
 
 ### Formato de los .md de resultados
 

@@ -908,37 +908,57 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-12 | Creación del documento con índice y checklist de los 4 niveles. Pensum v1.1 copiado a docs/ y enlazado. Documentos movidos a resultados/; Nivel 1 rehecho con las etapas de la guía v7; agregado el índice de la guía; índices con casilla de avance por tema; códigos de la guía (F0, E1…) reemplazados por nombres; secciones reordenadas (niveles = 3 a 6); «manual» redefinido como guiado con Claude; carpeta docs/ renombrada a «Documentación para la construcción del proyecto». |
 | 2026-10-12 | Los .md pasan a ser la fuente de verdad: se edita el .md y el HTML se regenera con scripts/md_a_html.py. |
 | 2026-10-12 | Nueva sección «Análisis de resultados» (al final, sin número, con título destacado): explicación para principiantes y registro de lo que se va logrando. |
+| 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
+| 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
+| 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |
+| 2026-10-13 | Se reinicia el checklist sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso (casillas desmarcadas, notas previas conservadas); nuevas casillas «Ejercicio» en 3.12 a 3.15 y 3.24; renumerados los pasos E.5, E.6, E.8 y E.9; temas 3.18 a 3.23 (dashboard) aplazados. |
+| 2026-10-13 | Se revierte el aplazamiento: los temas 3.18 a 3.23 (dashboard) vuelven al checklist, con sus casillas «Ejercicio E.7 a E.12»; las pruebas, los experimentos y las decisiones pasan a E.13, E.14 y E.15. |
+| 2026-10-13 | Las Partes 3 y 4 (agente y tablero) pasan a este documento como los temas 3.27 a 3.43, con las casillas «Ejercicio F.1 a F.17»; el proyecto del nivel pasa a ser el 3.44. El agentizando queda como segundo pase opcional. |
+| 2026-10-13 | Se reescribe el texto general del «Análisis de resultados» con el ejercicio del asesor de viajes y se agrega «En el ejercicio» a cada entrada. Las filas de esta bitácora que habían quedado al final del archivo vuelven a esta tabla. |
 
 ## Análisis de resultados {id=analisis}
 
-Esta sección explica, en palabras simples, para qué sirve todo lo que se construye aquí. Está pensada para alguien que empieza en el campo de la inteligencia artificial.
+Esta sección explica, en palabras simples, para qué sirve todo lo que se construye aquí y qué va dejando cada tema. Está pensada para alguien que empieza en el campo de la inteligencia artificial.
 
 #### El objetivo, en una frase
 
-Aprender a usar un modelo de lenguaje (un LLM, como Claude) desde un programa propio, medir cuánto cuesta y qué tan bien responde, y usar esas mediciones para construir un agente que haga trabajo real por sí solo, con reglas y bajo control.
+Aprender a usar un modelo de lenguaje (un LLM, como Claude) desde un programa propio, medir cuánto cuesta y qué tan bien responde, y usar esas mediciones para construir un agente que haga trabajo real por sí solo, con reglas y bajo control. Todo se hace sobre un caso simulado que se trata como real.
+
+#### El caso sobre el que se hace todo
+
+En lugar de practicar con preguntas sueltas, todo el checklist se vive sobre un mismo caso: un **asesor de viajes** de una agencia ficticia, «Turismo Colombia (simulada)», que atiende por WhatsApp a 10 clientes ficticios. Los datos son inventados (catálogo de destinos, hospedajes y tours, y las conversaciones de los clientes), pero se tratan como reales: mensajes cortos e informales, clientes que vuelven otro día, preguntas trampa sobre cosas que no están en el catálogo.
+
+¿Por qué un caso y no ejemplos sueltos? Porque así cada concepto se ve con consecuencias de negocio. Un precio inventado deja de ser una curiosidad técnica: es una cotización falsa a un cliente. Un chat que olvida que alguien es alérgico al maní deja de ser un detalle de memoria: es un problema de verdad. Y como el proceso es el mismo para cualquier negocio, lo que se aprende aquí se puede llevar a otros proyectos cambiando solo el catálogo y los clientes. El ejercicio completo está explicado en el documento «Ejercicio simulado · Chat de consola».
 
 #### Qué se construye y qué se obtiene
 
-1. **Un chat de consola con memoria** (Parte 1). Es un programa que conversa con Claude desde la terminal y recuerda lo que se habló. Construirlo enseña lo básico: cómo se le habla al modelo, qué es un token, cuánto cuesta cada mensaje y por qué el modelo a veces inventa. **Resultado:** saber conectar cualquier programa a un LLM.
-2. **Un laboratorio de parámetros** (Parte 2). Es una pequeña aplicación web para probar el mismo pedido con distintos modelos y ajustes, y medir tiempo, costo y calidad. **Resultado:** decidir con datos, no a ojo, qué modelo y qué configuración usar para cada tarea.
-3. **Un agente** (Parte 3). Es un programa en el que el LLM no solo responde: decide pasos, usa herramientas y repite hasta terminar una tarea, con límites de gasto y con aprobación humana cuando hace falta. **Resultado:** automatizar un proceso real de principio a fin.
-4. **Un tablero del agente** (Parte 4). Muestra qué tan bien trabaja el agente comparado con hacerlo a mano, y sugiere ajustes. **Resultado:** mejorar el agente con evidencia y saber si vale la pena.
+1. **El chat del asesor de viajes, con memoria** (Parte 1, temas 3.1 a 3.11). Es un programa que conversa con Claude desde la terminal, atiende a varios clientes y recuerda lo que cada uno dijo. Construirlo enseña lo básico: cómo se le habla al modelo, qué es un token, cuánto cuesta cada mensaje y por qué el modelo a veces inventa. **Resultado:** saber conectar cualquier programa a un LLM y saber qué puede salir mal.
+2. **El laboratorio de parámetros, con su dashboard** (Parte 2, temas 3.12 a 3.26). Es una aplicación para probar el mismo pedido de un cliente con distintos modelos y ajustes, y medir tiempo, costo y calidad. **Resultado:** decidir con datos, no a ojo, qué modelo y qué configuración usar.
+3. **El agente asesor** (Parte 3, temas 3.27 a 3.36). Es un programa en el que el LLM no solo responde: decide pasos, consulta el catálogo con herramientas y repite hasta resolver, con límites de gasto y aprobación humana cuando hace falta. **Resultado:** automatizar de punta a punta la atención de un cliente, bajo control.
+4. **El tablero del agente** (Parte 4, temas 3.37 a 3.43). Muestra qué tan bien trabaja el agente comparado con hacerlo a mano, y sugiere ajustes. **Resultado:** mejorar el agente con evidencia y saber si vale la pena.
+5. **El proyecto del nivel** (tema 3.44). El resumen de todo lo anterior como una pieza que se puede mostrar.
 
 #### Para qué sirve todo esto
 
 - **Para el portafolio:** cada etapa queda como un commit en GitHub, que es la prueba de que se sabe hacer.
-- **Para Minus:** es la base para ofrecer a clientes asistentes y agentes que funcionan, cuestan lo que se calculó y se pueden medir. Por ejemplo, un agente que clasifica y responde las solicitudes de posventa de una constructora.
+- **Para Minus:** es la base para ofrecer a clientes asistentes y agentes que funcionan, cuestan lo que se calculó y se pueden medir. El asesor de viajes es el modelo; lo mismo vale para una inmobiliaria, una constructora o un call center.
+- **Para otros proyectos:** el proceso queda estandarizado (checklist, forma de medir y de documentar), así que se puede llevar a otro repositorio, como el CRM de ventas, cambiando solo los datos.
 - **Para el criterio propio:** se aprende a detectar cuándo un LLM sirve y cuándo no, cuánto va a costar antes de construir y cómo evitar que invente datos.
 
-#### Lo que vamos logrando
+#### Cómo leer cada entrada
 
-Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qué se hizo, en palabras simples, a qué nos conduce y un ejemplo concreto. El número y el título de cada tema, más arriba, llevan directo a su entrada.
+Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta con cuatro partes: **qué se hizo**, **a qué nos conduce**, **en el ejercicio** (qué significa ese resultado para el asesor de viajes) y un **ejemplo** concreto con números cuando los hay. El número y el título de cada tema, más arriba, llevan directo a su entrada.
+
+#### Lo que vamos logrando
 
 #### 2 · Base del proyecto (2026-10-12)
 
 **Qué se hizo:** se escribió el objetivo del proyecto, se creó el repositorio privado en GitHub, se configuró Git y se separó la documentación de los resultados.
 
 **A qué nos conduce:** ya hay un lugar ordenado donde cada avance queda guardado y fechado. Desde ahora, todo lo que se construya deja rastro, y ese rastro es el portafolio.
+
+**En el ejercicio:** el repositorio es donde viven el catálogo ficticio, los 10 clientes, el simulador y la base de datos del piloto, junto con cada commit del asesor de viajes. Si mañana el caso se lleva a otro proyecto, este historial muestra cómo se construyó.
+
 
 > **Ejemplo**
 > Funciona como la historia clínica de un paciente. Si dentro de seis meses alguien de un cliente de Minus pregunta «¿desde cuándo saben conectar sistemas a Claude?», no hace falta decir «hace un tiempo»: se abre GitHub y se ve el commit «etapa 1: primera llamada a la API», con fecha, código y resultado.
@@ -949,17 +969,23 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 **A qué nos conduce:** es el piso sobre el que se apoya todo lo demás. Sin entorno aislado, los proyectos se estorban entre sí; sin la clave protegida, un descuido la publicaría y alguien podría gastar tu dinero. Con esto listo, el siguiente paso es el primero emocionante: hacer que un programa nuestro le haga una pregunta a Claude y reciba la respuesta.
 
+**En el ejercicio:** es el mismo entorno desde el que corre el asesor de viajes. La clave solo se gasta con clientes simulados, y como es exclusiva de este proyecto, el gasto del ejercicio se ve aparte del resto.
+
+
 > **Ejemplo**
 > El entorno virtual es como tener una caja de herramientas aparte para cada obra. Si el CRM necesita una versión de la biblioteca `anthropic` y esta Academia otra, cada uno usa la suya y ninguno rompe al otro.
 > La clave en `.env` es como la llave de la casa guardada en un cajón, no pegada en la puerta: el programa la usa, pero no queda a la vista. Cuando hoy la clave quedó escrita en `.env.example` (la plantilla que sí se sube a GitHub), fue como dejarla pegada en la puerta; por eso se cambió la cerradura: se revocó y se creó otra.
 
 #### 3.2 · Primera llamada a la API (2026-10-12)
 
-**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
+**Versión previa:** hecha con ejemplos sueltos de la guía; se reemplaza cuando el tema se rehaga con el caso del ejercicio.
 
 **Qué se hizo:** se escribió un programa de 25 líneas que le hace una pregunta a Claude y muestra todo lo que devuelve: la respuesta, por qué terminó y cuántos tokens usó. Se ejecutó tres veces con la API real.
 
 **A qué nos conduce:** es la prueba de que la conexión funciona y de que ya podemos usar un modelo de lenguaje desde nuestro propio código. Dos cosas que se aprenden de verlo en vivo: la respuesta cambia un poco cada vez, así que un LLM no es una base de datos con respuestas fijas; y cada respuesta tiene un costo medible en tokens, que aquí fue de centésimas de centavo. Esas dos ideas, variación y costo, son las que más adelante se miden en el laboratorio y deciden si un agente es viable.
+
+**En el ejercicio:** se va a rehacer con un mensaje de cliente («hola buenas, cuanto vale ir a cartagena 4 noches?») sin catálogo. Se espera ver cómo el modelo inventa precios, y esa será la razón de cargar el catálogo más adelante.
+
 
 > **Ejemplo**
 > La pregunta «¿Qué es un modelo de lenguaje?» usó 34 tokens de entrada y unos 112 de salida. Con los precios de Haiku 5.5 (0,10 USD por millón de tokens de entrada y 0,50 por millón de salida), cada respuesta cuesta unos 0,00006 USD. Un asistente que contestara 10.000 preguntas parecidas al mes gastaría unos 0,60 USD.
@@ -967,11 +993,14 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-12)
 
-**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
+**Versión previa:** hecha con ejemplos sueltos de la guía; se reemplaza cuando el tema se rehaga con el caso del ejercicio.
 
 **Qué se hizo:** se recibió la respuesta de Claude «en vivo», pedazo por pedazo, como cuando ChatGPT va escribiendo en pantalla. Cada pedazo se separó con una barra para ver cómo llegan. También se pidió ver el razonamiento resumido del modelo.
 
 **A qué nos conduce:** se ve con los ojos lo que significa que un modelo «predice el siguiente token»: va armando el texto por trozos pequeños, sin saber de antemano cómo terminará, y los trozos cortan en mitad de palabras. Esto sirve para dos decisiones prácticas: el streaming permite que un chat se sienta rápido (el usuario lee mientras se genera), y el razonamiento es una parte invisible del costo: en la prueba del acertijo, tres de cada cuatro tokens de salida se fueron en pensar. Esa cuenta decide cuándo conviene activar el razonamiento y cuándo apagarlo para ahorrar.
+
+**En el ejercicio:** se va a rehacer con ese mismo mensaje de cliente. Un chat de WhatsApp se siente rápido si la respuesta aparece mientras se genera, y esta prueba mide cuánto razona el asesor antes de contestar.
+
 
 > **Ejemplo**
 > Recibir la respuesta en streaming es como ver a alguien escribir en un tablero en vez de esperar a que te entregue la hoja terminada: la frase del café llegó en 40 pedazos y se podía leer desde el primero.
@@ -979,18 +1008,15 @@ Cada vez que se marca un tema como hecho, aquí se agrega una entrada corta: qu�
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-12)
 
-**Versión previa:** hecha con ejemplos sueltos de la guía; se actualizará al rehacerlo con el caso del ejercicio.
+**Versión previa:** hecha con ejemplos sueltos de la guía; se reemplaza cuando el tema se rehaga con el caso del ejercicio.
 
 **Qué se hizo:** se contaron los tokens de distintos tipos de texto y se simuló una conversación de 20 turnos para ver cuánto crece lo que se envía en cada mensaje, y cuánto costaría esa conversación con cada modelo.
 
 **A qué nos conduce:** a entender de dónde sale la factura. Un modelo no recuerda nada entre llamadas: para que «recuerde», hay que reenviarle toda la conversación cada vez, y todo lo que se reenvía se cobra de nuevo. Por eso una conversación de 20 turnos cuesta casi 24 veces más que 20 mensajes sueltos. También se ve que el idioma importa (el español usa más tokens que el inglés) y que la elección del modelo mueve el costo muchísimo: el mismo chat cuesta 0,0068 USD con Haiku y 0,2704 USD con Opus. Esas cuentas son las que permiten cotizar un proyecto antes de construirlo.
 
+**En el ejercicio:** se va a rehacer con mensajes tipo WhatsApp y la conversación de un cliente del caso. Servirá para elegir cuántos turnos recuerda el asesor, que es la decisión que más mueve el costo.
+
+
 > **Ejemplo**
 > Un asistente de ventas atiende 1.000 conversaciones al mes, de 20 turnos cada una. Con Haiku cuesta unos 6,8 USD al mes; con Sonnet, unos 135; con Opus, unos 270. Es el mismo servicio: cambiar de modelo lo multiplica por 40.
 > Y cuánto pesa la memoria: si el asistente solo recordara los últimos 5 turnos en vez de los 20, la entrada baja de 47.600 a 18.800 tokens por conversación (un 60 % menos) y las conversaciones largas dejan de encarecerse sin freno. Es como un vendedor que, antes de cada respuesta, no relee la libreta completa del cliente sino solo las últimas cinco notas.
-| 2026-10-12 | Los títulos de los temas enlazan a su entrada del análisis de resultados; cada entrada lleva un ejemplo. |
-| 2026-10-12 | Se vincula el ejercicio simulado (asesor de viajes, piloto de 10 clientes): enlace en la sección 1 y casillas «Ejercicio» en los temas 3.5–3.11, 3.17, 3.25 y 3.26. |
-| 2026-10-13 | Decisión del ejercicio: la base SQLite nace en 3.7 y el 3.16 la amplía; nueva casilla «Ejercicio E.0» en 3.16. |
-| 2026-10-13 | Se reinicia el checklist sobre el ejercicio: 3.2 a 3.4 se rehacen con el caso (casillas desmarcadas, notas previas conservadas); nuevas casillas «Ejercicio» en 3.12 a 3.15 y 3.24; renumerados los pasos E.5, E.6, E.8 y E.9; temas 3.18 a 3.23 (dashboard) aplazados. |
-| 2026-10-13 | Se revierte el aplazamiento: los temas 3.18 a 3.23 (dashboard) vuelven al checklist, con sus casillas «Ejercicio E.7 a E.12»; las pruebas, los experimentos y las decisiones pasan a E.13, E.14 y E.15. |
-| 2026-10-13 | Las Partes 3 y 4 (agente y tablero) pasan a este documento como los temas 3.27 a 3.43, con las casillas «Ejercicio F.1 a F.17»; el proyecto del nivel pasa a ser el 3.44. El agentizando queda como segundo pase opcional. |
