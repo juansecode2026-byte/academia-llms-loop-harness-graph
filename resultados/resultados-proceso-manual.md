@@ -332,15 +332,36 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.12 Qué vas a construir (laboratorio) {ref=d0:D0}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d0) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-- [ ] Ejercicio E.1: definir qué se va a medir del asesor de viajes y con qué objetivo ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d0) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [x] Ejercicio E.1: definir qué se va a medir del asesor de viajes y con qué objetivo ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Este apartado de la guía es de diseño: no trae código ni gasta tokens, así que las casillas de construir y ejecutar se cumplen con la definición que sigue. Es el paso del ejercicio E.1.
+>
+> **Qué es el laboratorio.** Una app local de Streamlit con cuatro pestañas (Playground, Comparador, Batería de alucinaciones y Métricas) más una quinta de Decisiones, que se construye por etapas en los temas 3.13 a 3.26 y guarda cada experimento en la base. Está ensayada en la maqueta de la conversación; el laboratorio real se escribe después.
+>
+> **Objetivo, en una frase.** Decidir, para cada tipo de tarea del asesor, qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
+>
+> **Qué preguntas debe poder contestar** (y qué se mide para cada una):
+>
+> | Pregunta del asesor | Qué se mide | Dato que ya existe |
+> |---|---|---|
+> | ¿Qué modelo conviene? | Costo, segundos y calidad por modelo | 3.6: una muestra por modelo |
+> | ¿Cuánto debe razonar? | Tokens de razonamiento y costo por nivel de effort | 3.5: una muestra por nivel, solo ruido |
+> | ¿Cuántos turnos debe recordar? | Costo y recuerdo del dato clave por tamaño de ventana, con y sin ficha | 3.9: ventana de 5, 6 de 10 recuerdos |
+> | ¿Qué reglas del prompt valen la pena? | % de respuestas que inventan y tokens de salida | 3.8: 0 de 8 inventadas, una muestra |
+> | ¿Cuánto cuesta cada decisión? | USD por llamada y por conversación, acumulado | 3.4 y 3.9: 388 llamadas guardadas |
+>
+> **Criterios de éxito** (umbrales sugeridos por la guía, editables): al menos 18 muestras por configuración para decidir; hasta 10 % de respuestas que inventan; al menos 70 % de «admitió no saber» en las trampas; 0 % de respuestas cortadas; recuerdo del dato clave de 10 de 10; y costo dentro del presupuesto. Una configuración con pocas muestras no se usa para decidir.
+>
+> **Cómo se adapta al caso** (diferencias frente a la guía genérica): la batería usa las 8 trampas del catálogo del asesor en lugar de preguntas generales; los controles suman la ventana de memoria y el catálogo de interés, que en 3.9 resultaron ser las palancas más grandes; y se mide el recuerdo del dato clave, que la guía no incluye.
+>
+> **Límites del laboratorio:** datos simulados; tope de 1 USD por corrida; muestras pequeñas al empezar (se dice en cada resultado); y una calificación de alucinaciones que al comienzo es un juicio, hasta que exista un modelo juez.
+> **Mapa de etapas:** D1 a D14 de la guía son los temas 3.13 a 3.26; el tema 3.13 fija los controles y las mediciones, y el 3.26 entrega el tablero de decisiones.
 
 ### 3.13 Qué controlamos y qué medimos {ref=d1:D1}
 
@@ -1080,6 +1101,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.11 completo: `e10_informe_piloto.py` genera el informe del piloto sin gastar tokens (paso D.4); checklist de cierre de la guía con evidencia, filas de la sección 7 con los hashes de cada etapa y lecciones para agentizar en la sección 8. Cierra la Parte 1 del Nivel 1. |
 | 2026-10-13 | El tema 3.11 pasa a llamarse «Resumen general» en lugar de «Cierre del nivel»: consolida lo hecho en los temas anteriores y no produce datos nuevos de gasto. |
 | 2026-10-13 | El análisis suma la sección «Evidencia de conocimiento de LLMs: qué muestra este proyecto»: habilidades demostradas, cuándo y para qué se usan, límites del nivel y el costo estimado del laboratorio (~0,96 USD para 54 llamadas). |
+| 2026-10-13 | Tema 3.12 completo (paso E.1): objetivo del laboratorio, preguntas que debe contestar, criterios de éxito y límites; entrada breve del análisis. Abre la Parte 2. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1968,4 +1990,21 @@ En palabras simples: el nivel termina con un asesor 23 % más barato y con una l
 > 2. **Filtrar el catálogo por las ciudades del cliente.** Es el ahorro que falta: de 0,1631 a ~0,080 USD, ~8 USD al mes por cada 1.000 conversaciones (**estimado**). Se prueba en 3.25 y 3.26, y como herramienta del agente en 3.30.
 > 3. **Aplicar la ventana según la longitud de la conversación.** El ahorro fue de 9,8 % en la conversación de 10 turnos y de 29,2 % en la de 24 (**medido**): conviene activarla desde cierto número de turnos en lugar de aplicarla siempre.
 > 4. **Repetir las trampas para afirmar algo sobre alucinaciones.** «0 de 8» es una impresión con una respuesta por trampa. Repetir cada trampa 10 veces (~80 respuestas, ~0,09 USD, **estimado**) permite hablar de una frecuencia de invento y no de un juicio.
+
+#### 3.12 · Qué vas a construir (laboratorio) (2026-10-13)
+
+**Qué se hizo:** se definió el laboratorio antes de escribirlo: su objetivo, las cinco preguntas que debe contestar, los criterios para dar una decisión por válida y sus límites. No se llamó a la API: el tema es de diseño y cuesta 0 tokens.
+
+**A qué nos conduce:** a no construir una app por construirla. Cada pestaña del laboratorio nace de una pregunta que el Nivel 1 dejó abierta con datos: qué modelo (3.6, una muestra), cuánto razonar (3.5, ruido), cuánto recordar (3.9, 6 de 10) y si las reglas bastan (3.8, 0 de 8). El laboratorio existe para convertir esas muestras sueltas en decisiones con evidencia suficiente.
+
+**En el ejercicio:** el paso E.1 queda hecho. La definición quedó en las notas del tema y sirve de criterio de entrega: la Parte 2 termina cuando el tablero de decisiones contesta las cinco preguntas con al menos 18 muestras por configuración o dice, con claridad, cuáles no puede contestar todavía.
+
+**Qué encareció el proceso:** nada en tokens. Lo único que cuesta es el laboratorio que viene, cuyo costo estimado (~0,96 USD para 54 llamadas) ya está en la sección «Evidencia de conocimiento de LLMs».
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos para que el laboratorio produzca decisiones y no solo datos._
+> 1. **Escribir la pregunta antes que la pestaña.** Cada vista debe contestar una de las cinco preguntas; si una pestaña no responde ninguna, no se construye. Se aplica al diseñar los controles en 3.13.
+> 2. **Fijar los umbrales antes de ver los resultados.** Los criterios (18 muestras, 10 % de invento, recuerdo de 10 de 10) se definen ahora para no ajustarlos después a lo que salga. Se revisan en 3.26.
+> 3. **Empezar por la pregunta que ya duele.** La memoria (6 de 10 recuerdos) es la brecha medida más clara del nivel: el primer experimento debería ser ventana con y sin ficha del cliente (3.25 y 3.26).
+> 4. **Dejar dicho qué no se podrá concluir.** Con datos simulados y muestras chicas, el laboratorio puede descartar configuraciones malas con más seguridad que probar que una es la mejor; ese límite debe aparecer en el tablero, no solo en el informe.
 
