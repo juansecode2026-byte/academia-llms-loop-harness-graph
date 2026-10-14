@@ -1302,7 +1302,7 @@ dos cosas, y las dos son contexto, es decir, texto que se le manda al modelo ant
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Catálogo en el contexto (6.578 tokens por mensaje).** *Objetivo:* saber cuánto pesa darle al asesor los datos de la agencia. *Decisión:* si conviene mandar todo el catálogo o solo la parte que le sirve al cliente. *Ejemplo:* para responder por Cartagena, el asesor recibió también los registros de Villa de Leyva o Barichara; ese texto representó cerca del 72 % del costo de la conversación.
 - **Memoria (6.578 → ~7.000 tokens).** *Objetivo:* ver cuánto crece lo que se reenvía de un mensaje al siguiente. *Decisión:* cuánto historial conservar (se resuelve en 3.4 y 3.9). *Ejemplo:* del primer al segundo mensaje la entrada subió unos 420 tokens; en una conversación de 20 mensajes ese crecimiento se acumula.
@@ -1387,7 +1387,7 @@ promedio de 3 ejecuciones.
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Entrada: instrucciones y catálogo (6.578 tokens, 68 % del costo).** *Objetivo:* ver qué parte del costo es lo que se envía y no lo que se contesta. *Decisión:* atacar primero la entrada antes que la respuesta. *Ejemplo:* de 0,00097 USD por respuesta, 0,00066 USD son la entrada; a 10.000 mensajes al mes con Haiku serían unos 9,7 USD, de los cuales ~6,6 USD son catálogo reenviado (**calculado**).
 - **Respuesta visible (380 tokens, 20 %).** *Objetivo:* saber cuánto cuesta lo que el cliente sí lee. *Decisión:* si recortar la respuesta es la prioridad o hay algo más grande. *Ejemplo:* aunque la respuesta se acortara a la mitad (190 tokens), el costo total bajaría cerca de 10 % (**calculado**); no es lo primero que conviene tocar.
@@ -1469,7 +1469,7 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Catálogo completo (6.478 tokens, 68,2 % de la entrada).** *Objetivo:* conocer la parte más pesada de lo que se envía. *Decisión:* si se filtra el catálogo antes de enviarlo. *Ejemplo:* es 0,00065 USD de los 0,00116 USD de una llamada promedio (56 %) y se reenvía en cada mensaje de cada cliente.
 - **Historial (2.936 tokens en promedio).** *Objetivo:* ver cuánto crece la memoria turno a turno. *Decisión:* cuántos turnos conservar. *Ejemplo:* en las conversaciones largas la entrada pasó de 6.565 tokens en el turno 1 a 12.480 en los turnos 21 a 28; cada turno cuesta más que el anterior.
@@ -1558,7 +1558,7 @@ cada llamada costó cerca de 0,00097 USD, y 0,00066 USD de eso (68 %) fue el cat
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Tope de salida (`max_tokens`).** *Objetivo:* saber qué pasa cuando el tope es más bajo que lo que el asesor necesita. *Decisión:* dejar el tope holgado y no usarlo para ahorrar. *Ejemplo:* con 40 y con 150 tokens el asesor no alcanzó a escribir; las dos llamadas costaron 0,00141 USD y el cliente se quedó sin respuesta.
 - **Razonamiento (222 a 330 tokens, 35 % a 47 % de la salida).** *Objetivo:* ver cuánto de la salida es pensamiento invisible. *Decisión:* cómo controlarlo (esfuerzo e instrucciones). *Ejemplo:* cuando se pidió «máximo 2 frases» el razonamiento subió a 697 tokens; el asesor pensó más para escribir menos.
@@ -1642,7 +1642,7 @@ la entrada fue la misma en los tres (6.618 tokens, casi todo catálogo), así qu
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Modelo (0,00086 / 0,01691 / 0,03555 USD).** *Objetivo:* ver cuánto cambia el costo al cambiar de modelo con la misma consulta. *Decisión:* qué modelo usar por defecto. *Ejemplo:* la misma consulta de «somos 2, del 10 al 14 de diciembre» costó 0,00086 USD en Haiku, 19,7 veces eso en Sonnet y 41 veces en Opus, con la misma cifra de $1.920.000.
 - **Tokens de entrada (6.618 en los tres).** *Objetivo:* confirmar que la comparación es justa. *Decisión:* atribuir la diferencia de costo al precio por token y no a lo enviado. *Ejemplo:* los tres recibieron el mismo catálogo y la misma consulta, así que la diferencia de 20 a 41 veces es solo tarifa.
@@ -1726,7 +1726,7 @@ cada llamada costó entre 0,00082 y 0,00107 USD, y 6.580 a 6.613 tokens de entra
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Memoria del cliente (389 tokens en el turno 2, 5,9 %).** *Objetivo:* ver cuánto pesa la memoria al comienzo de la conversación. *Decisión:* cuándo se vuelve un problema y hay que limitarla. *Ejemplo:* la memoria de Laura sumó 389 tokens al segundo turno; pequeña ahora, pero llega a 12.480 tokens hacia el turno 21 (3.4).
 - **Catálogo (6.580 tokens, 94 % de la entrada).** *Objetivo:* recordar que lo constante domina lo que crece. *Decisión:* no esperar que quitar memoria baje el costo mucho. *Ejemplo:* en el turno 2, de 6.988 tokens, 6.580 son el catálogo y las instrucciones.
@@ -1810,7 +1810,7 @@ cada llamada de prueba llevó en promedio 9.497 tokens de entrada: unos 6.500 de
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Reglas del prompt (213 tokens por llamada).** *Objetivo:* saber lo que cuesta escribir reglas. *Decisión:* si el costo de las reglas se paga solo. *Ejemplo:* 213 tokens por llamada son 0,00002 USD; es un costo casi invisible por llamada.
 - **Longitud de la respuesta (1.806 contra 2.340 tokens de salida, −23 %).** *Objetivo:* medir si las reglas acortan las respuestas. *Decisión:* si se mantienen las reglas de «una opción» y «responde corto». *Ejemplo:* en las 8 trampas, el asesor con reglas escribió 534 tokens menos (0,00027 USD); la respuesta a Sofía pasó de 269 a 169 tokens diciendo lo mismo.
@@ -1904,7 +1904,7 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Ventana de 5 turnos (entrada −20,2 %).** *Objetivo:* ver cuánto ahorra enviar solo lo reciente. *Decisión:* si se adopta la ventana y con qué tamaño. *Ejemplo:* la llamada más grande bajó de 14.845 a 8.165 tokens en la conversación de Julián, y el costo total bajó 23,4 %.
 - **Memoria con la ventana (6 de 10 recuerdos).** *Objetivo:* medir lo que se pierde al ahorrar. *Decisión:* si el ahorro es aceptable o hace falta compensarlo. *Ejemplo:* con la ventana, el asesor olvidó que Valentina no come carne y las edades de los niños Ramírez (4, 7 y 11); con historial completo, recordó los 10 datos.
@@ -1994,7 +1994,7 @@ nada en tokens, porque el tema no llamó a la API. Lo que sí tiene un costo es 
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Cliente falso (0 llamadas a la API).** *Objetivo:* poder revisar el programa todas las veces que haga falta sin pagar y sin depender del modelo. *Decisión:* correr las pruebas sin límite. *Ejemplo:* si un desarrollador corre las pruebas 30 veces al día, con el cliente falso son 0 USD; con una corrida real de los 10 clientes serían unos 5 USD al día (30 × 0,17, **estimado**).
 - **Tiempo de ejecución (~3 s).** *Objetivo:* saber si la revisión es tan rápida que se puede hacer en cada cambio. *Decisión:* dónde poner las pruebas: en cada cambio y antes de cada commit si tardan segundos; solo antes de subir si tardan minutos. *Ejemplo:* si mañana hubiera 200 pruebas y el tiempo subiera a 2 minutos, ese dato avisaría que hay que separar las rápidas de las lentas.
@@ -2077,7 +2077,7 @@ nada en tokens, porque el informe es código sin llamadas a la API. Para ver qu�
 
 **5.1 Para qué sirve cada dato**
 
-cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+Cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Informe determinístico (0 llamadas a la API).** *Objetivo:* poder repetir el informe todas las veces que haga falta con las mismas cifras. *Decisión:* regenerarlo después de cada cambio importante y no escribirlo a mano. *Ejemplo:* tras implementar la ficha del cliente, el informe se vuelve a generar en segundos y muestra si «dato clave con ventana» pasó de 6 a 10, sin gastar un token.
 - **Datos guardados en la base (388 llamadas).** *Objetivo:* contar con el material para comparar configuraciones. *Decisión:* guardar siempre cada llamada con su configuración (esfuerzo, ventana, catálogo). *Ejemplo:* gracias a la columna `config` se comparó la línea base del 3.4 con el chat final cliente por cliente, sin volver a llamar al asesor.
