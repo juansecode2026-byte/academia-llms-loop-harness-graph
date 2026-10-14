@@ -304,15 +304,29 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 ### 3.11 Cierre del nivel {ref=e10:E10}
 
-- [ ] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e10) y explica qué se va a hacer y por qué
-- [ ] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
-- [ ] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
-- [ ] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
-- [ ] Commit con mensaje descriptivo y registrar el hash en la sección 7
-- [ ] Ejercicio D.4: informe del piloto: tokens, costo y alucinaciones por cliente ([ver paso D.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
+- [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e10) y explica qué se va a hacer y por qué
+- [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
+- [x] Claude lo ejecuta y compara con «Ejecuta y observa» o el punto de control
+- [x] Claude documenta en las notas qué hace el código y qué se observó, y responde «Para pensar» si el apartado lo trae
+- [x] Commit con mensaje descriptivo y registrar el hash en la sección 7
+- [x] Ejercicio D.4: informe del piloto: tokens, costo y alucinaciones por cliente ([ver paso D.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
-> _Pendiente de documentar._
+> Script: `chat-consola/etapas/e10_informe_piloto.py`. Es código determinístico (sin llamar a Claude): lee la base del piloto y las respuestas ya guardadas, y genera `chat-consola/informes/informe-piloto.md` con cinco partes: (1) tokens y costo de la línea base contra el chat final, (2) la misma comparación por cliente con el dato clave recordado, (3) alucinaciones, (4) gasto del piloto y (5) el checklist de cierre de la guía (10.1) con su evidencia. Se ejecuta con 0 tokens.
+>
+> | Resultado del informe | Dato |
+> |---|---|
+> | Costo de las 184 conversaciones | 0,2130 USD (línea base) contra 0,1631 USD (chat final): −23,4 % |
+> | Cliente más caro | Julián (24 turnos): 0,0317 USD con historial completo, 0,0225 con ventana |
+> | Cliente más barato | Camilo (10 turnos): 0,0090 y 0,0081 USD |
+> | Precios en las 194 respuestas del chat final | 0 montos sin explicar y 8 sumas revisadas, todas correctas |
+> | Trampas del catálogo | 0 de 8 inventadas (juicio de Claude, 3.8 y 3.9) |
+> | Dato clave recordado | 6 de 10 con ventana de 5 turnos; 10 de 10 con historial completo |
+> | Gasto en la base | 388 llamadas, 0,3997 USD |
+>
+> **Checklist de cierre (guía 10.1):** los diez puntos tienen evidencia. Dos quedaron con matiz: el chat final «recuerda entre sesiones y recorta», pero olvida el dato clave de 4 de 10 clientes (la ficha del cliente está pendiente), y la guía esperaba `8 passed` en las pruebas mientras aquí hay `13 passed` y 1 `xfailed` (falla esperada y documentada). El `.env` nunca estuvo en Git ni hay claves en el historial, y hay 11 commits «etapa N» (el historial conserva las primeras versiones y las rehechas con el caso).
+> **Patrones para llevar a candyCRM** (guía 10.3), con dónde quedaron construidos: filtrar bloques por tipo (3.2), `construir_peticion` (`chat.py`), ventana deslizante (`recortar`, 3.9), errores por tipo sin dañar la conversación (3.9 y su prueba), mensaje de sistema con reglas contra inventar (3.8), y cliente inyectable con cliente falso (`test_chat.py`, 3.10). Lo que el chat de consola todavía no tiene y el siguiente nivel agrega: **herramientas** para que el asesor consulte el catálogo y registre datos.
+> **Para pensar:** la guía no trae pregunta en este apartado. Lo que más cambia la lectura del nivel es esta: *ahorrar es fácil, ahorrar sin perder exactitud no*. El 23,4 % de ahorro costó el dato clave de 4 de 10 clientes, y solo el informe por cliente lo mostró.
 
 <!-- parte: 2 | Parte 2 · Laboratorio de parámetros | 15 apartados | p2 -->
 
@@ -1009,9 +1023,15 @@ Cada tema y proyecto cerrado deja una fila aquí. Es el índice de pruebas del p
 
 | Fecha | Sección | Qué se hizo | Commit / tag | Enlace |
 |---|---|---|---|---|
-|  |  |  |  |  |
-|  |  |  |  |  |
-|  |  |  |  |  |
+| 2026-10-13 | 3.2 y 3.3 | Primera llamada y streaming con el asesor y el catálogo | `1b2e238` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/1b2e238) |
+| 2026-10-13 | 3.4 | 10 conversaciones reales: tokens y costos | `932e946` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/932e946) |
+| 2026-10-13 | 3.5 | Parámetros de generación | `de8d312` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/de8d312) |
+| 2026-10-13 | 3.6 | Panorama de modelos | `1f02c32` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/1f02c32) |
+| 2026-10-13 | 3.7 | Chat con memoria por cliente | `cbba0fb` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/cbba0fb) |
+| 2026-10-13 | 3.8 | Limitaciones: 8 trampas del catálogo | `35a01a3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/35a01a3) |
+| 2026-10-13 | 3.9 | Chat final ensamblado y piloto de 10 clientes | `57dd309` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/57dd309) |
+| 2026-10-13 | 3.10 | Pruebas automáticas sin gastar tokens | `aef841a` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/aef841a) |
+| 2026-10-13 | 3.11 | Cierre del nivel: informe del piloto | `edbdcf3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/edbdcf3) |
 
 ## 8. Lecciones aprendidas para agentizar
 
@@ -1019,9 +1039,10 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 
 | Sección | Paso repetitivo | Requiere criterio humano | Instrucción clave para el agente |
 |---|---|---|---|
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 3.4 | Correr las 10 conversaciones y registrar cada llamada en `ejecuciones` | Decidir qué optimizar primero cuando varias palancas compiten | «Mide cada llamada en la tabla antes de proponer un ahorro y calcula el efecto de cada palanca por separado.» |
+| 3.8 | Correr las trampas del catálogo con y sin reglas | Juzgar si una respuesta inventa o solo agrega un consejo suelto | «Marca una respuesta como inventada solo si afirma algo que no está en un registro del catálogo; guarda la respuesta y el registro comparado.» |
+| 3.9 | Atender a los 10 clientes y comparar con la línea base | Aceptar o no el olvido que trae un ahorro | «Ningún ahorro se acepta sin medir la memoria con la pregunta de cierre; si baja de 10 de 10, se detiene y se propone una ficha del cliente.» |
+| 3.10 y 3.11 | Correr las pruebas y regenerar el informe del piloto | Elegir qué falla se tolera (`xfail`) y cuál bloquea | «Corre `pytest` antes de gastar en una corrida real y no la lances si hay fallas que no estén marcadas como esperadas.» |
 
 ## 9. Bitácora de cambios
 
@@ -1056,6 +1077,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.10 completo: `test_chat.py` con 14 pruebas sin gastar tokens (13 pasan, 1 `xfail` documenta el olvido de la ventana de 5 turnos); paso D.3 marcado y entrada del análisis. |
 | 2026-10-13 | El análisis suma «Para qué sirve cada dato» (objetivo, decisión y ejemplo de cada variable) y la tabla «Resumen: cada dato y su decisión»; aplicado a 3.10 y pedido por el hook para las entradas nuevas. |
 | 2026-10-13 | «Para qué sirve cada dato» y «Resumen: cada dato y su decisión» se agregan también a las entradas 3.2 a 3.9. |
+| 2026-10-13 | Tema 3.11 completo: `e10_informe_piloto.py` genera el informe del piloto sin gastar tokens (paso D.4); checklist de cierre de la guía con evidencia, filas de la sección 7 con los hashes de cada etapa y lecciones para agentizar en la sección 8. Cierra la Parte 1 del Nivel 1. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1821,4 +1843,76 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 > 2. **Implementar la ficha del cliente y quitar el `xfail`.** La prueba de memoria con ventana ya existe y falla a propósito (6 de 10). Pasarla a verde es la meta medible de la solución propuesta en 3.9: 10 de 10 con la ventana de 5 turnos. Se hace en 3.25 y 3.26.
 > 3. **Hacer del validador de precios una herramienta de producción.** Hoy funciona sobre respuestas guardadas y exige revisar 8 sumas a mano; ampliarlo a sumas y divisiones y sumarle las 8 trampas lo convierte en un filtro automático sobre cada respuesta, a 0 tokens (**por construir**, 3.26 y 3.30).
 > 4. **Reducir la corrida real a lo que las pruebas no ven.** Cuando haya que medir calidad, correr solo los 3 clientes con trampa o dato crítico (~0,05 USD, **estimado**) y reservar los 10 para el cierre de cada decisión; así se mide mejor y se gasta una tercera parte.
+
+#### 3.11 · Cierre del nivel (2026-10-13)
+
+**Qué se hizo:** se cerró la Parte 1 del Nivel 1 con un informe del piloto generado por un script que no llama a Claude: lee la base, compara por cliente la línea base del 3.4 con el chat final del 3.9, cuenta precios sospechosos, recoge el veredicto de las trampas y comprueba el checklist de cierre de la guía. También se registraron en la sección 7 los commits de cada etapa y en la sección 8 las lecciones para agentizar.
+
+**A qué nos conduce:** a una foto honesta del nivel: el asesor con catálogo atiende a los 10 clientes por 0,1631 USD (antes 0,2130), sin precios inventados y sin inventar en las trampas, pero **con un problema abierto y medido**: olvida el dato clave de 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián) cuando se recorta la memoria. El informe por cliente fue lo único que lo mostró; el promedio de ahorro (−23,4 %) lo escondía.
+
+**En el ejercicio:** el paso D.4 queda hecho y la Parte 1 queda cerrada. Lo que sigue (laboratorio de parámetros y agente) debe partir de este informe como línea de salida, y la ficha del cliente es la primera mejora con su prueba ya escrita (`xfail` del 3.10).
+
+**Qué encareció el proceso:** nada en tokens, porque el informe es código sin llamadas a la API. Para ver qué cuesta lo que no se automatizó: pedirle a un modelo que lea las 194 respuestas guardadas y escriba un informe equivalente significaría unos 56.000 tokens de entrada (las respuestas del asesor y los mensajes de los clientes), que valen unos 0,006 USD en Haiku o unos 0,11 USD en Sonnet (**estimado**), más el riesgo de que redondee o interprete las cifras.
+
+**Variables que afectaron el proceso (mirada de AI Engineer):**
+
+| Variable | Dato | Efecto |
+|---|---|---|
+| Informe determinístico | 0 llamadas a la API | 0 tokens y mismas cifras cada vez que se genera |
+| Datos guardados en la base | 388 llamadas en 3 configuraciones, 194 respuestas del chat final | Hace posible el informe sin repetir ninguna corrida |
+| Comparación por cliente | Ahorro de 9,8 % (Camilo) a 29,2 % (Julián) en costo | El promedio de −23,4 % oculta que el ahorro depende de lo larga que sea la conversación |
+| Memoria con ventana | 6 de 10 clientes recuerdan el dato clave | Un ahorro de costo que se paga en exactitud |
+| Veredicto de las trampas | 0 de 8 inventadas; es un juicio, no una medición automática | Confianza útil pero limitada: muestra pequeña, una respuesta por trampa |
+| Checklist de la guía | 10 de 10 puntos con evidencia, 2 con matiz | Permite cerrar el nivel diciendo qué falta, no solo qué se hizo |
+
+**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+
+- **Informe determinístico (0 llamadas a la API).** *Objetivo:* poder repetir el informe todas las veces que haga falta con las mismas cifras. *Decisión:* regenerarlo después de cada cambio importante y no escribirlo a mano. *Ejemplo:* tras implementar la ficha del cliente, el informe se vuelve a generar en segundos y muestra si «dato clave con ventana» pasó de 6 a 10, sin gastar un token.
+- **Datos guardados en la base (388 llamadas).** *Objetivo:* contar con el material para comparar configuraciones. *Decisión:* guardar siempre cada llamada con su configuración (esfuerzo, ventana, catálogo). *Ejemplo:* gracias a la columna `config` se comparó la línea base del 3.4 con el chat final cliente por cliente, sin volver a llamar al asesor.
+- **Comparación por cliente (ahorro de 9,8 % a 29,2 %).** *Objetivo:* ver si el ahorro es parejo o depende del caso. *Decisión:* dónde conviene cada optimización. *Ejemplo:* Camilo (10 turnos) ahorró 0,0009 USD de 0,0090 (9,8 %); Julián (24 turnos) ahorró 0,0092 de 0,0317 (29,2 %): la ventana rinde en conversaciones largas, casi nada en las cortas.
+- **Memoria con ventana (6 de 10).** *Objetivo:* saber qué se perdió al ahorrar. *Decisión:* no darse por satisfecho con el ahorro total y agregar la ficha del cliente. *Ejemplo:* Valentina, con la ventana, ya no recordaba que no come carne; con historial completo sí.
+- **Veredicto de las trampas (0 de 8, juicio).** *Objetivo:* saber si el asesor inventa. *Decisión:* si es seguro seguir con herramientas y un volumen mayor de clientes. *Ejemplo:* ante el hotel «casa dorada imperial» dijo que no estaba en el catálogo; no se probó con varias repeticiones, así que la confianza es una primera señal y no una garantía.
+- **Checklist de la guía (10 de 10, 2 con matiz).** *Objetivo:* cerrar el nivel contra criterios externos y no contra la sensación de haber terminado. *Decisión:* qué se arrastra al siguiente nivel. *Ejemplo:* la guía esperaba `8 passed`; aquí son 13 y un `xfail`, y se dice así en el informe.
+
+**Resumen: cada dato y su decisión**
+
+| Dato | Pregunta que responde | Decisión que permite |
+|---|---|---|
+| 0 llamadas a la API | ¿El informe cuesta? | Regenerarlo en cada cambio |
+| 388 llamadas guardadas | ¿Puedo comparar sin volver a pagar? | Guardar siempre la configuración de cada llamada |
+| Ahorro de 9,8 % a 29,2 % por cliente | ¿El ahorro es parejo? | Aplicar la ventana donde las conversaciones son largas |
+| 6 de 10 recuerdos | ¿Qué se perdió al ahorrar? | Agregar la ficha del cliente |
+| 0 de 8 trampas, juicio | ¿Inventa el asesor? | Seguir, con repeticiones para afirmar más |
+| Checklist 10 de 10 con 2 matices | ¿Qué falta para cerrar el nivel? | Llevar al siguiente nivel la ficha del cliente y las herramientas |
+
+**Cómo optimizar cada variable (mirada de AI Engineer):**
+
+| Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
+|---|---|---|---|---|
+| Memoria con ventana | Ficha del cliente con personas, fechas, presupuesto y restricciones | De 6 a 10 de 10 recuerdos por unos 80 tokens más por llamada | **Estimado** | 3.25 y 3.26 |
+| Costo del chat final | Catálogo de interés (solo las ciudades del cliente) | De 0,1631 a ~0,080 USD | **Estimado** | 3.25, 3.26 y 3.30 |
+| Veredicto de trampas | Repetir cada trampa 10 veces y contar los inventos | De 8 a 80 respuestas (~0,09 USD) con una frecuencia de invento, no una impresión | **Estimado** | 3.26 |
+| Informe | Generarlo con cada corrida y comparar contra el anterior | Saber de inmediato si un cambio sube el costo o baja la memoria | **Por construir** | 3.16 |
+| Tablero del laboratorio | Mostrar este informe en el dashboard del laboratorio | Ver el costo y la memoria por cliente sin leer tablas | **Por construir** | 3.18 a 3.23 |
+
+**Tokens ahorrados en dólares (mirada de AI Engineer):** la referencia medida es el chat final contra la línea base del 3.4 (184 llamadas, 1.747.598 tokens de entrada y 76.523 de salida, 0,2130 USD); lo demás es el ahorro que aún se puede lograr.
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Chat final contra línea base (3.9) | 1.824.121 | 1.441.319 | 382.802 | 0,0499 (−23,4 %) | **Medido** |
+| Informe del piloto con script y no con un modelo | ~56.000 de entrada | 0 | ~56.000 | ~0,006 en Haiku; ~0,11 en Sonnet | **Estimado** |
+| Catálogo de interés sobre el chat final | 1.393.846 de entrada | ~561.000 | ~833.000 | ~0,083 (de 0,1631 a ~0,080) | **Estimado** |
+| Las dos mejoras, a 1.000 conversaciones al mes | ~144 millones de entrada | ~61 millones | ~83 millones | ~8 USD al mes (de ~16,3 a ~8,0) | **Estimado** (supone que las 10 conversaciones son representativas) |
+
+En palabras simples: el nivel termina con un asesor 23 % más barato y con una lista corta y medible de lo que falta, la ficha del cliente y el catálogo filtrado, que juntas lo llevarían a la mitad del costo original y a recordar los 10 datos.
+
+> **Ejemplo**
+> El informe muestra a Julián como el cliente más caro (24 turnos): 0,0317 USD con historial completo y 0,0225 con ventana de 5 turnos, un ahorro del 29,2 %. Su llamada más grande bajó de 14.845 a 8.165 tokens. Pero en la pregunta de cierre, el asesor con ventana le dijo «no tengo ningún dato de su viaje todavía» y olvidó que comparaba Santa Marta con San Andrés con un presupuesto de 3 millones; con el historial completo lo recordó. Y a Camilo, que solo preguntó por Medellín en 10 turnos, la ventana le ahorró apenas 0,0009 USD y también olvidó sus fechas del 3 al 6 de noviembre.
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos enfocados en solución, basados en los datos de este análisis y ordenados por prioridad._
+> 1. **Implementar la ficha del cliente antes de seguir.** El informe por cliente muestra que 4 de 10 olvidan el dato clave con la ventana, y la prueba del 3.10 ya está escrita para volverse verde. Meta: 10 de 10 por unos 80 tokens más por llamada (**estimado**). Se hace en 3.25 y 3.26.
+> 2. **Filtrar el catálogo por las ciudades del cliente.** Es el ahorro que falta: de 0,1631 a ~0,080 USD, ~8 USD al mes por cada 1.000 conversaciones (**estimado**). Se prueba en 3.25 y 3.26, y como herramienta del agente en 3.30.
+> 3. **Aplicar la ventana según la longitud de la conversación.** El ahorro fue de 9,8 % en la conversación de 10 turnos y de 29,2 % en la de 24 (**medido**): conviene activarla desde cierto número de turnos en lugar de aplicarla siempre.
+> 4. **Repetir las trampas para afirmar algo sobre alucinaciones.** «0 de 8» es una impresión con una respuesta por trampa. Repetir cada trampa 10 veces (~80 respuestas, ~0,09 USD, **estimado**) permite hablar de una frecuencia de invento y no de un juicio.
 
