@@ -302,7 +302,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > 2. **La prueba de precios revisó 270 montos:** 262 se explican solos como precio o múltiplo del catálogo, y 8 eran sumas o divisiones que el asesor hizo bien (por ejemplo $2.060.000 = $1.440.000 + $440.000 + $180.000 en Julián, o $1.280.000 = $1.020.000 + $260.000 en la Pareja Torres). Se revisaron uno por uno y quedaron en una lista; **un monto nuevo hace fallar la prueba** hasta que alguien lo mire. Ningún precio resultó inventado.
 > 3. **Límite:** estas pruebas vigilan la lógica y lo ya guardado, no la calidad de una respuesta nueva. Para saber si un cambio de prompt, ventana o catálogo mejora o empeora al asesor hay que hacer una corrida real (0,17 USD); las pruebas sirven para no gastarla cuando el error es de código.
 
-### 3.11 Cierre del nivel {ref=e10:E10}
+### 3.11 Resumen general {ref=e10:E10}
 
 - [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#e10) y explica qué se va a hacer y por qué
 - [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
@@ -1031,7 +1031,7 @@ Cada tema y proyecto cerrado deja una fila aquí. Es el índice de pruebas del p
 | 2026-10-13 | 3.8 | Limitaciones: 8 trampas del catálogo | `35a01a3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/35a01a3) |
 | 2026-10-13 | 3.9 | Chat final ensamblado y piloto de 10 clientes | `57dd309` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/57dd309) |
 | 2026-10-13 | 3.10 | Pruebas automáticas sin gastar tokens | `aef841a` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/aef841a) |
-| 2026-10-13 | 3.11 | Cierre del nivel: informe del piloto | `edbdcf3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/edbdcf3) |
+| 2026-10-13 | 3.11 | Resumen general: informe del piloto | `edbdcf3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/edbdcf3) |
 
 ## 8. Lecciones aprendidas para agentizar
 
@@ -1078,6 +1078,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | El análisis suma «Para qué sirve cada dato» (objetivo, decisión y ejemplo de cada variable) y la tabla «Resumen: cada dato y su decisión»; aplicado a 3.10 y pedido por el hook para las entradas nuevas. |
 | 2026-10-13 | «Para qué sirve cada dato» y «Resumen: cada dato y su decisión» se agregan también a las entradas 3.2 a 3.9. |
 | 2026-10-13 | Tema 3.11 completo: `e10_informe_piloto.py` genera el informe del piloto sin gastar tokens (paso D.4); checklist de cierre de la guía con evidencia, filas de la sección 7 con los hashes de cada etapa y lecciones para agentizar en la sección 8. Cierra la Parte 1 del Nivel 1. |
+| 2026-10-13 | El tema 3.11 pasa a llamarse «Resumen general» en lugar de «Cierre del nivel»: consolida lo hecho en los temas anteriores y no produce datos nuevos de gasto. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1844,7 +1845,7 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 > 3. **Hacer del validador de precios una herramienta de producción.** Hoy funciona sobre respuestas guardadas y exige revisar 8 sumas a mano; ampliarlo a sumas y divisiones y sumarle las 8 trampas lo convierte en un filtro automático sobre cada respuesta, a 0 tokens (**por construir**, 3.26 y 3.30).
 > 4. **Reducir la corrida real a lo que las pruebas no ven.** Cuando haya que medir calidad, correr solo los 3 clientes con trampa o dato crítico (~0,05 USD, **estimado**) y reservar los 10 para el cierre de cada decisión; así se mide mejor y se gasta una tercera parte.
 
-#### 3.11 · Cierre del nivel (2026-10-13)
+#### 3.11 · Resumen general (2026-10-13)
 
 **Qué se hizo:** se cerró la Parte 1 del Nivel 1 con un informe del piloto generado por un script que no llama a Claude: lee la base, compara por cliente la línea base del 3.4 con el chat final del 3.9, cuenta precios sospechosos, recoge el veredicto de las trampas y comprueba el checklist de cierre de la guía. También se registraron en la sección 7 los commits de cada etapa y en la sección 8 las lecciones para agentizar.
 

@@ -173,7 +173,7 @@ Se crea el escenario y el chat empieza a atender a los clientes con memoria prop
 | D.1 | Correr las trampas del catálogo y medir si el chat inventa | [3.8 Limitaciones de los LLM](../resultados/resultados-proceso-manual.html#s3-8) |
 | D.2 | Chat final: los 10 clientes atendidos, con recorte de memoria y cada llamada guardada en ejecuciones | [3.9 Ensamblar el chat final](../resultados/resultados-proceso-manual.html#s3-9) |
 | D.3 | Pruebas sin gastar tokens del simulador y de la memoria por cliente | [3.10 Pruebas automáticas](../resultados/resultados-proceso-manual.html#s3-10) |
-| D.4 | Informe del piloto: tokens, costo y alucinaciones por cliente | [3.11 Cierre del nivel](../resultados/resultados-proceso-manual.html#s3-11) |
+| D.4 | Informe del piloto: tokens, costo y alucinaciones por cliente | [3.11 Resumen general](../resultados/resultados-proceso-manual.html#s3-11) |
 
 ## 10. Fase E · El laboratorio sobre el caso (Parte 2)
 
