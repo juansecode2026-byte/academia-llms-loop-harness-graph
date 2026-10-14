@@ -342,7 +342,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > **Notas del proceso**
 > Este apartado de la guía es de diseño: no trae código ni gasta tokens, así que las casillas de construir y ejecutar se cumplen con la definición que sigue. Es el paso del ejercicio E.1.
 >
-> **Qué es el laboratorio.** Una app local de Streamlit con cuatro pestañas (Playground, Comparador, Batería de alucinaciones y Métricas) más una quinta de Decisiones, que se construye por etapas en los temas 3.13 a 3.26 y guarda cada experimento en la base. Está ensayada en la maqueta de la conversación; el laboratorio real se escribe después.
+> **Qué es el laboratorio.** Una app local de Streamlit con cuatro pestañas (Playground, Comparador, Batería de alucinaciones y Métricas) más una quinta de Decisiones, que se construye por etapas en los temas 3.13 a 3.26 y guarda cada experimento en la base. El laboratorio real se escribe después; la maqueta que se mostró en la conversación es solo un ejemplo visual y no forma parte del resultado.
 >
 > **Objetivo, en una frase.** Decidir, para cada tipo de tarea del asesor, qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
 >
@@ -1103,6 +1103,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | El tema 3.11 pasa a llamarse «Resumen general» en lugar de «Cierre del nivel»: consolida lo hecho en los temas anteriores y no produce datos nuevos de gasto. |
 | 2026-10-13 | El análisis suma la sección «Evidencia de conocimiento de LLMs: qué muestra este proyecto»: habilidades demostradas, cuándo y para qué se usan, límites del nivel y el costo estimado del laboratorio (~0,96 USD para 54 llamadas). |
 | 2026-10-13 | Tema 3.12 completo (paso E.1): objetivo del laboratorio, preguntas que debe contestar, criterios de éxito y límites; entrada breve del análisis. Abre la Parte 2. |
+| 2026-10-13 | La entrada del tema 3.12 se reescribe como planeación estructurada: objetivo, alcance, preguntas, etapas, criterios, riesgos, costo estimado y evidencia esperada. Se corrige la nota que mencionaba la maqueta como parte del resultado. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1994,18 +1995,108 @@ En palabras simples: el nivel termina con un asesor 23 % más barato y con una l
 
 #### 3.12 · Qué vas a construir (laboratorio) (2026-10-13)
 
-**Qué se hizo:** se definió el laboratorio antes de escribirlo: su objetivo, las cinco preguntas que debe contestar, los criterios para dar una decisión por válida y sus límites. No se llamó a la API: el tema es de diseño y cuesta 0 tokens.
+> **PLANEACIÓN**
+> _Este tema no trae mediciones: es el plan del laboratorio de la Parte 2. Define qué se va a construir, cómo se juzgará y qué puede salir mal. Los resultados llegan desde el tema 3.13 y se cierran en el 3.26._
 
-**A qué nos conduce:** a no construir una app por construirla. Cada pestaña del laboratorio nace de una pregunta que el Nivel 1 dejó abierta con datos: qué modelo (3.6, una muestra), cuánto razonar (3.5, ruido), cuánto recordar (3.9, 6 de 10) y si las reglas bastan (3.8, 0 de 8). El laboratorio existe para convertir esas muestras sueltas en decisiones con evidencia suficiente.
+**1. Qué se hizo**
 
-**En el ejercicio:** el paso E.1 queda hecho. La definición quedó en las notas del tema y sirve de criterio de entrega: la Parte 2 termina cuando el tablero de decisiones contesta las cinco preguntas con al menos 18 muestras por configuración o dice, con claridad, cuáles no puede contestar todavía.
+Se escribió el plan del laboratorio antes de construirlo. No se llamó a la API: el tema es de diseño y cuesta 0 tokens. El plan responde seis cosas, desarrolladas en las secciones siguientes: para qué sirve, qué entra y qué no, qué preguntas contesta, cómo se construye, cómo se sabrá si funcionó y qué riesgos tiene.
 
-**Qué encareció el proceso:** nada en tokens. Lo único que cuesta es el laboratorio que viene, cuyo costo estimado (~0,96 USD para 54 llamadas) ya está en la sección «Evidencia de conocimiento de LLMs».
+**2. Objetivo**
+
+- **Objetivo general:** decidir, para cada tipo de tarea del asesor, qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
+- **Objetivos específicos:**
+  1. Convertir las muestras sueltas del Nivel 1 en decisiones con evidencia suficiente.
+  2. Medir el costo y la calidad de cada configuración con las mismas conversaciones del piloto.
+  3. Dejar un tablero que cualquier persona pueda leer para saber qué configuración usar y por qué.
+
+**3. Alcance: qué entra y qué no**
+
+| Entra en el laboratorio | No entra (todavía) |
+|---|---|
+| Comparar modelos, effort, ventana, catálogo de interés y mensaje de sistema | Herramientas (tool use) y el agente: Parte 3 |
+| Medir tokens, costo, tiempo, razonamiento, invento y recuerdo del dato clave | Datos reales de clientes: llegan con candyCRM |
+| Registrar cada experimento en la base única del piloto | Otros proveedores de modelos |
+| Calificar alucinaciones a mano o con un modelo juez | Fine-tuning y RAG con vectores |
+| Un tablero de decisiones por tipo de tarea | Publicar la app en internet |
+
+**4. Las cinco preguntas que debe contestar**
+
+| # | Pregunta | Qué se mide | Dato de partida | Dónde se contesta |
+|---|---|---|---|---|
+| 1 | ¿Qué modelo conviene? | Costo, segundos y calidad por modelo | 3.6: Haiku 0,00086, Sonnet 0,01691 y Opus 0,03555 USD, una muestra | 3.25 y 3.26 |
+| 2 | ¿Cuánto debe razonar? | Tokens de razonamiento y costo por nivel de effort | 3.5: 0,00097, 0,00101 y 0,00092 USD, sin orden: ruido | 3.25 |
+| 3 | ¿Cuántos turnos recordar? | Costo y recuerdo del dato clave por tamaño de ventana, con y sin ficha | 3.9: ventana de 5, recuerdo de 6 de 10 | 3.25 |
+| 4 | ¿Qué reglas valen la pena? | Invento, tokens de salida y recuerdo | 3.8: 0 de 8 inventadas, salida −23 % | 3.25 |
+| 5 | ¿Cuánto cuesta cada decisión? | USD por llamada, por conversación y acumulado | 3.4 y 3.9: 388 llamadas guardadas | 3.23 y 3.26 |
+
+**5. Qué se construirá, por etapa**
+
+| Etapa | Tema | Qué se construye | Resultado verificable |
+|---|---|---|---|
+| D1 | 3.13 | Diseño: controles y mediciones | Las dos tablas entendidas |
+| D2 | 3.14 | Preparación | `streamlit hello` abre en el navegador |
+| D3 | 3.15 | Motor de medición | Una llamada medida en consola |
+| D4 | 3.16 | Registro de experimentos | Tabla nueva en la base única del piloto |
+| D5 | 3.17 | Batería y modelo juez | Las trampas del caso, cada una con su verdad |
+| D6 a D7 | 3.18 y 3.19 | Estructura de la app y controles | La app abre con sus pestañas y la barra lateral |
+| D8 a D11 | 3.20 a 3.23 | Playground, Comparador, Batería y Métricas | Cada vista con sus medidas |
+| D12 | 3.24 | Pruebas del laboratorio | `pytest -q` pasa sin gastar tokens |
+| D13 | 3.25 | Experimentos y cierre | La grilla de 10 clientes × 12 configuraciones |
+| D14 | 3.26 | Tablero de decisiones | Configuración recomendada por tarea |
+
+**6. Criterios de éxito**
+
+| Criterio | Umbral | Por qué ese umbral |
+|---|---|---|
+| Muestras por configuración | Al menos 18 | Con menos, la variación es ruido (se vio con `effort` en 3.5) |
+| Respuestas que inventan | Hasta 10 % | Una cotización falsa es un problema comercial |
+| «Admitió no saber» en las trampas | Al menos 70 % | Confirma que las reglas funcionan |
+| Respuestas cortadas | 0 % | Una respuesta cortada es un cliente sin respuesta (3.5) |
+| Recuerdo del dato clave | 10 de 10 | El ahorro de memoria no puede costar exactitud (3.9) |
+| Costo | Dentro del presupuesto del experimento | Se define en el tema 3.13 |
+
+Los umbrales son los de la guía y se pueden editar, **pero se fijan antes de ver los resultados** para no ajustarlos a lo que salga.
+
+**7. Riesgos y cómo se controlan**
+
+| Riesgo | Por qué importa | Cómo se controla |
+|---|---|---|
+| Muestras pequeñas | Una decisión sobre ruido se ve como evidencia | Mínimo de 18 por configuración y gris en el tablero si no se cumple |
+| Calificación subjetiva de las alucinaciones | Dos personas califican distinto | Reglas escritas de calificación y, después, un modelo juez que se compara con la calificación manual |
+| Gasto fuera de control | La grilla completa son 12 configuraciones sobre 184 mensajes | Tope de gasto por corrida (como el del simulador) y correr una configuración a la vez |
+| Datos simulados | Los resultados pueden no valer en clientes reales | Decirlo en cada resultado y repetir el laboratorio con datos reales en candyCRM |
+| Cambios de modelos o de precios | Una decisión puede quedar vieja | Guardar la fecha y los precios de cada experimento |
+| Perder lo ya medido | Una base nueva rompería la línea base | Ampliar la base única del piloto en lugar de crear otra (3.16) |
+
+**8. Costo estimado**
+
+Hay dos estimaciones, según el alcance, y ninguna está medida todavía:
+
+| Alcance | Cuenta | Costo estimado |
+|---|---|---|
+| Batería de la guía: 18 muestras en tres modelos | 54 llamadas con los costos de 3.6 | ~0,96 USD (ver la sección «Evidencia de conocimiento de LLMs») |
+| Grilla del piloto: 10 clientes × 12 configuraciones | 12 corridas de las 184 conversaciones, a ~0,17 USD cada una con Haiku | ~2 USD (más si se incluyen Sonnet y Opus) |
+
+La segunda supera el tope de 1 USD por corrida; por eso se corre una configuración a la vez.
+
+**9. Qué evidencia dejará al terminar**
+
+| Parte | Qué quedará en el repositorio |
+|---|---|
+| Código | El laboratorio (motor, registro, batería, app y pruebas) |
+| Datos | Cada experimento guardado, con configuración, medidas y fecha |
+| Análisis | Una entrada por tema con las cifras y sus límites |
+| Resultado | El tablero de decisiones y capturas de la app funcionando, agregadas al terminar la Parte 2 |
+
+**10. Qué se decide ahora y qué queda abierto**
+
+- **Decidido:** el objetivo, las cinco preguntas, los criterios de éxito y los límites.
+- **Abierto:** el presupuesto exacto del experimento (se define en 3.13), el tamaño de la ventana a probar (3.25) y si habrá modelo juez desde el principio o primero calificación manual (3.17).
 
 > **CONCLUSIONES**
 > _Desde el punto de vista de un AI Engineer: cuatro consejos para que el laboratorio produzca decisiones y no solo datos._
 > 1. **Escribir la pregunta antes que la pestaña.** Cada vista debe contestar una de las cinco preguntas; si una pestaña no responde ninguna, no se construye. Se aplica al diseñar los controles en 3.13.
 > 2. **Fijar los umbrales antes de ver los resultados.** Los criterios (18 muestras, 10 % de invento, recuerdo de 10 de 10) se definen ahora para no ajustarlos después a lo que salga. Se revisan en 3.26.
-> 3. **Empezar por la pregunta que ya duele.** La memoria (6 de 10 recuerdos) es la brecha medida más clara del nivel: el primer experimento debería ser ventana con y sin ficha del cliente (3.25 y 3.26).
-> 4. **Dejar dicho qué no se podrá concluir.** Con datos simulados y muestras chicas, el laboratorio puede descartar configuraciones malas con más seguridad que probar que una es la mejor; ese límite debe aparecer en el tablero, no solo en el informe.
-
+> 3. **Empezar por la pregunta que ya duele.** La memoria (6 de 10 recuerdos) es la brecha medida más clara del nivel: el primer experimento debería ser ventana con y sin ficha del cliente (3.25).
+> 4. **Controlar el gasto antes de correr la grilla.** La grilla de 12 configuraciones cuesta ~2 USD (**estimado**) y supera el tope de 1 USD: correr una configuración a la vez, con tope por corrida, y empezar por las tres más baratas.
