@@ -1053,6 +1053,7 @@ Cada tema y proyecto cerrado deja una fila aquí. Es el índice de pruebas del p
 | 2026-10-13 | 3.9 | Chat final ensamblado y piloto de 10 clientes | `57dd309` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/57dd309) |
 | 2026-10-13 | 3.10 | Pruebas automáticas sin gastar tokens | `aef841a` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/aef841a) |
 | 2026-10-13 | 3.11 | Resumen general: informe del piloto | `edbdcf3` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/edbdcf3) |
+| 2026-10-13 | 3.12 | Definición del laboratorio: objetivo, preguntas y criterios | `dcc35fa` | [ver commit](https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph/commit/dcc35fa) |
 
 ## 8. Lecciones aprendidas para agentizar
 
