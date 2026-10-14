@@ -125,6 +125,12 @@ El usuario lee los HTML, pero **el contexto de trabajo sale de los .md**. Reglas
   encarecieron el gasto de tokens y cómo optimizarlo); **su respuesta se agrega a la entrada del
   tema** en «Qué encareció el proceso» y «Cómo se podría optimizar», junto con la tabla
   «Tokens ahorrados en dólares» (medido contra optimizado, con estado del dato).
+- **Estructura de cada entrada del análisis (numerada y prolija):** 1. Qué se hizo; 2. A qué nos conduce;
+  3. En el ejercicio; 4. Qué encareció el proceso; 5. Variables que afectaron el proceso (5.1 Para qué
+  sirve cada dato; 5.2 Resumen: cada dato y su decisión); 6. Cómo optimizar cada variable; 7. Tokens
+  ahorrados en dólares; 8. Ejemplo; y al cierre la nota CONCLUSIONES. Cada título va en su línea como
+  `**N. Título**` (subtítulo `**N.M Título**`) y el generador de HTML lo muestra como título. Los números
+  son fijos aunque falte un apartado. Los temas de planeación llevan la nota PLANEACIÓN.
 - **«Para qué sirve cada dato»:** tras la tabla de variables, una viñeta por variable con objetivo,
   decisión que permite y ejemplo concreto con números, y la tabla «Resumen: cada dato y su decisión»
   (Dato | Pregunta que responde | Decisión que permite). Cada número se mide para decidir algo.

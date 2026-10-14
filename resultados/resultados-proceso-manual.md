@@ -1116,6 +1116,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | La entrada del tema 3.12 se reescribe como planeación estructurada: objetivo, alcance, preguntas, etapas, criterios, riesgos, costo estimado y evidencia esperada. Se corrige la nota que mencionaba la maqueta como parte del resultado. |
 | 2026-10-13 | El tema 3.12 pasa a llamarse «Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia)». Desde ahora, la primera mención de «asesor» en cada tema y en cada entrada del análisis lleva entre paréntesis «asistente de ventas de Turismo Colombia». |
 | 2026-10-13 | El tema 3.12 suma, al comienzo de sus notas y de su entrada del análisis, el bloque «Aplicación local de Streamlit que prueba configuraciones de un asesor con modelo de lenguaje (LLM)» con su definición: qué configura, mide, decide, entrega y dónde corre. |
+| 2026-10-13 | Las entradas del análisis (3.2 a 3.11) se reordenan con títulos y subtítulos numerados (1 Qué se hizo … 8 Ejemplo) y el generador de HTML los muestra como títulos; la estructura queda como regla del hook y de CLAUDE.md. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1263,13 +1264,21 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 
 #### 3.2 · Primera llamada a la API (2026-10-13)
 
-**Qué se hizo:** se escribió un programa de unas 35 líneas que le manda a Claude la conversación de un cliente ficticio (dos mensajes, el segundo insistiendo en un precio aproximado) con el papel de asesor de viajes (asistente de ventas de Turismo Colombia) y el catálogo de la agencia cargado, y muestra todo lo que devuelve. Se ejecutó tres veces.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a comprobar que, con los datos delante, el asesor responde con cifras verificables. Las tres veces usó el precio del catálogo (480.000 por noche, 1.920.000 por las 4 noches) y aclaró lo que el catálogo no tiene: tarifa de temporada alta, disponibilidad y vuelos. Y a ver lo que cuesta darle esos datos: el catálogo viaja en cada mensaje.
+se escribió un programa de unas 35 líneas que le manda a Claude la conversación de un cliente ficticio (dos mensajes, el segundo insistiendo en un precio aproximado) con el papel de asesor de viajes (asistente de ventas de Turismo Colombia) y el catálogo de la agencia cargado, y muestra todo lo que devuelve. Se ejecutó tres veces.
 
-**En el ejercicio:** es la base del asesor. Todo lo que sigue (memoria, parámetros, modelos y trampas) se construye sobre un asesor que consulta el catálogo, y cada cifra de sus respuestas se puede rastrear a un registro.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** dos cosas, y las dos son contexto, es decir, texto que se le manda al modelo antes de que responda.
+a comprobar que, con los datos delante, el asesor responde con cifras verificables. Las tres veces usó el precio del catálogo (480.000 por noche, 1.920.000 por las 4 noches) y aclaró lo que el catálogo no tiene: tarifa de temporada alta, disponibilidad y vuelos. Y a ver lo que cuesta darle esos datos: el catálogo viaja en cada mensaje.
+
+**3. En el ejercicio**
+
+es la base del asesor. Todo lo que sigue (memoria, parámetros, modelos y trampas) se construye sobre un asesor que consulta el catálogo, y cada cifra de sus respuestas se puede rastrear a un registro.
+
+**4. Qué encareció el proceso**
+
+dos cosas, y las dos son contexto, es decir, texto que se le manda al modelo antes de que responda.
 
 - **El catálogo viajando en cada mensaje.** Cada mensaje del cliente carga unos 6.500 tokens del catálogo completo, aunque el cliente pregunte solo por Cartagena. En la conversación de dos mensajes eso fue casi todo de los 13.580 tokens de entrada, y cerca del 72 % de todo el costo.
 - **La memoria.** En el segundo mensaje se reenvía todo lo anterior: la entrada sube de 6.578 a unos 7.000 tokens. Con dos mensajes casi no se nota, pero en una conversación de 20 crece sin parar (se mide en el tema 3.4).
@@ -1281,7 +1290,7 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 | Salida | 1.057 | 0,00053 USD |
 | **Total** | | **0,0019 USD** |
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1291,7 +1300,9 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 | Longitud de la respuesta | El primer mensaje listó 3 hoteles y 2 tours: entre 599 y 647 tokens de salida con razonamiento | Más salida, que es la parte más cara por token, y más historial para el turno siguiente |
 | Fuente de los datos | Las 3 ejecuciones dieron la misma cifra: $1.920.000, del registro `casa-naranja-del-centro` | Exactitud: 3 de 3 respuestas verificables |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Catálogo en el contexto (6.578 tokens por mensaje).** *Objetivo:* saber cuánto pesa darle al asesor los datos de la agencia. *Decisión:* si conviene mandar todo el catálogo o solo la parte que le sirve al cliente. *Ejemplo:* para responder por Cartagena, el asesor recibió también los registros de Villa de Leyva o Barichara; ese texto representó cerca del 72 % del costo de la conversación.
 - **Memoria (6.578 → ~7.000 tokens).** *Objetivo:* ver cuánto crece lo que se reenvía de un mensaje al siguiente. *Decisión:* cuánto historial conservar (se resuelve en 3.4 y 3.9). *Ejemplo:* del primer al segundo mensaje la entrada subió unos 420 tokens; en una conversación de 20 mensajes ese crecimiento se acumula.
@@ -1299,7 +1310,7 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 - **Longitud de la respuesta (599 a 647 tokens).** *Objetivo:* ver si el asesor contesta más de lo que se le preguntó. *Decisión:* si se piden respuestas cortas y que pregunte antes de listar. *Ejemplo:* a «cuánto vale ir a Cartagena 4 noches» listó 3 hoteles y 2 tours; con una sola opción y una pregunta, la salida sería menor y el historial reenviado después, también.
 - **Fuente de los datos (3 de 3 con la misma cifra).** *Objetivo:* comprobar que las cifras salen del catálogo y no del modelo. *Decisión:* si se puede confiar en el asesor para cotizar. *Ejemplo:* las tres ejecuciones dieron $1.920.000, que es el precio de `casa-naranja-del-centro` (480.000) por 4 noches; cualquiera lo verifica en el catálogo.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1309,7 +1320,9 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 | Longitud de la respuesta (599 a 647 tokens) | ¿Contesta más de lo necesario? | Reglas de brevedad (3.8) |
 | Fuente de los datos (3 de 3 con la misma cifra) | ¿De dónde sale cada cifra? | Confiar en el asesor con catálogo |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):** primero la que más pesa, una a la vez, midiendo costo **y** exactitud.
+**6. Cómo optimizar cada variable**
+
+primero la que más pesa, una a la vez, midiendo costo **y** exactitud.
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1320,7 +1333,7 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 | Razonamiento | Esfuerzo (effort) según el tipo de mensaje: bajo en un saludo, alto en una cotización | Menos tokens de razonamiento en mensajes simples | **Por medir** | 3.5 y 3.32 |
 | Sensación de rapidez | Mostrar «escribiendo…» desde el primer token y enviar mensajes cortos | No baja el costo; el cliente siente que el asesor responde rápido | **Por medir** (tiempo hasta el primer token) | 3.15 |
 
-> **Ejemplo**
+> **8. Ejemplo**
 > El cliente escribe: «somos 2, del 10 al 14 de diciembre, dame un precio aproximado, un hotel bueno en el centro».
 > El asesor, las tres veces: «Casa Naranja del Centro: $480.000 por noche, **$1.920.000** en total. Es el precio base de temporada baja; diciembre suele ser temporada alta, así que el precio final será más alto. Un asesor humano te confirma disponibilidad y precio exacto».
 > ¿De dónde sale cada dato? Del registro del catálogo `casa-naranja-del-centro`: `precio_desde` 480000 y ubicación «Dentro del centro amurallado» (por eso es «el hotel del centro»). El total son 4 noches × 480.000 = 1.920.000. Lo que el catálogo no tiene, como la tarifa de diciembre y los cupos, el asesor lo dijo en vez de inventarlo. Cualquiera puede verificar la respuesta abriendo el archivo del catálogo.
@@ -1335,13 +1348,21 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-13)
 
-**Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor (asistente de ventas de Turismo Colombia) al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a ver en qué se va el costo de una respuesta del asesor: con el catálogo, lo que se envía son 6.578 tokens y el costo de cada respuesta ronda los 0,00097 USD, y dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. También se ve el streaming: la respuesta llega en 67 a 92 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
+se recibió en vivo, pedazo por pedazo, la respuesta del asesor (asistente de ventas de Turismo Colombia) al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
 
-**En el ejercicio:** la decisión de cuánto catálogo cargar (todo, o solo lo que el cliente pregunta) es la primera palanca de costo del asesor. Se mide en el tema 3.4, junto con cuántos turnos recuerda.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** en una respuesta con catálogo, el costo se reparte así:
+a ver en qué se va el costo de una respuesta del asesor: con el catálogo, lo que se envía son 6.578 tokens y el costo de cada respuesta ronda los 0,00097 USD, y dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. También se ve el streaming: la respuesta llega en 67 a 92 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
+
+**3. En el ejercicio**
+
+la decisión de cuánto catálogo cargar (todo, o solo lo que el cliente pregunta) es la primera palanca de costo del asesor. Se mide en el tema 3.4, junto con cuántos turnos recuerda.
+
+**4. Qué encareció el proceso**
+
+en una respuesta con catálogo, el costo se reparte así:
 
 | Parte de la respuesta | Tokens | Costo (Haiku) | % del costo |
 |---|---|---|---|
@@ -1352,7 +1373,9 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 
 En palabras simples: dos de cada tres pesos se van en volver a mandarle al asesor el catálogo completo en cada mensaje, no en lo que contesta. Y una parte se paga por un razonamiento que el cliente nunca ve.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):** promedio de 3 ejecuciones.
+**5. Variables que afectaron el proceso**
+
+promedio de 3 ejecuciones.
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1362,7 +1385,9 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 | Pedazos del streaming | 78 pedazos (entre 67 y 92); varios cortan palabras | No cambia el costo; permite mostrar la respuesta antes |
 | Idioma del razonamiento | El resumen llegó en inglés aunque la respuesta salió en español | No afecta al cliente; sí a quien audita las conversaciones |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Entrada: instrucciones y catálogo (6.578 tokens, 68 % del costo).** *Objetivo:* ver qué parte del costo es lo que se envía y no lo que se contesta. *Decisión:* atacar primero la entrada antes que la respuesta. *Ejemplo:* de 0,00097 USD por respuesta, 0,00066 USD son la entrada; a 10.000 mensajes al mes con Haiku serían unos 9,7 USD, de los cuales ~6,6 USD son catálogo reenviado (**calculado**).
 - **Respuesta visible (380 tokens, 20 %).** *Objetivo:* saber cuánto cuesta lo que el cliente sí lee. *Decisión:* si recortar la respuesta es la prioridad o hay algo más grande. *Ejemplo:* aunque la respuesta se acortara a la mitad (190 tokens), el costo total bajaría cerca de 10 % (**calculado**); no es lo primero que conviene tocar.
@@ -1370,7 +1395,7 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 - **Pedazos del streaming (78, entre 67 y 92).** *Objetivo:* entender cómo llega la respuesta. *Decisión:* si se usa streaming para mostrarla antes (no ahorra, mejora la sensación de rapidez). *Ejemplo:* en WhatsApp el cliente empieza a leer a los pocos segundos en vez de esperar a que termine la respuesta completa.
 - **Idioma del razonamiento (en inglés).** *Objetivo:* saber qué pasa cuando alguien audita las conversaciones. *Decisión:* si se guarda el resumen del razonamiento y cómo se lee. *Ejemplo:* el resumen salió en inglés aunque la respuesta al cliente fue en español; quien revise por qué el asesor recomendó algo debe leer inglés.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1380,7 +1405,9 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 | Pedazos del streaming (78, entre 67 y 92) | ¿Cómo llega la respuesta? | Usar streaming; medir el primer token (3.15) |
 | Idioma del razonamiento (en inglés) | ¿Se puede auditar el razonamiento? | Guardar trazas con aviso (3.34) |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):** el origen es la ficha que la API devuelve en cada llamada; se ataca primero lo que más pesa.
+**6. Cómo optimizar cada variable**
+
+el origen es la ficha que la API devuelve en cada llamada; se ataca primero lo que más pesa.
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1390,7 +1417,7 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 | Streaming | «Escribiendo…» desde el primer token y envío por párrafos | Mejor tiempo percibido, mismo costo | **Por medir** (tiempo hasta el primer token) | 3.15 |
 | Razonamiento para auditar | Guardar el resumen del razonamiento en las trazas | Saber por qué el asesor recomendó algo | **Por construir** | 3.34 |
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Es como un vendedor que, antes de contestar cada mensaje, relee todo el catálogo de la agencia: contesta bien, pero cuesta más.
 > La respuesta real de la primera ejecución, a «hola buenas, cuanto vale ir a cartagena 4 noches?», listó tres alojamientos con su total de 4 noches: Casa Naranja del Centro, $480.000 por noche, **$1.920.000**; Hotel Brisas de Bocagrande, $360.000 por noche, **$1.440.000**; Hostal La Muralla Viva, $120.000 por noche, **$480.000**. Cada cifra sale de un registro de alojamientos del catálogo en Cartagena (`casa-naranja-del-centro`, `hotel-brisas-de-bocagrande`, `hostal-la-muralla-viva`).
 > El costo: con 10.000 mensajes al mes con Haiku serían unos 9,7 USD. Si en lugar del catálogo completo (unos 6.500 tokens) se cargaran solo los alojamientos y tours de la ciudad por la que pregunta el cliente, en el tema 3.4 se calculó que pesaría en promedio unos 1.950 tokens (entre 1.069 y 2.615 según las ciudades) y que las conversaciones costarían un 39 % menos.
@@ -1404,13 +1431,21 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-13)
 
-**Qué se hizo:** se corrieron las conversaciones completas de 10 clientes ficticios (184 mensajes, de 10 a 28 por cliente) contra el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado, y se midió en qué se va cada token de cada llamada: instrucciones, catálogo, historial, mensaje nuevo y respuesta. Con esos datos reales se calculó cuánto bajaría el costo con cada palanca.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a una sorpresa que cambia qué optimizar primero: **lo que más pesa no es la memoria, es el catálogo**. Se esperaba que el historial, que crece, fuera el problema; pero el catálogo completo es el 68 % de lo que se envía, y el 70 % de él no le sirve al cliente que está preguntando. Además, el 97 % de lo que se envía en cada turno ya se había enviado en el turno anterior. Con esto ya no se optimiza a ojo: se sabe qué atacar primero y cuánto se espera ganar.
+se corrieron las conversaciones completas de 10 clientes ficticios (184 mensajes, de 10 a 28 por cliente) contra el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado, y se midió en qué se va cada token de cada llamada: instrucciones, catálogo, historial, mensaje nuevo y respuesta. Con esos datos reales se calculó cuánto bajaría el costo con cada palanca.
 
-**En el ejercicio:** las 10 conversaciones quedaron guardadas en la base única del piloto, con cada llamada medida. Esa es la línea base con la que se compara cada mejora en los temas 3.25 y 3.26, y los 14 «¿qué te dije?» revisados (13 correctos, 1 parcial) son la referencia para comprobar que recortar la memoria no hace que el asesor olvide los datos del cliente.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** el costo de una llamada promedio (0,00116 USD) se reparte así:
+a una sorpresa que cambia qué optimizar primero: **lo que más pesa no es la memoria, es el catálogo**. Se esperaba que el historial, que crece, fuera el problema; pero el catálogo completo es el 68 % de lo que se envía, y el 70 % de él no le sirve al cliente que está preguntando. Además, el 97 % de lo que se envía en cada turno ya se había enviado en el turno anterior. Con esto ya no se optimiza a ojo: se sabe qué atacar primero y cuánto se espera ganar.
+
+**3. En el ejercicio**
+
+las 10 conversaciones quedaron guardadas en la base única del piloto, con cada llamada medida. Esa es la línea base con la que se compara cada mejora en los temas 3.25 y 3.26, y los 14 «¿qué te dije?» revisados (13 correctos, 1 parcial) son la referencia para comprobar que recortar la memoria no hace que el asesor olvide los datos del cliente.
+
+**4. Qué encareció el proceso**
+
+el costo de una llamada promedio (0,00116 USD) se reparte así:
 
 | Parte | Costo (USD) | % del costo |
 |---|---|---|
@@ -1421,7 +1456,7 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 
 En palabras simples: más de la mitad del dinero se va en volver a mandarle al asesor un catálogo del que casi siempre usa una cuarta parte; otra cuarta parte, en repetirle la conversación; y menos de una quinta parte, en lo que el asesor escribe. Y como cada turno reenvía todo lo anterior, una conversación larga cuesta mucho más que una corta: 0,0317 USD la de 24 turnos contra 0,0090 USD la de 10.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1432,7 +1467,9 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 | Longitud de la conversación | De 10 a 28 turnos: 0,0090 a 0,0317 USD por conversación | El costo crece más rápido que el número de turnos |
 | Salida y razonamiento | 416 tokens por respuesta; el razonamiento es el 17 % | 18 % del costo; el razonamiento, cerca del 3 % |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Catálogo completo (6.478 tokens, 68,2 % de la entrada).** *Objetivo:* conocer la parte más pesada de lo que se envía. *Decisión:* si se filtra el catálogo antes de enviarlo. *Ejemplo:* es 0,00065 USD de los 0,00116 USD de una llamada promedio (56 %) y se reenvía en cada mensaje de cada cliente.
 - **Historial (2.936 tokens en promedio).** *Objetivo:* ver cuánto crece la memoria turno a turno. *Decisión:* cuántos turnos conservar. *Ejemplo:* en las conversaciones largas la entrada pasó de 6.565 tokens en el turno 1 a 12.480 en los turnos 21 a 28; cada turno cuesta más que el anterior.
@@ -1441,7 +1478,7 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 - **Longitud de la conversación (0,0090 a 0,0317 USD).** *Objetivo:* ver cómo crece el costo con el número de turnos. *Decisión:* dónde conviene cortar o resumir. *Ejemplo:* la conversación de Camilo (10 turnos) costó 0,0090 USD y la de Julián (24 turnos) 0,0317 USD: 2,4 veces más turnos, 3,5 veces más costo.
 - **Salida y razonamiento (416 tokens, 18 % del costo).** *Objetivo:* saber qué parte es lo que el asesor escribe y piensa. *Decisión:* si hay que atacar la salida o la entrada primero. *Ejemplo:* con 18 % del costo, la salida pesa mucho menos que el catálogo (56 %); por eso no fue lo primero que se optimizó.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1452,7 +1489,9 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 | Longitud de la conversación (0,0090 a 0,0317 USD) | ¿Una conversación larga cuesta lo proporcional? | Ventana y resumen |
 | Salida y razonamiento (416 tokens, 18 % del costo) | ¿Cuánto cuesta lo que contesta? | Después de la entrada |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):** se cambia una cosa a la vez y se mide costo **y** exactitud. Los ahorros son calculados sobre las 184 llamadas reales; la calidad de las respuestas se prueba en el laboratorio.
+**6. Cómo optimizar cada variable**
+
+se cambia una cosa a la vez y se mide costo **y** exactitud. Los ahorros son calculados sobre las 184 llamadas reales; la calidad de las respuestas se prueba en el laboratorio.
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1463,7 +1502,9 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 | Historial | Resumir lo viejo en pocas líneas en lugar de recortarlo | Conserva los datos del cliente con menos tokens | **Por medir** | 3.25 y 3.26 |
 | Salida y razonamiento | Respuestas del tamaño de un chat y esfuerzo (effort) según el tipo de mensaje | Reducir ese 18 % del costo | **Por medir** | 3.5 y 3.32 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y lo que habría costado con cada optimización. Como las palancas solo recortan la entrada (a 0,10 USD por millón en Haiku 5,5), los tokens ahorrados salen de dividir los dólares ahorrados por esa tarifa.
+**7. Tokens ahorrados en dólares**
+
+diferencia entre lo medido (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y lo que habría costado con cada optimización. Como las palancas solo recortan la entrada (a 0,10 USD por millón en Haiku 5,5), los tokens ahorrados salen de dividir los dólares ahorrados por esa tarifa.
 
 | Concepto | Tokens de entrada antes | Tokens de entrada después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1474,7 +1515,7 @@ En palabras simples: más de la mitad del dinero se va en volver a mandarle al a
 
 En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 millones (el 67 %) se podían no enviar, y eso es 0,12 USD de los 0,21 USD gastados.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Julián, el cliente que dudaba entre Santa Marta y San Andrés, tuvo la conversación más larga de las que comparaban destinos: 24 turnos. En su último mensaje se enviaron 14.845 tokens, de los cuales 6.478 eran el catálogo completo, aunque Julián solo preguntó por Santa Marta y San Andrés, cuyos registros (por ejemplo `posada-playa-dorada`, `hotel-coral-sereno`, `tayrona-senderismo`) pesan 1.941 tokens: el 30 % del catálogo. Su conversación costó 0,0317 USD.
 > Lo mismo con Camilo, que solo pregunta por Medellín: su catálogo útil son 1.069 tokens y la conversación de 10 turnos costó 0,0090 USD.
 > Si se mandara a cada cliente solo el catálogo de sus ciudades y se recordaran los últimos 5 turnos, las 10 conversaciones habrían costado 0,0953 USD en lugar de 0,2130 USD, un 55 % menos. A 1.000 conversaciones al mes con Haiku, de unos 21 USD a unos 10 USD.
@@ -1488,15 +1529,23 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 
 #### 3.5 · Parámetros de generación (2026-10-13)
 
-**Qué se hizo:** se probaron los cuatro mandos de la generación sobre el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a dos hallazgos que van contra la intuición. Primero, **un tope de salida bajo no ahorra: deja al asesor sin respuesta**, porque el razonamiento se come el tope antes de escribir. Segundo, **pedir respuestas cortas no baja necesariamente el costo**: el asesor escribió menos pero razonó casi tres veces más. Y un tercero confirmado: la temperatura ya no se controla en Claude 5.5 (error 400), así que el comportamiento se gobierna con el catálogo, el mensaje de sistema y el `effort`.
+se probaron los cuatro mandos de la generación sobre el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
 
-**En el ejercicio:** el asesor responde siempre con los precios del catálogo ($480.000, $1.440.000 y $1.920.000 por 4 noches), sin importar `effort` ni tope. Para el piloto, el tope debe dejarse holgado (2.048 como hoy) y el ahorro buscarse en el contexto, no en estos mandos.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** cada llamada costó cerca de 0,00097 USD, y 0,00066 USD de eso (68 %) fue el catálogo de 6.578 tokens, igual que en 3.4. Lo propio de este tema fueron dos gastos inútiles: las dos llamadas con tope bajo (40 y 150) costaron 0,00141 USD en conjunto y no entregaron ninguna respuesta; y la instrucción de brevedad subió el razonamiento a 697 tokens y el costo en un 12 % (0,00110 contra 0,00098 USD).
+a dos hallazgos que van contra la intuición. Primero, **un tope de salida bajo no ahorra: deja al asesor sin respuesta**, porque el razonamiento se come el tope antes de escribir. Segundo, **pedir respuestas cortas no baja necesariamente el costo**: el asesor escribió menos pero razonó casi tres veces más. Y un tercero confirmado: la temperatura ya no se controla en Claude 5.5 (error 400), así que el comportamiento se gobierna con el catálogo, el mensaje de sistema y el `effort`.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el asesor responde siempre con los precios del catálogo ($480.000, $1.440.000 y $1.920.000 por 4 noches), sin importar `effort` ni tope. Para el piloto, el tope debe dejarse holgado (2.048 como hoy) y el ahorro buscarse en el contexto, no en estos mandos.
+
+**4. Qué encareció el proceso**
+
+cada llamada costó cerca de 0,00097 USD, y 0,00066 USD de eso (68 %) fue el catálogo de 6.578 tokens, igual que en 3.4. Lo propio de este tema fueron dos gastos inútiles: las dos llamadas con tope bajo (40 y 150) costaron 0,00141 USD en conjunto y no entregaron ninguna respuesta; y la instrucción de brevedad subió el razonamiento a 697 tokens y el costo en un 12 % (0,00110 contra 0,00098 USD).
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1507,7 +1556,9 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 | Catálogo | 6.578 tokens por llamada, 68 % del costo | Sigue siendo lo que más pesa, por encima de todos estos mandos |
 | Temperatura | Error 400 (`temperature is deprecated for this model`) | No es una palanca disponible |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Tope de salida (`max_tokens`).** *Objetivo:* saber qué pasa cuando el tope es más bajo que lo que el asesor necesita. *Decisión:* dejar el tope holgado y no usarlo para ahorrar. *Ejemplo:* con 40 y con 150 tokens el asesor no alcanzó a escribir; las dos llamadas costaron 0,00141 USD y el cliente se quedó sin respuesta.
 - **Razonamiento (222 a 330 tokens, 35 % a 47 % de la salida).** *Objetivo:* ver cuánto de la salida es pensamiento invisible. *Decisión:* cómo controlarlo (esfuerzo e instrucciones). *Ejemplo:* cuando se pidió «máximo 2 frases» el razonamiento subió a 697 tokens; el asesor pensó más para escribir menos.
@@ -1516,7 +1567,7 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 - **Catálogo (6.578 tokens, 68 % del costo).** *Objetivo:* recordar qué pesa más que todos estos mandos. *Decisión:* en qué trabajar primero. *Ejemplo:* estos mandos ahorrarían cerca de 8 % (**estimado**); filtrar el catálogo ahorra 39 % (**calculado**).
 - **Temperatura (error 400).** *Objetivo:* confirmar si es una palanca disponible. *Decisión:* descartarla y fijar el comportamiento con catálogo y mensaje de sistema. *Ejemplo:* al enviar `temperature` 0,2 la API respondió «deprecated for this model»; en Claude 5.5 no se puede variar.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1527,7 +1578,7 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 | Catálogo (6.578 tokens, 68 % del costo) | ¿Dónde está el ahorro grande? | Contexto primero, mandos después |
 | Temperatura (error 400) | ¿Puedo regular la creatividad? | Usar prompt y catálogo |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1537,7 +1588,9 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 | Catálogo | Mandar solo el de interés (palanca ya calculada en 3.4) | −39 % del costo | **Calculado** | 3.25 y 3.26 |
 | Temperatura | Ninguna: no existe; fijar el comportamiento con catálogo y mensaje de sistema | — | **Medido** (error 400) | — |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido y lo que habría costado con la optimización. Referencia medida en esta etapa: una llamada completa de 6.578 tokens de entrada y 634 de salida, 0,00097 USD. El piloto completo gastó 0,2130 USD en 184 llamadas (1.747.598 tokens de entrada y 76.523 de salida).
+**7. Tokens ahorrados en dólares**
+
+diferencia entre lo medido y lo que habría costado con la optimización. Referencia medida en esta etapa: una llamada completa de 6.578 tokens de entrada y 634 de salida, 0,00097 USD. El piloto completo gastó 0,2130 USD en 184 llamadas (1.747.598 tokens de entrada y 76.523 de salida).
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1548,7 +1601,7 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 
 En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo sale como se estima); el ahorro grande sigue estando en no reenviar el catálogo entero, y lo único seguro de esta etapa es no poner topes bajos.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Al cliente que pregunta «cuanto vale ir a cartagena 4 noches?» el asesor respondió, con los mismos datos del catálogo en todas las pruebas: `hostal-la-muralla-viva` $480.000, `hotel-brisas-de-bocagrande` $1.440.000 y `casa-naranja-del-centro` $1.920.000 (120.000, 360.000 y 480.000 por noche). Con `max_tokens=150` esa respuesta nunca salió: el asesor gastó los 150 tokens pensando y el cliente se quedó sin respuesta, por 0,00073 USD. Con la regla «máximo 2 frases», la respuesta fue un solo párrafo con los tres precios, pero costó más (0,00110 USD) porque el asesor razonó 697 tokens para resumir.
 
 > **CONCLUSIONES**
@@ -1560,15 +1613,23 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 
 #### 3.6 · Panorama de modelos de Anthropic (2026-10-13)
 
-**Qué se hizo:** se consultó a la API qué modelos puede usar la cuenta (14 en total) y se puso a los tres de la familia 5.5, Haiku, Sonnet y Opus, a responder la misma consulta de un cliente con el catálogo cargado. Se midieron tiempo, tokens y costo. Fueron 3 llamadas por 0,0533 USD.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a que **elegir modelo es la decisión de costo más grande que hay**, mucho más que `effort` o la longitud de la respuesta. Con los mismos datos del catálogo, los tres dieron el mismo precio correcto, y la diferencia fue de estilo: Sonnet y Opus ofrecieron alternativas y cerraron mejor. Esa mejora de estilo cuesta de 20 a 41 veces más. Con una sola muestra no se concluye la calidad, pero sí que no se justifica pagar más por el precio de una cotización simple.
+se consultó a la API qué modelos puede usar la cuenta (14 en total) y se puso a los tres de la familia 5.5, Haiku, Sonnet y Opus, a responder la misma consulta de un cliente con el catálogo cargado. Se midieron tiempo, tokens y costo. Fueron 3 llamadas por 0,0533 USD.
 
-**En el ejercicio:** el piloto del asesor (asistente de ventas de Turismo Colombia) debería correr en Haiku. Si más adelante un tipo de consulta exige más (un reclamo, una cotización con muchas condiciones), se le puede enviar a un modelo más grande, y eso se decide con la calidad medida en el laboratorio.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** la entrada fue la misma en los tres (6.618 tokens, casi todo catálogo), así que **el precio por token fue lo único que movió el costo**. Haiku cobra 0,10 USD por millón de tokens de entrada, Sonnet 2,00 y Opus 4,00. En los tres, la entrada con el catálogo fue la mayor parte: 77 % del costo en Haiku, 78 % en Sonnet y 74 % en Opus.
+a que **elegir modelo es la decisión de costo más grande que hay**, mucho más que `effort` o la longitud de la respuesta. Con los mismos datos del catálogo, los tres dieron el mismo precio correcto, y la diferencia fue de estilo: Sonnet y Opus ofrecieron alternativas y cerraron mejor. Esa mejora de estilo cuesta de 20 a 41 veces más. Con una sola muestra no se concluye la calidad, pero sí que no se justifica pagar más por el precio de una cotización simple.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el piloto del asesor (asistente de ventas de Turismo Colombia) debería correr en Haiku. Si más adelante un tipo de consulta exige más (un reclamo, una cotización con muchas condiciones), se le puede enviar a un modelo más grande, y eso se decide con la calidad medida en el laboratorio.
+
+**4. Qué encareció el proceso**
+
+la entrada fue la misma en los tres (6.618 tokens, casi todo catálogo), así que **el precio por token fue lo único que movió el costo**. Haiku cobra 0,10 USD por millón de tokens de entrada, Sonnet 2,00 y Opus 4,00. En los tres, la entrada con el catálogo fue la mayor parte: 77 % del costo en Haiku, 78 % en Sonnet y 74 % en Opus.
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1579,7 +1640,9 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 | Calidad de la cifra | Los tres: $1.920.000, de `casa-naranja-del-centro` | Idéntica; el modelo más caro no mejora el dato |
 | Estilo de la respuesta | Haiku una opción; Sonnet y Opus agregan alternativas | Es lo único que se compra al pagar más |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Modelo (0,00086 / 0,01691 / 0,03555 USD).** *Objetivo:* ver cuánto cambia el costo al cambiar de modelo con la misma consulta. *Decisión:* qué modelo usar por defecto. *Ejemplo:* la misma consulta de «somos 2, del 10 al 14 de diciembre» costó 0,00086 USD en Haiku, 19,7 veces eso en Sonnet y 41 veces en Opus, con la misma cifra de $1.920.000.
 - **Tokens de entrada (6.618 en los tres).** *Objetivo:* confirmar que la comparación es justa. *Decisión:* atribuir la diferencia de costo al precio por token y no a lo enviado. *Ejemplo:* los tres recibieron el mismo catálogo y la misma consulta, así que la diferencia de 20 a 41 veces es solo tarifa.
@@ -1588,7 +1651,7 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 - **Calidad de la cifra (la misma en los tres).** *Objetivo:* comprobar si pagar más mejora el dato que importa. *Decisión:* si hay motivo para subir de modelo en consultas de precio. *Ejemplo:* los tres dieron $1.920.000 de `casa-naranja-del-centro`; el modelo más caro no mejoró la cifra.
 - **Estilo de la respuesta (una opción contra varias).** *Objetivo:* saber qué se compra realmente al pagar más. *Decisión:* si ese estilo vale 20 a 41 veces el costo. *Ejemplo:* Haiku ofreció una opción; Sonnet y Opus agregaron `hotel-brisas-de-bocagrande` y `hostal-la-muralla-viva` y cerraron con una pregunta; es un estilo mejor, no un dato mejor.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1599,7 +1662,7 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 | Calidad de la cifra (la misma en los tres) | ¿El modelo caro acierta más? | No en consultas de precio |
 | Estilo de la respuesta (una opción contra varias) | ¿Qué compro al pagar más? | Evaluar con rúbrica (3.26) |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1608,7 +1671,9 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 | Tokens de entrada | Filtrar el catálogo por ciudad de interés | Con Haiku −39 %; con un modelo grande el ahorro en dólares sería 20 a 40 veces mayor | **Calculado** | 3.25 y 3.30 |
 | Tiempo de respuesta | Medir primer token y tiempos con más muestras | Saber si la diferencia de 2,1 s pesa en WhatsApp | **Por medir** | 3.15 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** el ahorro de elegir modelo no está en tokens, que son los mismos, sino en el precio de cada uno. Comparación entre la consulta medida en cada modelo y el piloto completo (184 llamadas, 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD en Haiku).
+**7. Tokens ahorrados en dólares**
+
+el ahorro de elegir modelo no está en tokens, que son los mismos, sino en el precio de cada uno. Comparación entre la consulta medida en cada modelo y el piloto completo (184 llamadas, 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD en Haiku).
 
 | Concepto | Tokens | Costo en Sonnet (USD) | Costo en Haiku (USD) | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1620,7 +1685,7 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 
 En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente a Sonnet y unos 8 frente a Opus por cada 10 conversaciones, y la cifra que ve el cliente es la misma. Falta confirmar con las 10 conversaciones que Haiku no pierda calidad en los casos difíciles.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > El cliente dijo: «somos 2, del 10 al 14 de diciembre, queremos ir a cartagena. dame un precio en pesos nomas, aproximado, un hotel bueno en el centro». Los tres modelos recomendaron `casa-naranja-del-centro` (480.000 por noche, 4 noches, $1.920.000) y avisaron que diciembre es temporada alta. Haiku lo hizo por 0,00086 USD. Sonnet agregó `hotel-brisas-de-bocagrande` (desde $360.000) por 0,01691 USD, y Opus sumó también `hostal-la-muralla-viva` (desde $120.000) por 0,03555 USD. A 1.000 conversaciones con unos 18 mensajes cada una, la diferencia entre Haiku y Sonnet sería de cientos de dólares al mes por un cierre de respuesta mejor redactado.
 
 > **CONCLUSIONES**
@@ -1632,15 +1697,23 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 
 #### 3.7 · Primer chat con memoria (2026-10-13)
 
-**Qué se hizo:** se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor (asistente de ventas de Turismo Colombia) recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a entender que **el asesor no recuerda nada por sí mismo: recuerda lo que nosotros le volvemos a enviar**. Eso explica dos cosas del tema 3.4: por qué cada turno cuesta más que el anterior (se reenvía todo) y por qué cada cliente necesita su propio historial (si no, se mezclan). También mostró que quitar la memoria no ahorra casi nada, porque el peso es el catálogo.
+se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor (asistente de ventas de Turismo Colombia) recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
 
-**En el ejercicio:** el paso C.5 queda hecho: cada cliente del piloto tiene su historial separado. En el piloto completo ese historial vive en la tabla `mensajes` de la base única, para que sobreviva si el programa se cierra.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** cada llamada costó entre 0,00082 y 0,00107 USD, y 6.580 a 6.613 tokens de entrada eran el catálogo y el mensaje de sistema. La memoria de Laura sumó solo 389 tokens (5,9 %) en el segundo turno. Lo que más pesó en la salida fue la longitud de la respuesta: la primera respuesta de Laura fue de 789 tokens y otras llegaron a 817, porque el asesor listó todo el catálogo de Cartagena aunque la cliente no lo había pedido.
+a entender que **el asesor no recuerda nada por sí mismo: recuerda lo que nosotros le volvemos a enviar**. Eso explica dos cosas del tema 3.4: por qué cada turno cuesta más que el anterior (se reenvía todo) y por qué cada cliente necesita su propio historial (si no, se mezclan). También mostró que quitar la memoria no ahorra casi nada, porque el peso es el catálogo.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el paso C.5 queda hecho: cada cliente del piloto tiene su historial separado. En el piloto completo ese historial vive en la tabla `mensajes` de la base única, para que sobreviva si el programa se cierra.
+
+**4. Qué encareció el proceso**
+
+cada llamada costó entre 0,00082 y 0,00107 USD, y 6.580 a 6.613 tokens de entrada eran el catálogo y el mensaje de sistema. La memoria de Laura sumó solo 389 tokens (5,9 %) en el segundo turno. Lo que más pesó en la salida fue la longitud de la respuesta: la primera respuesta de Laura fue de 789 tokens y otras llegaron a 817, porque el asesor listó todo el catálogo de Cartagena aunque la cliente no lo había pedido.
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1651,7 +1724,9 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 | Separación por cliente | Camilo no recibió datos de Laura | Sin separación se mezclarían los datos de los clientes |
 | Duración de la conversación | Estimado: con ~250 tokens de crecimiento por turno, 500 turnos costarían ~3,5 USD solo en entrada | El costo total crece con el cuadrado del número de turnos |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Memoria del cliente (389 tokens en el turno 2, 5,9 %).** *Objetivo:* ver cuánto pesa la memoria al comienzo de la conversación. *Decisión:* cuándo se vuelve un problema y hay que limitarla. *Ejemplo:* la memoria de Laura sumó 389 tokens al segundo turno; pequeña ahora, pero llega a 12.480 tokens hacia el turno 21 (3.4).
 - **Catálogo (6.580 tokens, 94 % de la entrada).** *Objetivo:* recordar que lo constante domina lo que crece. *Decisión:* no esperar que quitar memoria baje el costo mucho. *Ejemplo:* en el turno 2, de 6.988 tokens, 6.580 son el catálogo y las instrucciones.
@@ -1660,7 +1735,7 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 - **Separación por cliente.** *Objetivo:* asegurar que los datos de un cliente no lleguen a otro. *Decisión:* una memoria por cliente y una prueba que lo confirme. *Ejemplo:* Camilo preguntó por la boda de Laura y el asesor respondió que no tenía esa información, sin mezclar datos.
 - **Duración de la conversación (~3,5 USD en 500 turnos, estimado).** *Objetivo:* anticipar cuánto costaría una conversación muy larga. *Decisión:* si hace falta ventana y resumen. *Ejemplo:* con ~250 tokens de crecimiento por turno, 500 turnos costarían unos 3,5 USD solo en entrada; con ventana de 5 turnos, unos 0,4 USD.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1671,7 +1746,7 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 | Separación por cliente | ¿Se mezclan los clientes? | Una lista por cliente (3.10) |
 | Duración de la conversación (~3,5 USD en 500 turnos, estimado) | ¿Una conversación larga se encarece? | Ventana y resumen |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1681,7 +1756,9 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 | Separación por cliente | Una lista (y una fila de la tabla `mensajes`) por cliente | Evitar mezclar datos | **Medido** | 3.10 (pruebas) |
 | Duración de la conversación | Ventana más resumen para que el costo crezca de forma lineal, no cuadrática | ~0,4 USD en vez de ~3,5 USD por 500 turnos | **Estimado** | 3.25 y 3.26 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre lo medido y lo que habría costado con la optimización. La demo mide el turno 2 de Laura (6.988 tokens de entrada); el resto usa la línea base del piloto (184 llamadas, 1.747.598 tokens de entrada, 0,2130 USD).
+**7. Tokens ahorrados en dólares**
+
+diferencia entre lo medido y lo que habría costado con la optimización. La demo mide el turno 2 de Laura (6.988 tokens de entrada); el resto usa la línea base del piloto (184 llamadas, 1.747.598 tokens de entrada, 0,2130 USD).
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1692,7 +1769,7 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 
 En palabras simples: en conversaciones cortas la memoria casi no se nota, pero en las largas se vuelve lo más caro después del catálogo. La ventana la mantiene a raya sin tocar lo que el asesor sabe del cliente, si el historial completo queda guardado aparte.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Laura escribió «nos casamos el 14 de febrero y queremos viajar esa semana a cartagena. cuanto vale?». El asesor respondió con los precios del catálogo: `hostal-la-muralla-viva` desde $120.000, `hotel-brisas-de-bocagrande` desde $360.000 y `casa-naranja-del-centro` desde $480.000 por noche. Al preguntar en el turno siguiente qué fecha y qué precio le había dado, el asesor repitió «14 de febrero» y los mismos tres precios, por 0,00083 USD. Camilo, con su propia lista vacía, preguntó por la misma boda y el asesor respondió que no tenía esa información. Sin guardar sus respuestas, Laura recibió «no veo un precio anterior en esta conversación».
 
 > **CONCLUSIONES**
@@ -1704,15 +1781,23 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 
 #### 3.8 · Limitaciones de los LLM (2026-10-13)
 
-**Qué se hizo:** se tomaron 8 mensajes-trampa de los clientes del piloto (un hotel que no existe, un descuento no publicado, el clima, una dieta, un destino ausente, una alergia grave, una garantía y la temporada alta) y se compararon dos respuestas del asesor (asistente de ventas de Turismo Colombia) con la misma conversación previa: la que ya había dado sin reglas y la nueva con cinco reglas escritas en el prompt. Fueron 8 llamadas nuevas por 0,00850 USD.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a un hallazgo que corrige una suposición. Con el catálogo cargado, **el asesor no inventó en ninguna de las 8 trampas, ni con reglas ni sin ellas**: reconoce que algo no está publicado y lo pasa a un asesor humano. Las reglas no hicieron falta para evitar el invento grueso; sirvieron para pulir (respuestas más cortas y enfocadas, menos consejos sueltos). Eso cambia dónde poner el esfuerzo: el riesgo que queda son las afirmaciones pequeñas fuera del catálogo (como «Medellín suele ser templada»), y esas se cazan con pruebas, no con más reglas.
+se tomaron 8 mensajes-trampa de los clientes del piloto (un hotel que no existe, un descuento no publicado, el clima, una dieta, un destino ausente, una alergia grave, una garantía y la temporada alta) y se compararon dos respuestas del asesor (asistente de ventas de Turismo Colombia) con la misma conversación previa: la que ya había dado sin reglas y la nueva con cinco reglas escritas en el prompt. Fueron 8 llamadas nuevas por 0,00850 USD.
 
-**En el ejercicio:** el paso D.1 queda hecho y el piloto ya tiene su primera medición de seguridad: 0 de 8 trampas inventadas. La versión de las reglas queda en `caso_simulado.py` (`construir_system(con_reglas=True)`) para usarla en el chat final (3.9) y volver a medir en las pruebas (3.10) y el informe (3.11).
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** cada llamada de prueba llevó en promedio 9.497 tokens de entrada: unos 6.500 del catálogo, unos 2.700 del historial de ese cliente y 213 de las reglas. La salida fue pequeña (226 tokens por respuesta con reglas, 293 sin ellas). Es decir, probar una trampa en el turno 13 o 16 cuesta más que en el turno 3, porque se reenvía toda la conversación anterior.
+a un hallazgo que corrige una suposición. Con el catálogo cargado, **el asesor no inventó en ninguna de las 8 trampas, ni con reglas ni sin ellas**: reconoce que algo no está publicado y lo pasa a un asesor humano. Las reglas no hicieron falta para evitar el invento grueso; sirvieron para pulir (respuestas más cortas y enfocadas, menos consejos sueltos). Eso cambia dónde poner el esfuerzo: el riesgo que queda son las afirmaciones pequeñas fuera del catálogo (como «Medellín suele ser templada»), y esas se cazan con pruebas, no con más reglas.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el paso D.1 queda hecho y el piloto ya tiene su primera medición de seguridad: 0 de 8 trampas inventadas. La versión de las reglas queda en `caso_simulado.py` (`construir_system(con_reglas=True)`) para usarla en el chat final (3.9) y volver a medir en las pruebas (3.10) y el informe (3.11).
+
+**4. Qué encareció el proceso**
+
+cada llamada de prueba llevó en promedio 9.497 tokens de entrada: unos 6.500 del catálogo, unos 2.700 del historial de ese cliente y 213 de las reglas. La salida fue pequeña (226 tokens por respuesta con reglas, 293 sin ellas). Es decir, probar una trampa en el turno 13 o 16 cuesta más que en el turno 3, porque se reenvía toda la conversación anterior.
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1723,7 +1808,9 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 | Catálogo | Cerca de 6.500 tokens por llamada | Sigue siendo la mayor parte de la entrada |
 | Invento de datos | 0 de 8 trampas, con y sin reglas | El riesgo grueso no apareció; quedan deslices menores (2 sin reglas, 1 con reglas) |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Reglas del prompt (213 tokens por llamada).** *Objetivo:* saber lo que cuesta escribir reglas. *Decisión:* si el costo de las reglas se paga solo. *Ejemplo:* 213 tokens por llamada son 0,00002 USD; es un costo casi invisible por llamada.
 - **Longitud de la respuesta (1.806 contra 2.340 tokens de salida, −23 %).** *Objetivo:* medir si las reglas acortan las respuestas. *Decisión:* si se mantienen las reglas de «una opción» y «responde corto». *Ejemplo:* en las 8 trampas, el asesor con reglas escribió 534 tokens menos (0,00027 USD); la respuesta a Sofía pasó de 269 a 169 tokens diciendo lo mismo.
@@ -1732,7 +1819,7 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 - **Catálogo (~6.500 tokens).** *Objetivo:* recordar qué pesa más de la entrada. *Decisión:* dónde está el ahorro grande. *Ejemplo:* sigue siendo la mayor parte de la entrada, por encima de las reglas y de la salida.
 - **Invento de datos (0 de 8 trampas).** *Objetivo:* medir si el asesor inventa lo que no está en el catálogo. *Decisión:* si hace falta poner más reglas o basta con probar. *Ejemplo:* ante «casa dorada imperial» (hotel que no existe), el asesor dijo que no estaba en el catálogo; ante el clima, un descuento o la alergia, pasó a un asesor humano.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1743,7 +1830,7 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 | Catálogo (~6.500 tokens) | ¿Dónde está el ahorro grande? | Catálogo de interés |
 | Invento de datos (0 de 8 trampas) | ¿Inventa? | Probar con validador, no con más reglas |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1753,7 +1840,9 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 | Deslices menores | Prueba automática que busque afirmaciones fuera del catálogo (clima, vida nocturna, consejos médicos) | Detectarlos sin leer las 184 respuestas a mano | **Por medir** | 3.10 y 3.11 |
 | Precios y totales | Que los calcule el código y no el modelo | Elimina el error aritmético y el precio inventado | **Por medir** | 3.30 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre las 8 respuestas sin reglas (medidas en 3.4: 74.272 tokens de entrada y 2.340 de salida, 0,00860 USD) y las mismas con reglas (75.976 de entrada y 1.806 de salida, 0,00850 USD).
+**7. Tokens ahorrados en dólares**
+
+diferencia entre las 8 respuestas sin reglas (medidas en 3.4: 74.272 tokens de entrada y 2.340 de salida, 0,00860 USD) y las mismas con reglas (75.976 de entrada y 1.806 de salida, 0,00850 USD).
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1765,7 +1854,7 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 
 En palabras simples: las reglas pagan su propio costo y dejan una ganancia mínima de dinero, así que **no se justifican por ahorro sino por control**: respuestas más cortas, enfocadas y con menos deslices. El ahorro grande sigue en el catálogo filtrado.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Valentina, que no come carne, preguntó si el almuerzo de los tours tiene opción vegetariana. El catálogo no publica nada de comidas (`tayrona-senderismo` y `minca-y-cascadas` no traen ese dato). Sin reglas, el asesor dijo «no tengo información publicada sobre el almuerzo» y envió a un asesor humano; con reglas, dijo lo mismo y sugirió llevar un snack. Con la Familia Ortiz, cuya hermana es alérgica al maní, ninguna versión prometió nada y las dos pasaron el caso a un asesor humano; la versión sin reglas, además, recomendó llevar adrenalina autoinyectable, un consejo médico que el catálogo no respalda, y la versión con reglas lo reemplazó por «consulte al médico de su hermana». Y en el caso de Sofía, sobre temporada alta, la respuesta con reglas bajó de 269 a 169 tokens de salida diciendo lo mismo.
 
 > **CONCLUSIONES**
@@ -1777,13 +1866,21 @@ En palabras simples: las reglas pagan su propio costo y dejan una ganancia míni
 
 #### 3.9 · Ensamblar el chat final (2026-10-13)
 
-**Qué se hizo:** se juntó todo lo aprendido en un solo programa, `chat.py`: el asesor (asistente de ventas de Turismo Colombia) con el catálogo y las reglas, en Haiku, con streaming, memoria por cliente guardada en la base y ventana de 5 turnos. Con él se atendió a los 10 clientes del piloto (los mismos 184 mensajes del 3.4) y se les hizo una pregunta de cierre para ver si el asesor seguía recordando su dato clave. Fueron 205 llamadas en total por 0,1875 USD (incluye la prueba en consola y la comparación con el historial completo).
+**1. Qué se hizo**
 
-**A qué nos conduce:** a la primera decisión real de AI Engineer con datos propios: **la ventana ahorra, pero hace olvidar**. El costo bajó 23,4 % y la entrada dejó de crecer (la llamada más grande pasó de 14.845 a 8.165 tokens), pero el asesor solo recordó el dato clave de 6 de los 10 clientes, contra 10 de 10 con la memoria completa. Ningún ahorro se acepta sin medir lo que se pierde, y aquí se perdió algo importante: que Valentina no come carne o que los niños Ramírez tienen 4, 7 y 11 años.
+se juntó todo lo aprendido en un solo programa, `chat.py`: el asesor (asistente de ventas de Turismo Colombia) con el catálogo y las reglas, en Haiku, con streaming, memoria por cliente guardada en la base y ventana de 5 turnos. Con él se atendió a los 10 clientes del piloto (los mismos 184 mensajes del 3.4) y se les hizo una pregunta de cierre para ver si el asesor seguía recordando su dato clave. Fueron 205 llamadas en total por 0,1875 USD (incluye la prueba en consola y la comparación con el historial completo).
 
-**En el ejercicio:** el paso D.2 queda hecho y el asesor ya funciona como programa completo: cualquier cliente se puede retomar donde quedó. Antes de usarlo con clientes de verdad hay que resolver la memoria con una ficha del cliente; las pruebas automáticas del 3.10 deben vigilar justamente que no se pierdan esos datos.
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** con el historial recortado, **el catálogo pasó a ser casi todo el gasto**. De los 7.575 tokens de entrada promedio por llamada, 6.478 son el catálogo (85,5 %). Repartido sobre el costo de los 184 mensajes (0,1631 USD):
+a la primera decisión real de AI Engineer con datos propios: **la ventana ahorra, pero hace olvidar**. El costo bajó 23,4 % y la entrada dejó de crecer (la llamada más grande pasó de 14.845 a 8.165 tokens), pero el asesor solo recordó el dato clave de 6 de los 10 clientes, contra 10 de 10 con la memoria completa. Ningún ahorro se acepta sin medir lo que se pierde, y aquí se perdió algo importante: que Valentina no come carne o que los niños Ramírez tienen 4, 7 y 11 años.
+
+**3. En el ejercicio**
+
+el paso D.2 queda hecho y el asesor ya funciona como programa completo: cualquier cliente se puede retomar donde quedó. Antes de usarlo con clientes de verdad hay que resolver la memoria con una ficha del cliente; las pruebas automáticas del 3.10 deben vigilar justamente que no se pierdan esos datos.
+
+**4. Qué encareció el proceso**
+
+con el historial recortado, **el catálogo pasó a ser casi todo el gasto**. De los 7.575 tokens de entrada promedio por llamada, 6.478 son el catálogo (85,5 %). Repartido sobre el costo de los 184 mensajes (0,1631 USD):
 
 | Parte | Tokens (184 llamadas) | Costo (USD) | % del costo |
 |---|---|---|---|
@@ -1794,7 +1891,7 @@ En palabras simples: las reglas pagan su propio costo y dejan una ganancia míni
 
 Además, medir la memoria tuvo su costo: la pregunta de cierre con historial completo pesó 12.275 tokens por llamada, contra 7.567 con la ventana (cifras **calculadas** con los tokens medidos de las 184 llamadas; el reparto entre catálogo y ventana es aproximado).
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1805,7 +1902,9 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 | Reglas contra inventar | 213 tokens por llamada (~39.000 en el piloto) | ~2 % del costo; 0 de 8 trampas inventadas |
 | Longitud de la conversación | Costo por cliente de 0,0081 (Camilo, 10 turnos) a 0,0236 USD (Sofía, 28 turnos) | Con la ventana crece casi en línea recta con los turnos |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Ventana de 5 turnos (entrada −20,2 %).** *Objetivo:* ver cuánto ahorra enviar solo lo reciente. *Decisión:* si se adopta la ventana y con qué tamaño. *Ejemplo:* la llamada más grande bajó de 14.845 a 8.165 tokens en la conversación de Julián, y el costo total bajó 23,4 %.
 - **Memoria con la ventana (6 de 10 recuerdos).** *Objetivo:* medir lo que se pierde al ahorrar. *Decisión:* si el ahorro es aceptable o hace falta compensarlo. *Ejemplo:* con la ventana, el asesor olvidó que Valentina no come carne y las edades de los niños Ramírez (4, 7 y 11); con historial completo, recordó los 10 datos.
@@ -1814,7 +1913,7 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 - **Reglas contra inventar (213 tokens, 2 % del costo).** *Objetivo:* saber lo que cuestan las reglas en el piloto. *Decisión:* si se justifican. *Ejemplo:* ~39.000 tokens en las 184 llamadas, ~0,0039 USD; con 0 de 8 trampas inventadas, se justifican por control.
 - **Longitud de la conversación (0,0081 a 0,0236 USD por cliente).** *Objetivo:* ver si el costo por cliente sigue creciendo con la ventana. *Decisión:* si el costo de una conversación larga es predecible. *Ejemplo:* Camilo (10 turnos) costó 0,0081 USD y Sofía (28 turnos) 0,0236 USD; con la ventana, el costo crece casi en línea recta.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1825,7 +1924,7 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 | Reglas contra inventar (213 tokens, 2 % del costo) | ¿Cuánto cuestan las reglas? | Mantenerlas |
 | Longitud de la conversación (0,0081 a 0,0236 USD por cliente) | ¿Sigue creciendo el costo? | Planificar por turno |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1835,7 +1934,9 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 | Tamaño de la ventana | Probar 5, 8 y 10 turnos con la misma pregunta de cierre | Encontrar el punto donde no se olvida sin pagar el historial completo | **Por medir** | 3.25 y 3.26 |
 | Medición de la memoria | Convertir la pregunta de cierre en prueba automática (patrón del dato clave por cliente) | Detectar olvidos sin leer respuestas a mano | **Medido** (ya funciona en este tema) | 3.10 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** diferencia entre la línea base medida (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y el chat final, más lo que se ahorraría con la siguiente optimización.
+**7. Tokens ahorrados en dólares**
+
+diferencia entre la línea base medida (184 llamadas: 1.747.598 tokens de entrada, 76.523 de salida, 0,2130 USD) y el chat final, más lo que se ahorraría con la siguiente optimización.
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1848,7 +1949,7 @@ Además, medir la memoria tuvo su costo: la pregunta de cierre con historial com
 
 En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el catálogo ahorraría casi dos tercios. Pero el ahorro de la ventana tiene un precio en memoria, y recuperarlo con una ficha del cliente cuesta casi nada (unos 0,0015 USD en todo el piloto).
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Valentina dijo al comienzo «no como carne, soy vegetariana». Veinte turnos después, al preguntarle qué datos tenía de su viaje, el asesor con la ventana de 5 turnos respondió: «Restricción de comida o alergia: no me has dicho cuál es» y corrigió una suposición suya («yo dije que ibas sola, pero tú no lo mencionaste»). No inventó, pero olvidó lo más importante para recomendarle un tour. Con el historial completo, el mismo asesor sí lo recordó. En cambio, a Andrés, que pidió un descuento para 6 personas, el chat final le respondió bien: no hay descuentos publicados, y por el `ecohostal-selva-tayrona` (máximo 3 huéspedes, desde $190.000) serían 2 cabañas, «$380.000 por noche».
 
 > **IMPORTANTE**
@@ -1864,15 +1965,23 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 
 #### 3.10 · Pruebas automáticas sin gastar tokens (2026-10-13)
 
-**Qué se hizo:** se escribieron 14 pruebas que comprueban el chat sin llamar a la API: un cliente falso hace de Claude, y una base temporal hace de la base del piloto. Además, tres pruebas leen las respuestas ya guardadas del piloto para vigilar la memoria y los precios sin volver a gastar. Gasto: 0 tokens, 0 USD; se ejecutan en unos 3 segundos.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a poder cambiar el asesor (asistente de ventas de Turismo Colombia) sin miedo y sin pagar. Cada vez que se toque el prompt, la ventana o el catálogo, estas pruebas dicen en 3 segundos si algo de la lógica se rompió: que cada cliente conserve su memoria, que el modelo reciba solo la ventana, que los costos se calculen bien y que un error de la API no deje basura. Y dejan por escrito el problema abierto: la ventana de 5 turnos olvida el dato clave de 4 de 10 clientes.
+se escribieron 14 pruebas que comprueban el chat sin llamar a la API: un cliente falso hace de Claude, y una base temporal hace de la base del piloto. Además, tres pruebas leen las respuestas ya guardadas del piloto para vigilar la memoria y los precios sin volver a gastar. Gasto: 0 tokens, 0 USD; se ejecutan en unos 3 segundos.
 
-**En el ejercicio:** el paso D.3 queda hecho: la memoria por cliente y el registro de cada llamada están cubiertos. La prueba del dato clave, escrita a partir de la pregunta de cierre del 3.9, es la señal que debe ponerse verde cuando se implemente la ficha del cliente (temas 3.25 y 3.26).
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** nada en tokens, porque el tema no llamó a la API. Lo que sí tiene un costo es **no tener estas pruebas**: cada verificación real del piloto cuesta 0,1725 USD (194 llamadas, medido en 3.9). Con ellas, los errores de código se detectan gratis y las corridas reales quedan para lo que solo se ve con el modelo.
+a poder cambiar el asesor (asistente de ventas de Turismo Colombia) sin miedo y sin pagar. Cada vez que se toque el prompt, la ventana o el catálogo, estas pruebas dicen en 3 segundos si algo de la lógica se rompió: que cada cliente conserve su memoria, que el modelo reciba solo la ventana, que los costos se calculen bien y que un error de la API no deje basura. Y dejan por escrito el problema abierto: la ventana de 5 turnos olvida el dato clave de 4 de 10 clientes.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el paso D.3 queda hecho: la memoria por cliente y el registro de cada llamada están cubiertos. La prueba del dato clave, escrita a partir de la pregunta de cierre del 3.9, es la señal que debe ponerse verde cuando se implemente la ficha del cliente (temas 3.25 y 3.26).
+
+**4. Qué encareció el proceso**
+
+nada en tokens, porque el tema no llamó a la API. Lo que sí tiene un costo es **no tener estas pruebas**: cada verificación real del piloto cuesta 0,1725 USD (194 llamadas, medido en 3.9). Con ellas, los errores de código se detectan gratis y las corridas reales quedan para lo que solo se ve con el modelo.
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1883,7 +1992,9 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 | Datos del piloto guardados | 194 respuestas del chat final y 10 de la sonda con historial completo | Permiten vigilar memoria y precios sin gasto nuevo |
 | Montos sin explicar | 8 de 270 (3 %), todos sumas correctas | La revisión manual fue corta; un monto nuevo obliga a revisar |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Cliente falso (0 llamadas a la API).** *Objetivo:* poder revisar el programa todas las veces que haga falta sin pagar y sin depender del modelo. *Decisión:* correr las pruebas sin límite. *Ejemplo:* si un desarrollador corre las pruebas 30 veces al día, con el cliente falso son 0 USD; con una corrida real de los 10 clientes serían unos 5 USD al día (30 × 0,17, **estimado**).
 - **Tiempo de ejecución (~3 s).** *Objetivo:* saber si la revisión es tan rápida que se puede hacer en cada cambio. *Decisión:* dónde poner las pruebas: en cada cambio y antes de cada commit si tardan segundos; solo antes de subir si tardan minutos. *Ejemplo:* si mañana hubiera 200 pruebas y el tiempo subiera a 2 minutos, ese dato avisaría que hay que separar las rápidas de las lentas.
@@ -1892,7 +2003,7 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 - **Datos del piloto guardados (204 respuestas).** *Objetivo:* reaprovechar lo que ya se pagó. *Decisión:* guardar siempre cada respuesta y cada medición, y preguntarse antes de pagar una corrida nueva si lo que se quiere revisar ya está guardado. *Ejemplo:* la revisión de precios del 3.10 leyó las 194 respuestas guardadas y comprobó 270 montos por 0 USD; sin ellas habría costado otros 0,17 USD.
 - **Montos sin explicar (8 de 270, 3 %).** *Objetivo:* saber si el asesor inventa precios y cuánto trabajo manual deja el revisor. *Decisión:* como las 8 eran sumas correctas, se confía en el asesor y se mejora el revisor para que entienda sumas antes de crecer. *Ejemplo:* a Julián el asesor le dijo «$2.060.000»; no está en el catálogo, pero es 1.440.000 + 440.000 + 180.000. Si el porcentaje subiera al 20 % en una corrida futura sería una alarma: o el asesor empezó a inventar o empezó a hacer cuentas más complicadas.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1903,7 +2014,7 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 | 204 respuestas guardadas | ¿Necesito pagar para revisar esto? | Guardar siempre; revisar primero lo guardado |
 | 8 de 270 sin explicar | ¿El asesor inventa? ¿Cuánto trabajo manual queda? | Confiar en el asesor y mejorar el revisor antes de crecer |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1913,7 +2024,9 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 | Validación de precios | Ampliar el validador a sumas y divisiones (hoy requiere una lista de 8 montos revisados) | Dejar de revisar a mano cada suma legítima | **Por construir** | 3.30 |
 | Pruebas de trampas | Agregar al validador las 8 trampas del catálogo con la respuesta esperada («no lo tengo») | Detectar un invento sin leer 8 respuestas | **Por construir** | 3.26 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** el ahorro no está en tokens sino en las corridas reales que las pruebas evitan. Referencia medida: una corrida completa del piloto con el chat final son 194 llamadas, 1.469.517 tokens de entrada, 51.114 de salida y 0,1725 USD.
+**7. Tokens ahorrados en dólares**
+
+el ahorro no está en tokens sino en las corridas reales que las pruebas evitan. Referencia medida: una corrida completa del piloto con el chat final son 194 llamadas, 1.469.517 tokens de entrada, 51.114 de salida y 0,1725 USD.
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1923,7 +2036,7 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 
 En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las veces que habría que repetir todo el piloto para descubrir un error de código, y cada una de esas repeticiones cuesta 0,17 USD.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > Después de 8 turnos de Laura (Cliente 1), la prueba del turno completo comprueba que al modelo le llegaron 9 mensajes (los 4 turnos anteriores más el nuevo, es decir la ventana de 5), que el mensaje de sistema incluía las reglas y el registro `casa-naranja-del-centro` del catálogo, y que la memoria completa, 16 mensajes, quedó guardada en la base. Todo sin llamar a Claude. En cambio, la prueba de la memoria del piloto lee la respuesta real de Valentina a la pregunta de cierre y verifica que mencione la dieta: con el historial completo la menciona; con la ventana de 5 turnos no, y esa prueba está marcada como «falla esperada» hasta que exista la ficha del cliente.
 
 > **CONCLUSIONES**
@@ -1935,15 +2048,23 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 
 #### 3.11 · Resumen general (2026-10-13)
 
-**Qué se hizo:** se cerró la Parte 1 del Nivel 1 con un informe del piloto generado por un script que no llama a Claude: lee la base, compara por cliente la línea base del 3.4 con el chat final del 3.9, cuenta precios sospechosos, recoge el veredicto de las trampas y comprueba el checklist de cierre de la guía. También se registraron en la sección 7 los commits de cada etapa y en la sección 8 las lecciones para agentizar.
+**1. Qué se hizo**
 
-**A qué nos conduce:** a una foto honesta del nivel: el asesor (asistente de ventas de Turismo Colombia) con catálogo atiende a los 10 clientes por 0,1631 USD (antes 0,2130), sin precios inventados y sin inventar en las trampas, pero **con un problema abierto y medido**: olvida el dato clave de 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián) cuando se recorta la memoria. El informe por cliente fue lo único que lo mostró; el promedio de ahorro (−23,4 %) lo escondía.
+se cerró la Parte 1 del Nivel 1 con un informe del piloto generado por un script que no llama a Claude: lee la base, compara por cliente la línea base del 3.4 con el chat final del 3.9, cuenta precios sospechosos, recoge el veredicto de las trampas y comprueba el checklist de cierre de la guía. También se registraron en la sección 7 los commits de cada etapa y en la sección 8 las lecciones para agentizar.
 
-**En el ejercicio:** el paso D.4 queda hecho y la Parte 1 queda cerrada. Lo que sigue (laboratorio de parámetros y agente) debe partir de este informe como línea de salida, y la ficha del cliente es la primera mejora con su prueba ya escrita (`xfail` del 3.10).
+**2. A qué nos conduce**
 
-**Qué encareció el proceso:** nada en tokens, porque el informe es código sin llamadas a la API. Para ver qué cuesta lo que no se automatizó: pedirle a un modelo que lea las 194 respuestas guardadas y escriba un informe equivalente significaría unos 56.000 tokens de entrada (las respuestas del asesor y los mensajes de los clientes), que valen unos 0,006 USD en Haiku o unos 0,11 USD en Sonnet (**estimado**), más el riesgo de que redondee o interprete las cifras.
+a una foto honesta del nivel: el asesor (asistente de ventas de Turismo Colombia) con catálogo atiende a los 10 clientes por 0,1631 USD (antes 0,2130), sin precios inventados y sin inventar en las trampas, pero **con un problema abierto y medido**: olvida el dato clave de 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián) cuando se recorta la memoria. El informe por cliente fue lo único que lo mostró; el promedio de ahorro (−23,4 %) lo escondía.
 
-**Variables que afectaron el proceso (mirada de AI Engineer):**
+**3. En el ejercicio**
+
+el paso D.4 queda hecho y la Parte 1 queda cerrada. Lo que sigue (laboratorio de parámetros y agente) debe partir de este informe como línea de salida, y la ficha del cliente es la primera mejora con su prueba ya escrita (`xfail` del 3.10).
+
+**4. Qué encareció el proceso**
+
+nada en tokens, porque el informe es código sin llamadas a la API. Para ver qué cuesta lo que no se automatizó: pedirle a un modelo que lea las 194 respuestas guardadas y escriba un informe equivalente significaría unos 56.000 tokens de entrada (las respuestas del asesor y los mensajes de los clientes), que valen unos 0,006 USD en Haiku o unos 0,11 USD en Sonnet (**estimado**), más el riesgo de que redondee o interprete las cifras.
+
+**5. Variables que afectaron el proceso**
 
 | Variable | Dato | Efecto |
 |---|---|---|
@@ -1954,7 +2075,9 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 | Veredicto de las trampas | 0 de 8 inventadas; es un juicio, no una medición automática | Confianza útil pero limitada: muestra pequeña, una respuesta por trampa |
 | Checklist de la guía | 10 de 10 puntos con evidencia, 2 con matiz | Permite cerrar el nivel diciendo qué falta, no solo qué se hizo |
 
-**Para qué sirve cada dato (objetivo, decisión y ejemplo):** cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
+**5.1 Para qué sirve cada dato**
+
+cada número se mide para poder decidir algo; si no ayuda a decidir, no vale la pena medirlo.
 
 - **Informe determinístico (0 llamadas a la API).** *Objetivo:* poder repetir el informe todas las veces que haga falta con las mismas cifras. *Decisión:* regenerarlo después de cada cambio importante y no escribirlo a mano. *Ejemplo:* tras implementar la ficha del cliente, el informe se vuelve a generar en segundos y muestra si «dato clave con ventana» pasó de 6 a 10, sin gastar un token.
 - **Datos guardados en la base (388 llamadas).** *Objetivo:* contar con el material para comparar configuraciones. *Decisión:* guardar siempre cada llamada con su configuración (esfuerzo, ventana, catálogo). *Ejemplo:* gracias a la columna `config` se comparó la línea base del 3.4 con el chat final cliente por cliente, sin volver a llamar al asesor.
@@ -1963,7 +2086,7 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 - **Veredicto de las trampas (0 de 8, juicio).** *Objetivo:* saber si el asesor inventa. *Decisión:* si es seguro seguir con herramientas y un volumen mayor de clientes. *Ejemplo:* ante el hotel «casa dorada imperial» dijo que no estaba en el catálogo; no se probó con varias repeticiones, así que la confianza es una primera señal y no una garantía.
 - **Checklist de la guía (10 de 10, 2 con matiz).** *Objetivo:* cerrar el nivel contra criterios externos y no contra la sensación de haber terminado. *Decisión:* qué se arrastra al siguiente nivel. *Ejemplo:* la guía esperaba `8 passed`; aquí son 13 y un `xfail`, y se dice así en el informe.
 
-**Resumen: cada dato y su decisión**
+**5.2 Resumen: cada dato y su decisión**
 
 | Dato | Pregunta que responde | Decisión que permite |
 |---|---|---|
@@ -1974,7 +2097,7 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 | 0 de 8 trampas, juicio | ¿Inventa el asesor? | Seguir, con repeticiones para afirmar más |
 | Checklist 10 de 10 con 2 matices | ¿Qué falta para cerrar el nivel? | Llevar al siguiente nivel la ficha del cliente y las herramientas |
 
-**Cómo optimizar cada variable (mirada de AI Engineer):**
+**6. Cómo optimizar cada variable**
 
 | Variable | Cómo optimizarla | Resultado esperado | Estado del dato | Dónde se prueba |
 |---|---|---|---|---|
@@ -1984,7 +2107,9 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 | Informe | Generarlo con cada corrida y comparar contra el anterior | Saber de inmediato si un cambio sube el costo o baja la memoria | **Por construir** | 3.16 |
 | Tablero del laboratorio | Mostrar este informe en el dashboard del laboratorio | Ver el costo y la memoria por cliente sin leer tablas | **Por construir** | 3.18 a 3.23 |
 
-**Tokens ahorrados en dólares (mirada de AI Engineer):** la referencia medida es el chat final contra la línea base del 3.4 (184 llamadas, 1.747.598 tokens de entrada y 76.523 de salida, 0,2130 USD); lo demás es el ahorro que aún se puede lograr.
+**7. Tokens ahorrados en dólares**
+
+la referencia medida es el chat final contra la línea base del 3.4 (184 llamadas, 1.747.598 tokens de entrada y 76.523 de salida, 0,2130 USD); lo demás es el ahorro que aún se puede lograr.
 
 | Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
 |---|---|---|---|---|---|
@@ -1995,7 +2120,7 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 
 En palabras simples: el nivel termina con un asesor 23 % más barato y con una lista corta y medible de lo que falta, la ficha del cliente y el catálogo filtrado, que juntas lo llevarían a la mitad del costo original y a recordar los 10 datos.
 
-> **Ejemplo**
+> **8. Ejemplo**
 > El informe muestra a Julián como el cliente más caro (24 turnos): 0,0317 USD con historial completo y 0,0225 con ventana de 5 turnos, un ahorro del 29,2 %. Su llamada más grande bajó de 14.845 a 8.165 tokens. Pero en la pregunta de cierre, el asesor con ventana le dijo «no tengo ningún dato de su viaje todavía» y olvidó que comparaba Santa Marta con San Andrés con un presupuesto de 3 millones; con el historial completo lo recordó. Y a Camilo, que solo preguntó por Medellín en 10 turnos, la ventana le ahorró apenas 0,0009 USD y también olvidó sus fechas del 3 al 6 de noviembre.
 
 > **CONCLUSIONES**

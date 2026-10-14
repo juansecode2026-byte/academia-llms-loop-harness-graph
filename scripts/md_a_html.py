@@ -114,6 +114,13 @@ def render_blocks(lines, prefix):
         elif ln.startswith("🛠"):
             out.append(f'<p class="proj">{inline(ln)}</p>')
             i += 1
+        elif re.fullmatch(r"\*\*(\d+(?:\.\d+)*)\.?\s+(.+?)\*\*", ln.strip()):
+            # título numerado de una entrada del análisis: «**5. Variables…**» o subtítulo «**5.1 Para qué…**»
+            m = re.fullmatch(r"\*\*(\d+(?:\.\d+)*)\.?\s+(.+?)\*\*", ln.strip())
+            nivel = m.group(1).count(".") + 1
+            etiqueta = "h4" if nivel == 1 else "h5"
+            out.append(f'<{etiqueta} class="sec sec{nivel}"><span class="sn">{m.group(1)}</span>{inline(m.group(2))}</{etiqueta}>')
+            i += 1
         else:
             buf = [ln]
             i += 1
