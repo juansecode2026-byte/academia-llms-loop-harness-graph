@@ -1,6 +1,6 @@
 # Academia LLMs · Loop, Harness, Graph
 
-Portafolio de AI Engineering: construir con la API de Anthropic un asesor de viajes con catálogo y memoria, y **medir cada decisión con datos**. Los clientes, el catálogo y las conversaciones son **simulados** («Turismo Colombia (simulada)», piloto de 10 clientes).
+Portafolio de AI Engineering: construir con la API de Anthropic un asesor de viajes (asistente de ventas de Turismo Colombia) con catálogo y memoria, y **medir cada decisión con datos**. Los clientes, el catálogo y las conversaciones son **simulados** («Turismo Colombia (simulada)», piloto de 10 clientes).
 
 Lo aprendido se lleva después a proyectos reales (candyCRM y los proyectos de Minus). Cada avance es un commit: el commit es la prueba.
 

@@ -108,7 +108,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Ejercicio A.4: radiografía del contexto sobre las conversaciones de los 10 clientes: de qué está hecha cada llamada, cuánto es redundante, cuánto catálogo sobra y cuánto bajaría el costo con cada palanca ([ver paso A.4](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s6))
 
 > **Notas del proceso**
-> Archivos (2026-10-13, `claude-haiku-5-5`, API real): `chat-consola/etapas/e3_tokens_costos.py` (la radiografía), `simulador_clientes.py` (entrega los mensajes de los 10 clientes al asesor), `base_piloto.py` (la base SQLite del piloto, `datos-simulados/piloto-simulado.db`, ignorada por git), `caso_simulado.py` y `datos-simulados/clientes-simulados.json` (los 10 clientes con sus guiones). El informe completo queda en `chat-consola/informes/radiografia-contexto.md`.
+> Archivos (2026-10-13, `claude-haiku-5-5`, API real): `chat-consola/etapas/e3_tokens_costos.py` (la radiografía), `simulador_clientes.py` (entrega los mensajes de los 10 clientes al asesor (asistente de ventas de Turismo Colombia)), `base_piloto.py` (la base SQLite del piloto, `datos-simulados/piloto-simulado.db`, ignorada por git), `caso_simulado.py` y `datos-simulados/clientes-simulados.json` (los 10 clientes con sus guiones). El informe completo queda en `chat-consola/informes/radiografia-contexto.md`.
 > Qué hace: el simulador corre las 10 conversaciones (184 mensajes, de 10 a 28 por cliente) contra el asesor, con el catálogo completo y todo el historial, y guarda cada llamada en la tabla `ejecuciones` (tokens de entrada, salida y razonamiento, costo, tiempo y motivo de parada). Después `e3_tokens_costos.py` cuenta con la API (`count_tokens`, que no genera respuesta ni cobra generación) los tokens de cada mensaje y reparte cada llamada en instrucciones, catálogo, historial y mensaje nuevo. La entrada de cualquier llamada se reconstruye exactamente sumando los tokens de cada mensaje más 2 de formato por mensaje: error de 0,00 % en las 184 llamadas. Eso permite calcular con precisión qué pasaría con otra configuración, sin volver a llamar al modelo.
 > Tropiezo: con 5 clientes en paralelo el simulador chocó con el límite de la cuenta (500.000 tokens de entrada por minuto) y se detuvo con 159 de 184 llamadas guardadas. Se le agregó una espera con reintento y se retomó con 3 en paralelo; el script continúa donde quedó, así que no se repitió ninguna llamada.
 > Costo del tema: 0,213 USD por las 184 llamadas reales. Los conteos de tokens no cobran.
@@ -164,7 +164,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 > **Notas del proceso**
 > Script: `chat-consola/etapas/e4_parametros.py`, con el catálogo cargado y el primer mensaje de un cliente («cuanto vale ir a cartagena 4 noches?»). Cada prueba mide tokens, razonamiento, segundos y costo. Gasto total de la etapa: 0,00737 USD.
-> 1. **`max_tokens` (el tope de salida):** con 40 y con 150 el asesor **no alcanzó a escribir nada** (`stop_reason = max_tokens`): todo el tope se fue en razonamiento (40 de 40 y 150 de 150). Con 2.048 respondió completo (634 tokens, 228 de razonamiento). El razonamiento cuenta dentro del tope, así que un tope bajo no abarata: se paga igual y no se obtiene respuesta (0,00068 y 0,00073 USD tirados).
+> 1. **`max_tokens` (el tope de salida):** con 40 y con 150 el asesor (asistente de ventas de Turismo Colombia) **no alcanzó a escribir nada** (`stop_reason = max_tokens`): todo el tope se fue en razonamiento (40 de 40 y 150 de 150). Con 2.048 respondió completo (634 tokens, 228 de razonamiento). El razonamiento cuenta dentro del tope, así que un tope bajo no abarata: se paga igual y no se obtiene respuesta (0,00068 y 0,00073 USD tirados).
 > 2. **`effort`:** low 630 tokens de salida (233 de razonamiento, 0,00097 USD), medium 709 (330, 0,00101), high 530 (222, 0,00092). **No subió en orden**: con una sola muestra por nivel, la variación (±5 % en costo) es ruido, no efecto. En una pregunta de precios el esfuerzo casi no cambia nada; el efecto real se mide con muchas muestras en el laboratorio (3.32).
 > 3. **`system` (comportamiento):** agregar «máximo 2 frases, usa solo precios del catálogo y di de qué registro salen» produjo una respuesta mucho más corta (un párrafo con los 3 precios) pero **el razonamiento se disparó a 697 tokens** (contra 238) y la llamada costó más: 0,00110 USD contra 0,00098. Una instrucción de brevedad ahorra texto, no necesariamente tokens.
 > 4. **Temperatura:** la API devolvió 400: `temperature is deprecated for this model`. En Claude 5.5 no se puede variar; se controlan `max_tokens`, `effort` y `system`.
@@ -188,7 +188,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > | Sonnet 5.5 | 4,1 | 367 (0) | 0,01691 | 5 |
 > | Opus 5.5 | 4,7 | 454 (110) | 0,03555 | 5 |
 >
-> 1. **Los tres usaron el mismo dato del catálogo:** `casa-naranja-del-centro`, 480.000 por noche, 4 noches = $1.920.000. Ninguno inventó un precio; los tres avisaron que diciembre es temporada alta y que un asesor confirma la tarifa. La exactitud de la cifra es igual en los tres.
+> 1. **Los tres usaron el mismo dato del catálogo:** `casa-naranja-del-centro`, 480.000 por noche, 4 noches = $1.920.000. Ninguno inventó un precio; los tres avisaron que diciembre es temporada alta y que un asesor (asistente de ventas de Turismo Colombia) confirma la tarifa. La exactitud de la cifra es igual en los tres.
 > 2. **La diferencia está en el estilo, no en los datos:** Haiku dio una respuesta corta con una sola opción y ofreció buscar algo más económico. Sonnet y Opus agregaron alternativas del catálogo (`hotel-brisas-de-bocagrande` desde $360.000; Opus también `hostal-la-muralla-viva` desde $120.000) y cerraron proponiendo pasar con un asesor. Por eso les doy 5 y a Haiku 4: es un juicio mío con una muestra, no una medición.
 > 3. **El costo sí cambia mucho:** Sonnet costó 19,7 veces lo de Haiku y Opus 41 veces, con los mismos 6.618 tokens de entrada. El tiempo cambió poco (de 2,6 a 4,7 s). El razonamiento fue distinto sin seguir el orden de precio (Sonnet 0, Opus 110, Haiku 182).
 > **Para pensar** (¿la diferencia de calidad justifica la de costo? ¿cuál usar en el chat final?): para esta consulta no. La cifra que le importa al cliente es idéntica y la diferencia es de estilo, a un costo 20 a 41 veces mayor. El chat del piloto debería correr en Haiku, y Sonnet o Opus quedarían para casos que lo exijan (consultas complejas o reclamos), lo que se confirma con la calidad medida en el laboratorio (3.25, 3.26 y 3.32).
@@ -207,7 +207,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Ejercicio C.5: chat con memoria por cliente ([ver paso C.5](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s8))
 
 > **Notas del proceso**
-> Script: `chat-consola/etapas/e6_chat_memoria.py`. Es un chat de consola donde **cada cliente tiene su propia lista de mensajes** (`/cliente NOMBRE` cambia de cliente) y donde, en cada turno, se hacen cuatro pasos: agregar el mensaje del cliente, enviar **toda** su lista, recordar la respuesta del asesor y mostrar cuánto creció la entrada. No escribe en la base del piloto, para no tocar las 184 llamadas medidas en 3.4. Con `--demo` corre una prueba guionada (5 llamadas, 0,00483 USD).
+> Script: `chat-consola/etapas/e6_chat_memoria.py`. Es un chat de consola donde **cada cliente tiene su propia lista de mensajes** (`/cliente NOMBRE` cambia de cliente) y donde, en cada turno, se hacen cuatro pasos: agregar el mensaje del cliente, enviar **toda** su lista, recordar la respuesta del asesor (asistente de ventas de Turismo Colombia) y mostrar cuánto creció la entrada. No escribe en la base del piloto, para no tocar las 184 llamadas medidas en 3.4. Con `--demo` corre una prueba guionada (5 llamadas, 0,00483 USD).
 > 1. **La memoria funciona:** Laura dijo «nos casamos el 14 de febrero» y recibió los precios del catálogo; en el turno siguiente preguntó qué fecha había dicho y qué precio le dieron, y el asesor respondió «14 de febrero» y repitió los precios exactos ($120.000, $360.000 y $480.000 por noche, y los dos tours). La entrada pasó de 6.599 a 6.988 tokens: la memoria sumó 389 tokens (5,9 %).
 > 2. **Cada cliente tiene la suya:** Camilo, con su lista vacía, preguntó «¿en qué fecha nos casamos?» y el asesor contestó que no tiene acceso a conversaciones anteriores y ofreció ayuda; no mezcló los datos de Laura ni inventó una fecha.
 > 3. **Experimento de ruptura:** se repitió el caso de Laura sin guardar las respuestas del asesor. En el segundo turno el asesor solo vio los dos mensajes de la cliente (`user`, `user`) y dijo «no veo un precio anterior en esta conversación», después volvió a listar los precios base. Es una buena respuesta (no inventó), pero perdió el hilo: la conversación ya no continúa lo que se había dicho. Además **no se ahorró casi nada**: la entrada fue 6.613 contra 6.988 tokens.
@@ -223,7 +223,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Ejercicio D.1: correr las trampas del catálogo y medir si el chat inventa ([ver paso D.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s9))
 
 > **Notas del proceso**
-> Script: `chat-consola/etapas/e7_limitaciones.py`. Toma 8 mensajes-trampa de los clientes del piloto (cosas que el catálogo no publica) con su conversación previa, y compara dos respuestas: **sin reglas** (la que el asesor ya dio en 3.4, guardada en la base, sin gasto nuevo) y **con reglas** (respuesta nueva con las cinco reglas del prompt: usar solo el catálogo y citar el registro, decir «no lo tengo» si no está, preguntar lo que falte antes de cotizar, recomendar una opción principal y responder corto). Solo lee la base; guarda el resultado en `chat-consola/informes/limitaciones-resultados.md`. Gasto: 8 llamadas, 0,00850 USD.
+> Script: `chat-consola/etapas/e7_limitaciones.py`. Toma 8 mensajes-trampa de los clientes del piloto (cosas que el catálogo no publica) con su conversación previa, y compara dos respuestas: **sin reglas** (la que el asesor (asistente de ventas de Turismo Colombia) ya dio en 3.4, guardada en la base, sin gasto nuevo) y **con reglas** (respuesta nueva con las cinco reglas del prompt: usar solo el catálogo y citar el registro, decir «no lo tengo» si no está, preguntar lo que falte antes de cotizar, recomendar una opción principal y responder corto). Solo lee la base; guarda el resultado en `chat-consola/informes/limitaciones-resultados.md`. Gasto: 8 llamadas, 0,00850 USD.
 >
 > | Trampa (cliente, turno) | Sin reglas | Con reglas |
 > |---|---|---|
@@ -252,7 +252,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 
 > **Notas del proceso**
 > Programa: `chat-consola/chat.py`, armado por bloques como pide la guía (configuración, memoria, llamada, comandos, bucle) y adaptado al caso. Cada decisión viene de un tema anterior: Haiku (3.6), `max_tokens` 2.048 y `effort` bajo (3.5), catálogo con las reglas contra inventar (3.8), streaming (3.3), costo por llamada (3.4) y una memoria por cliente (3.7). Resuelve los dos problemas del 3.7: **la memoria se guarda en la base del piloto** (tabla `mensajes`, con una columna nueva `config` para no pisar la conversación medida en 3.4) y **se envía con ventana de 5 turnos**. Comandos: `/cliente N`, `/tokens` (cuenta gratis lo que se enviará), `/historial`, `/reset`, `/ayuda`, `/salir`. Errores por tipo (clave inválida, límite de uso, sin conexión, error HTTP) con aviso claro y sin guardar el mensaje fallido.
-> **Ejecuta y observa:** (1) en consola, Camilo preguntó por el Hotel Poblado Verde y el asesor respondió en streaming «desde $330.000 COP por noche» (registro `hotel-poblado-verde`) y preguntó fechas y personas antes de cotizar; `/tokens` dijo 6.926 tokens para la próxima llamada y `/historial` mostró la ventana; (2) con una clave falsa salió «[API key inválida. Revisa tu .env]», sin traza de error y sin guardar nada; (3) al abrir el chat dice cuántos turnos tiene guardados cada cliente, porque la memoria vive en la base.
+> **Ejecuta y observa:** (1) en consola, Camilo preguntó por el Hotel Poblado Verde y el asesor (asistente de ventas de Turismo Colombia) respondió en streaming «desde $330.000 COP por noche» (registro `hotel-poblado-verde`) y preguntó fechas y personas antes de cotizar; `/tokens` dijo 6.926 tokens para la próxima llamada y `/historial` mostró la ventana; (2) con una clave falsa salió «[API key inválida. Revisa tu .env]», sin traza de error y sin guardar nada; (3) al abrir el chat dice cuántos turnos tiene guardados cada cliente, porque la memoria vive en la base.
 > **Paso D.2 (los 10 clientes):** `python chat.py --piloto` atendió los mismos 184 mensajes del 3.4 con la configuración final, más una pregunta de cierre por cliente («¿me confirmas los datos de mi viaje que te he dado?»): 194 llamadas, 0,1725 USD, todas terminadas sin cortes (`end_turn`). Después, `--sonda-completa` hizo la misma pregunta de cierre con el historial completo (10 llamadas, 0,01415 USD), para aislar el efecto de la ventana.
 >
 > | Medida (184 mensajes) | Línea base (3.4) | Chat final (3.9) | Cambio |
@@ -299,7 +299,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 >
 > Resultado: `13 passed, 1 xfailed` en 2,6 s.
 > 1. **La prueba que falla es la que más vale.** `test_la_ventana_de_5_turnos_recuerda_los_10_datos_clave` está marcada `xfail(strict=True)`: hoy «falla» porque el chat final olvida 4 de 10 datos clave, y la marca documenta el problema en lugar de esconderlo. Cuando se implemente la ficha del cliente y la prueba pase, `strict` la volverá roja hasta que se quite la marca: el sistema avisa solo que el problema quedó resuelto.
-> 2. **La prueba de precios revisó 270 montos:** 262 se explican solos como precio o múltiplo del catálogo, y 8 eran sumas o divisiones que el asesor hizo bien (por ejemplo $2.060.000 = $1.440.000 + $440.000 + $180.000 en Julián, o $1.280.000 = $1.020.000 + $260.000 en la Pareja Torres). Se revisaron uno por uno y quedaron en una lista; **un monto nuevo hace fallar la prueba** hasta que alguien lo mire. Ningún precio resultó inventado.
+> 2. **La prueba de precios revisó 270 montos:** 262 se explican solos como precio o múltiplo del catálogo, y 8 eran sumas o divisiones que el asesor (asistente de ventas de Turismo Colombia) hizo bien (por ejemplo $2.060.000 = $1.440.000 + $440.000 + $180.000 en Julián, o $1.280.000 = $1.020.000 + $260.000 en la Pareja Torres). Se revisaron uno por uno y quedaron en una lista; **un monto nuevo hace fallar la prueba** hasta que alguien lo mire. Ningún precio resultó inventado.
 > 3. **Límite:** estas pruebas vigilan la lógica y lo ya guardado, no la calidad de una respuesta nueva. Para saber si un cambio de prompt, ventana o catálogo mejora o empeora al asesor hay que hacer una corrida real (0,17 USD); las pruebas sirven para no gastarla cuando el error es de código.
 
 ### 3.11 Resumen general {ref=e10:E10}
@@ -325,12 +325,12 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 > | Gasto en la base | 388 llamadas, 0,3997 USD |
 >
 > **Checklist de cierre (guía 10.1):** los diez puntos tienen evidencia. Dos quedaron con matiz: el chat final «recuerda entre sesiones y recorta», pero olvida el dato clave de 4 de 10 clientes (la ficha del cliente está pendiente), y la guía esperaba `8 passed` en las pruebas mientras aquí hay `13 passed` y 1 `xfailed` (falla esperada y documentada). El `.env` nunca estuvo en Git ni hay claves en el historial, y hay 11 commits «etapa N» (el historial conserva las primeras versiones y las rehechas con el caso).
-> **Patrones para llevar a candyCRM** (guía 10.3), con dónde quedaron construidos: filtrar bloques por tipo (3.2), `construir_peticion` (`chat.py`), ventana deslizante (`recortar`, 3.9), errores por tipo sin dañar la conversación (3.9 y su prueba), mensaje de sistema con reglas contra inventar (3.8), y cliente inyectable con cliente falso (`test_chat.py`, 3.10). Lo que el chat de consola todavía no tiene y el siguiente nivel agrega: **herramientas** para que el asesor consulte el catálogo y registre datos.
+> **Patrones para llevar a candyCRM** (guía 10.3), con dónde quedaron construidos: filtrar bloques por tipo (3.2), `construir_peticion` (`chat.py`), ventana deslizante (`recortar`, 3.9), errores por tipo sin dañar la conversación (3.9 y su prueba), mensaje de sistema con reglas contra inventar (3.8), y cliente inyectable con cliente falso (`test_chat.py`, 3.10). Lo que el chat de consola todavía no tiene y el siguiente nivel agrega: **herramientas** para que el asesor (asistente de ventas de Turismo Colombia) consulte el catálogo y registre datos.
 > **Para pensar:** la guía no trae pregunta en este apartado. Lo que más cambia la lectura del nivel es esta: *ahorrar es fácil, ahorrar sin perder exactitud no*. El 23,4 % de ahorro costó el dato clave de 4 de 10 clientes, y solo el informe por cliente lo mostró.
 
 <!-- parte: 2 | Parte 2 · Laboratorio de parámetros | 15 apartados | p2 -->
 
-### 3.12 Qué vas a construir (laboratorio) {ref=d0:D0}
+### 3.12 Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia) {ref=d0:D0}
 
 - [x] Claude lee el [apartado de la guía](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/llms-chatbot-consola-nivel-1-fundamentos_v7_2026-10-12.html#d0) y explica qué se va a hacer y por qué
 - [x] Claude lo construye siguiendo «Construcción»: escribe el código y explica cada parte
@@ -344,7 +344,7 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 >
 > **Qué es el laboratorio.** Una app local de Streamlit con cuatro pestañas (Playground, Comparador, Batería de alucinaciones y Métricas) más una quinta de Decisiones, que se construye por etapas en los temas 3.13 a 3.26 y guarda cada experimento en la base. El laboratorio real se escribe después; la maqueta que se mostró en la conversación es solo un ejemplo visual y no forma parte del resultado.
 >
-> **Objetivo, en una frase.** Decidir, para cada tipo de tarea del asesor, qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
+> **Objetivo, en una frase.** Decidir, para cada tipo de tarea del asesor (asistente de ventas de Turismo Colombia), qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
 >
 > **Qué preguntas debe poder contestar** (y qué se mide para cada una):
 >
@@ -1104,6 +1104,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | El análisis suma la sección «Evidencia de conocimiento de LLMs: qué muestra este proyecto»: habilidades demostradas, cuándo y para qué se usan, límites del nivel y el costo estimado del laboratorio (~0,96 USD para 54 llamadas). |
 | 2026-10-13 | Tema 3.12 completo (paso E.1): objetivo del laboratorio, preguntas que debe contestar, criterios de éxito y límites; entrada breve del análisis. Abre la Parte 2. |
 | 2026-10-13 | La entrada del tema 3.12 se reescribe como planeación estructurada: objetivo, alcance, preguntas, etapas, criterios, riesgos, costo estimado y evidencia esperada. Se corrige la nota que mencionaba la maqueta como parte del resultado. |
+| 2026-10-13 | El tema 3.12 pasa a llamarse «Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia)». Desde ahora, la primera mención de «asesor» en cada tema y en cada entrada del análisis lleva entre paréntesis «asistente de ventas de Turismo Colombia». |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1251,7 +1252,7 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 
 #### 3.2 · Primera llamada a la API (2026-10-13)
 
-**Qué se hizo:** se escribió un programa de unas 35 líneas que le manda a Claude la conversación de un cliente ficticio (dos mensajes, el segundo insistiendo en un precio aproximado) con el papel de asesor de viajes y el catálogo de la agencia cargado, y muestra todo lo que devuelve. Se ejecutó tres veces.
+**Qué se hizo:** se escribió un programa de unas 35 líneas que le manda a Claude la conversación de un cliente ficticio (dos mensajes, el segundo insistiendo en un precio aproximado) con el papel de asesor de viajes (asistente de ventas de Turismo Colombia) y el catálogo de la agencia cargado, y muestra todo lo que devuelve. Se ejecutó tres veces.
 
 **A qué nos conduce:** a comprobar que, con los datos delante, el asesor responde con cifras verificables. Las tres veces usó el precio del catálogo (480.000 por noche, 1.920.000 por las 4 noches) y aclaró lo que el catálogo no tiene: tarifa de temporada alta, disponibilidad y vuelos. Y a ver lo que cuesta darle esos datos: el catálogo viaja en cada mensaje.
 
@@ -1323,7 +1324,7 @@ En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, au
 
 #### 3.3 · Ver cómo el modelo predice tokens (2026-10-13)
 
-**Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
+**Qué se hizo:** se recibió en vivo, pedazo por pedazo, la respuesta del asesor (asistente de ventas de Turismo Colombia) al primer mensaje del cliente, con el catálogo cargado y el razonamiento resumido a la vista. Se repitió tres veces.
 
 **A qué nos conduce:** a ver en qué se va el costo de una respuesta del asesor: con el catálogo, lo que se envía son 6.578 tokens y el costo de cada respuesta ronda los 0,00097 USD, y dos tercios de ese costo son el catálogo reenviado, no lo que el asesor escribe. También se ve el streaming: la respuesta llega en 67 a 92 pedazos que cortan palabras, y por eso en un chat de WhatsApp el cliente puede empezar a leer a los pocos segundos en vez de esperar la respuesta completa.
 
@@ -1392,7 +1393,7 @@ En palabras simples: dos de cada tres pesos se van en volver a mandarle al aseso
 
 #### 3.4 · Tokens, ventana de contexto y costos (2026-10-13)
 
-**Qué se hizo:** se corrieron las conversaciones completas de 10 clientes ficticios (184 mensajes, de 10 a 28 por cliente) contra el asesor con el catálogo cargado, y se midió en qué se va cada token de cada llamada: instrucciones, catálogo, historial, mensaje nuevo y respuesta. Con esos datos reales se calculó cuánto bajaría el costo con cada palanca.
+**Qué se hizo:** se corrieron las conversaciones completas de 10 clientes ficticios (184 mensajes, de 10 a 28 por cliente) contra el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado, y se midió en qué se va cada token de cada llamada: instrucciones, catálogo, historial, mensaje nuevo y respuesta. Con esos datos reales se calculó cuánto bajaría el costo con cada palanca.
 
 **A qué nos conduce:** a una sorpresa que cambia qué optimizar primero: **lo que más pesa no es la memoria, es el catálogo**. Se esperaba que el historial, que crece, fuera el problema; pero el catálogo completo es el 68 % de lo que se envía, y el 70 % de él no le sirve al cliente que está preguntando. Además, el 97 % de lo que se envía en cada turno ya se había enviado en el turno anterior. Con esto ya no se optimiza a ojo: se sabe qué atacar primero y cuánto se espera ganar.
 
@@ -1476,7 +1477,7 @@ En palabras simples: de los 1,75 millones de tokens que se enviaron, casi 1,2 mi
 
 #### 3.5 · Parámetros de generación (2026-10-13)
 
-**Qué se hizo:** se probaron los cuatro mandos de la generación sobre el asesor con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
+**Qué se hizo:** se probaron los cuatro mandos de la generación sobre el asesor (asistente de ventas de Turismo Colombia) con el catálogo cargado y el mismo mensaje de un cliente: el tope de salida (`max_tokens`), el esfuerzo de razonamiento (`effort`), el mensaje de sistema y la temperatura. Se midieron 8 llamadas por 0,00737 USD.
 
 **A qué nos conduce:** a dos hallazgos que van contra la intuición. Primero, **un tope de salida bajo no ahorra: deja al asesor sin respuesta**, porque el razonamiento se come el tope antes de escribir. Segundo, **pedir respuestas cortas no baja necesariamente el costo**: el asesor escribió menos pero razonó casi tres veces más. Y un tercero confirmado: la temperatura ya no se controla en Claude 5.5 (error 400), así que el comportamiento se gobierna con el catálogo, el mensaje de sistema y el `effort`.
 
@@ -1552,7 +1553,7 @@ En palabras simples: los mandos de este tema ahorran poco (cerca del 8 % si todo
 
 **A qué nos conduce:** a que **elegir modelo es la decisión de costo más grande que hay**, mucho más que `effort` o la longitud de la respuesta. Con los mismos datos del catálogo, los tres dieron el mismo precio correcto, y la diferencia fue de estilo: Sonnet y Opus ofrecieron alternativas y cerraron mejor. Esa mejora de estilo cuesta de 20 a 41 veces más. Con una sola muestra no se concluye la calidad, pero sí que no se justifica pagar más por el precio de una cotización simple.
 
-**En el ejercicio:** el piloto del asesor debería correr en Haiku. Si más adelante un tipo de consulta exige más (un reclamo, una cotización con muchas condiciones), se le puede enviar a un modelo más grande, y eso se decide con la calidad medida en el laboratorio.
+**En el ejercicio:** el piloto del asesor (asistente de ventas de Turismo Colombia) debería correr en Haiku. Si más adelante un tipo de consulta exige más (un reclamo, una cotización con muchas condiciones), se le puede enviar a un modelo más grande, y eso se decide con la calidad medida en el laboratorio.
 
 **Qué encareció el proceso:** la entrada fue la misma en los tres (6.618 tokens, casi todo catálogo), así que **el precio por token fue lo único que movió el costo**. Haiku cobra 0,10 USD por millón de tokens de entrada, Sonnet 2,00 y Opus 4,00. En los tres, la entrada con el catálogo fue la mayor parte: 77 % del costo en Haiku, 78 % en Sonnet y 74 % en Opus.
 
@@ -1620,7 +1621,7 @@ En palabras simples: en este piloto, quedarse en Haiku ahorra unos 4 USD frente 
 
 #### 3.7 · Primer chat con memoria (2026-10-13)
 
-**Qué se hizo:** se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
+**Qué se hizo:** se construyó el chat con memoria: una lista de mensajes por cliente que se reenvía completa en cada turno, y se probó con tres casos reales del piloto: que el asesor (asistente de ventas de Turismo Colombia) recuerde lo que dijo la cliente (Laura), que no mezcle datos entre clientes (Camilo) y qué pasa si no se recuerda lo que el asesor contestó (experimento de ruptura). Fueron 5 llamadas por 0,00483 USD.
 
 **A qué nos conduce:** a entender que **el asesor no recuerda nada por sí mismo: recuerda lo que nosotros le volvemos a enviar**. Eso explica dos cosas del tema 3.4: por qué cada turno cuesta más que el anterior (se reenvía todo) y por qué cada cliente necesita su propio historial (si no, se mezclan). También mostró que quitar la memoria no ahorra casi nada, porque el peso es el catálogo.
 
@@ -1692,7 +1693,7 @@ En palabras simples: en conversaciones cortas la memoria casi no se nota, pero e
 
 #### 3.8 · Limitaciones de los LLM (2026-10-13)
 
-**Qué se hizo:** se tomaron 8 mensajes-trampa de los clientes del piloto (un hotel que no existe, un descuento no publicado, el clima, una dieta, un destino ausente, una alergia grave, una garantía y la temporada alta) y se compararon dos respuestas del asesor con la misma conversación previa: la que ya había dado sin reglas y la nueva con cinco reglas escritas en el prompt. Fueron 8 llamadas nuevas por 0,00850 USD.
+**Qué se hizo:** se tomaron 8 mensajes-trampa de los clientes del piloto (un hotel que no existe, un descuento no publicado, el clima, una dieta, un destino ausente, una alergia grave, una garantía y la temporada alta) y se compararon dos respuestas del asesor (asistente de ventas de Turismo Colombia) con la misma conversación previa: la que ya había dado sin reglas y la nueva con cinco reglas escritas en el prompt. Fueron 8 llamadas nuevas por 0,00850 USD.
 
 **A qué nos conduce:** a un hallazgo que corrige una suposición. Con el catálogo cargado, **el asesor no inventó en ninguna de las 8 trampas, ni con reglas ni sin ellas**: reconoce que algo no está publicado y lo pasa a un asesor humano. Las reglas no hicieron falta para evitar el invento grueso; sirvieron para pulir (respuestas más cortas y enfocadas, menos consejos sueltos). Eso cambia dónde poner el esfuerzo: el riesgo que queda son las afirmaciones pequeñas fuera del catálogo (como «Medellín suele ser templada»), y esas se cazan con pruebas, no con más reglas.
 
@@ -1765,7 +1766,7 @@ En palabras simples: las reglas pagan su propio costo y dejan una ganancia míni
 
 #### 3.9 · Ensamblar el chat final (2026-10-13)
 
-**Qué se hizo:** se juntó todo lo aprendido en un solo programa, `chat.py`: el asesor con el catálogo y las reglas, en Haiku, con streaming, memoria por cliente guardada en la base y ventana de 5 turnos. Con él se atendió a los 10 clientes del piloto (los mismos 184 mensajes del 3.4) y se les hizo una pregunta de cierre para ver si el asesor seguía recordando su dato clave. Fueron 205 llamadas en total por 0,1875 USD (incluye la prueba en consola y la comparación con el historial completo).
+**Qué se hizo:** se juntó todo lo aprendido en un solo programa, `chat.py`: el asesor (asistente de ventas de Turismo Colombia) con el catálogo y las reglas, en Haiku, con streaming, memoria por cliente guardada en la base y ventana de 5 turnos. Con él se atendió a los 10 clientes del piloto (los mismos 184 mensajes del 3.4) y se les hizo una pregunta de cierre para ver si el asesor seguía recordando su dato clave. Fueron 205 llamadas en total por 0,1875 USD (incluye la prueba en consola y la comparación con el historial completo).
 
 **A qué nos conduce:** a la primera decisión real de AI Engineer con datos propios: **la ventana ahorra, pero hace olvidar**. El costo bajó 23,4 % y la entrada dejó de crecer (la llamada más grande pasó de 14.845 a 8.165 tokens), pero el asesor solo recordó el dato clave de 6 de los 10 clientes, contra 10 de 10 con la memoria completa. Ningún ahorro se acepta sin medir lo que se pierde, y aquí se perdió algo importante: que Valentina no come carne o que los niños Ramírez tienen 4, 7 y 11 años.
 
@@ -1854,7 +1855,7 @@ En palabras simples: el chat final ya ahorra una cuarta parte, y filtrando el ca
 
 **Qué se hizo:** se escribieron 14 pruebas que comprueban el chat sin llamar a la API: un cliente falso hace de Claude, y una base temporal hace de la base del piloto. Además, tres pruebas leen las respuestas ya guardadas del piloto para vigilar la memoria y los precios sin volver a gastar. Gasto: 0 tokens, 0 USD; se ejecutan en unos 3 segundos.
 
-**A qué nos conduce:** a poder cambiar el asesor sin miedo y sin pagar. Cada vez que se toque el prompt, la ventana o el catálogo, estas pruebas dicen en 3 segundos si algo de la lógica se rompió: que cada cliente conserve su memoria, que el modelo reciba solo la ventana, que los costos se calculen bien y que un error de la API no deje basura. Y dejan por escrito el problema abierto: la ventana de 5 turnos olvida el dato clave de 4 de 10 clientes.
+**A qué nos conduce:** a poder cambiar el asesor (asistente de ventas de Turismo Colombia) sin miedo y sin pagar. Cada vez que se toque el prompt, la ventana o el catálogo, estas pruebas dicen en 3 segundos si algo de la lógica se rompió: que cada cliente conserve su memoria, que el modelo reciba solo la ventana, que los costos se calculen bien y que un error de la API no deje basura. Y dejan por escrito el problema abierto: la ventana de 5 turnos olvida el dato clave de 4 de 10 clientes.
 
 **En el ejercicio:** el paso D.3 queda hecho: la memoria por cliente y el registro de cada llamada están cubiertos. La prueba del dato clave, escrita a partir de la pregunta de cierre del 3.9, es la señal que debe ponerse verde cuando se implemente la ficha del cliente (temas 3.25 y 3.26).
 
@@ -1925,7 +1926,7 @@ En palabras simples: las pruebas no ahorran dinero en cada llamada, ahorran las 
 
 **Qué se hizo:** se cerró la Parte 1 del Nivel 1 con un informe del piloto generado por un script que no llama a Claude: lee la base, compara por cliente la línea base del 3.4 con el chat final del 3.9, cuenta precios sospechosos, recoge el veredicto de las trampas y comprueba el checklist de cierre de la guía. También se registraron en la sección 7 los commits de cada etapa y en la sección 8 las lecciones para agentizar.
 
-**A qué nos conduce:** a una foto honesta del nivel: el asesor con catálogo atiende a los 10 clientes por 0,1631 USD (antes 0,2130), sin precios inventados y sin inventar en las trampas, pero **con un problema abierto y medido**: olvida el dato clave de 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián) cuando se recorta la memoria. El informe por cliente fue lo único que lo mostró; el promedio de ahorro (−23,4 %) lo escondía.
+**A qué nos conduce:** a una foto honesta del nivel: el asesor (asistente de ventas de Turismo Colombia) con catálogo atiende a los 10 clientes por 0,1631 USD (antes 0,2130), sin precios inventados y sin inventar en las trampas, pero **con un problema abierto y medido**: olvida el dato clave de 4 de 10 clientes (Ramírez, Camilo, Valentina y Julián) cuando se recorta la memoria. El informe por cliente fue lo único que lo mostró; el promedio de ahorro (−23,4 %) lo escondía.
 
 **En el ejercicio:** el paso D.4 queda hecho y la Parte 1 queda cerrada. Lo que sigue (laboratorio de parámetros y agente) debe partir de este informe como línea de salida, y la ficha del cliente es la primera mejora con su prueba ya escrita (`xfail` del 3.10).
 
@@ -1993,7 +1994,7 @@ En palabras simples: el nivel termina con un asesor 23 % más barato y con una l
 > 3. **Aplicar la ventana según la longitud de la conversación.** El ahorro fue de 9,8 % en la conversación de 10 turnos y de 29,2 % en la de 24 (**medido**): conviene activarla desde cierto número de turnos en lugar de aplicarla siempre.
 > 4. **Repetir las trampas para afirmar algo sobre alucinaciones.** «0 de 8» es una impresión con una respuesta por trampa. Repetir cada trampa 10 veces (~80 respuestas, ~0,09 USD, **estimado**) permite hablar de una frecuencia de invento y no de un juicio.
 
-#### 3.12 · Qué vas a construir (laboratorio) (2026-10-13)
+#### 3.12 · Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia) (2026-10-13)
 
 > **PLANEACIÓN**
 > _Este tema no trae mediciones: es el plan del laboratorio de la Parte 2. Define qué se va a construir, cómo se juzgará y qué puede salir mal. Los resultados llegan desde el tema 3.13 y se cierran en el 3.26._
@@ -2004,7 +2005,7 @@ Se escribió el plan del laboratorio antes de construirlo. No se llamó a la API
 
 **2. Objetivo**
 
-- **Objetivo general:** decidir, para cada tipo de tarea del asesor, qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
+- **Objetivo general:** decidir, para cada tipo de tarea del asesor (asistente de ventas de Turismo Colombia), qué configuración (modelo, effort, ventana de memoria y mensaje de sistema) da la respuesta correcta más barata, sin inventar y sin olvidar lo que el cliente dijo.
 - **Objetivos específicos:**
   1. Convertir las muestras sueltas del Nivel 1 en decisiones con evidencia suficiente.
   2. Medir el costo y la calidad de cada configuración con las mismas conversaciones del piloto.

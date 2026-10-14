@@ -169,6 +169,13 @@ en la carpeta de documentación.
 - "Artefacto" es una página publicada en claude.ai. La vitrina «Chat y Laboratorio
   Terminados» vive solo como artefacto: https://claude.ai/artifact/1gdPaiwxYXdoMyPe43rX1W
 
+## Cómo se nombra al asesor
+
+En los documentos de `resultados/`, la primera mención de «asesor» en cada tema y en cada entrada
+del análisis lleva entre paréntesis «(asistente de ventas de Turismo Colombia)»: el asesor es una
+IA, no una persona. «Asesor humano» es otra cosa (quien confirma lo que el catálogo no publica) y
+se escribe tal cual.
+
 ## Repositorio
 
 https://github.com/juansecode2026-byte/academia-llms-loop-harness-graph (privado, rama `main`).

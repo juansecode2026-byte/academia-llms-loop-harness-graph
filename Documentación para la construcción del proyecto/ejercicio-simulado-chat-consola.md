@@ -181,7 +181,7 @@ Se construye el laboratorio de la guía completo, con su dashboard (Streamlit), 
 
 | Paso | Qué se hace | Checklist |
 |---|---|---|
-| E.1 | Definir qué se va a medir del asesor de viajes y con qué objetivo | [3.12 Qué vas a construir (laboratorio)](../resultados/resultados-proceso-manual.html#s3-12) |
+| E.1 | Definir qué se va a medir del asesor de viajes y con qué objetivo | [3.12 Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia)](../resultados/resultados-proceso-manual.html#s3-12) |
 | E.2 | Fijar los controles (modelo, effort, ventana de memoria, mensaje de sistema) y las mediciones sobre el caso | [3.13 Qué controlamos y qué medimos](../resultados/resultados-proceso-manual.html#s3-13) |
 | E.3 | Preparar la estructura del laboratorio: carpetas y dependencias, incluido Streamlit | [3.14 Preparación del laboratorio](../resultados/resultados-proceso-manual.html#s3-14) |
 | E.4 | Construir el motor de medición: una llamada medida con la configuración del caso | [3.15 Motor de medición](../resultados/resultados-proceso-manual.html#s3-15) |
