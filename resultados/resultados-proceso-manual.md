@@ -1079,6 +1079,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | «Para qué sirve cada dato» y «Resumen: cada dato y su decisión» se agregan también a las entradas 3.2 a 3.9. |
 | 2026-10-13 | Tema 3.11 completo: `e10_informe_piloto.py` genera el informe del piloto sin gastar tokens (paso D.4); checklist de cierre de la guía con evidencia, filas de la sección 7 con los hashes de cada etapa y lecciones para agentizar en la sección 8. Cierra la Parte 1 del Nivel 1. |
 | 2026-10-13 | El tema 3.11 pasa a llamarse «Resumen general» en lugar de «Cierre del nivel»: consolida lo hecho en los temas anteriores y no produce datos nuevos de gasto. |
+| 2026-10-13 | El análisis suma la sección «Evidencia de conocimiento de LLMs: qué muestra este proyecto»: habilidades demostradas, cuándo y para qué se usan, límites del nivel y el costo estimado del laboratorio (~0,96 USD para 54 llamadas). |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1131,6 +1132,57 @@ La mirada de un AI Engineer: qué variables mueven el costo y la exactitud del a
 | Idioma | Español frente a inglés | El español usa cerca de 1,5 veces más tokens (21 contra 14 en la misma frase) | Instrucciones internas en inglés, respuestas en español | Medido en frases; por medir en el sistema | 3.4 en adelante |
 | Fuente de los datos | Si un precio sale del catálogo o lo inventa el modelo | Con catálogo, 3 de 3 respuestas con la misma cifra verificable: $1.920.000 de `casa-naranja-del-centro` (3.2); 13 de 14 recuerdos correctos con el historial completo (3.4); 0 de 8 trampas del catálogo inventadas, con y sin reglas (3.8) | Datos del catálogo y cálculos en código | Medido | 3.8, 3.30 |
 | Tiempo hasta el primer token | Cuánto tarda el asesor en empezar a responder | Sin medir | «Escribiendo…» y mensajes cortos | Por medir | 3.15 |
+
+#### Evidencia de conocimiento de LLMs: qué muestra este proyecto
+
+El nivel demuestra que se sabe **medir y decidir con un LLM, y no solo usarlo**. Esa es la diferencia entre quien ha conversado con una IA y quien la puede llevar a producción. La Parte 1 (temas 3.1 a 3.11) ya dejó parte de esa evidencia en el repositorio; el laboratorio de la Parte 2 (3.12 a 3.26, todavía por construir) la completa con una app.
+
+| Habilidad | Ya está en el repositorio (Parte 1) | Lo que suma el laboratorio (Parte 2, por construir) | Qué demuestra |
+|---|---|---|---|
+| Parámetros de generación | Tema 3.5: `max_tokens`, `effort` y mensaje de sistema probados; la temperatura da error 400 | Los controles movibles y cada efecto registrado | Se sabe qué controla cada parámetro y cuáles ya no existen |
+| Costos y tokens | Tema 3.4: 388 llamadas guardadas con tokens y USD, e informe del piloto | Cada experimento en `laboratorio.db` con sus medidas | Se puede calcular cuánto cuesta un sistema antes de ponerlo en producción |
+| Elección de modelo con datos | Tema 3.6: Haiku 0,00086 USD, Sonnet 0,01691 y Opus 0,03555 con la misma cifra (una muestra) | Comparador con una muestra mínima por configuración | Se elige por evidencia (20 a 41 veces de diferencia) y no por moda |
+| Alucinaciones | Tema 3.8: 8 trampas del catálogo (0 inventadas) y revisor de 270 montos | Batería de preguntas con modelo juez y % de alucinación | Se mide la confiabilidad en lugar de confiar en ella |
+| Evaluación | Tema 3.5: con una muestra por nivel el `effort` era ruido; tema 3.10: `xfail` documenta un problema abierto | Muestra mínima por configuración (18) y umbrales | Se distingue evidencia de ruido |
+| Decisión de ingeniería | Tema 3.9: la ventana ahorró 23,4 % pero olvidó datos de 4 de 10 clientes | Tablero de decisiones: configuración recomendada por tarea | Las mediciones se convierten en decisiones que otro puede ejecutar |
+
+**Cuándo se usaría, para qué y por qué importa** (los ejemplos son del asesor de viajes; lo mismo vale para candyCRM y los proyectos de Minus):
+
+| Habilidad | Cuándo se usa | Para qué sirve | Por qué importa | Ejemplo |
+|---|---|---|---|---|
+| Parámetros de generación | Al configurar cualquier asistente nuevo | Saber qué ajustar y qué no | Evita gastar tiempo en mandos que no existen o no cambian nada | En 3.5 un tope de 150 tokens dejó al asesor sin responder: en un CRM real habría dejado clientes sin respuesta, y se paga igual |
+| Costos y tokens | Antes de lanzar y cada mes | Presupuestar y detectar gastos escondidos | Un asistente que parece barato puede costar 20 veces más al cambiar de modelo | A 1.000 conversaciones al mes, unos 21 USD con Haiku y unos 426 USD con Sonnet (**estimado**, ×20) |
+| Elección de modelo | Al elegir proveedor o cuando sale un modelo nuevo | Pagar solo la calidad que la tarea necesita | La decisión de costo más grande que hay | Para precios del catálogo, Haiku dio la misma cifra que Opus por 41 veces menos |
+| Alucinaciones | Antes de exponer el asistente a clientes y tras cada cambio de prompt o catálogo | Saber si inventa lo que no sabe | Una cotización falsa es un problema comercial, no técnico | Ante «casa dorada imperial» dijo que no estaba en el catálogo en lugar de inventar un precio |
+| Evaluación | Al decidir con pocos datos | No confundir ruido con efecto | Evita adoptar un cambio que no mejora nada | `effort` low, medium y high costaron 0,00097, 0,00101 y 0,00092 USD sin orden: con una muestra parecía que high era el más barato |
+| Decisión de ingeniería | Al entregar el sistema a un socio o cliente | Dejar una recomendación que otro pueda aplicar | Sin ella, las mediciones quedan en un cuaderno | «Para precios, Haiku con effort bajo y defensas: 0,00086 USD por consulta y 0 inventos en 8 trampas; para reclamos, por probar» |
+
+**Lo que este nivel todavía no demuestra** (conviene decirlo con claridad): uso de **herramientas** (el asesor consultando el catálogo por su cuenta, Parte 3), **RAG con vectores**, **fine-tuning** y modelos de otros proveedores, porque el curso usa solo el SDK de Anthropic. Y los datos son **simulados**: lo real llega al aplicarlo en candyCRM.
+
+**Qué costaría construir el laboratorio (estimación).** Una batería completa de 18 muestras por modelo (la muestra mínima de la guía), con la misma consulta del tema 3.6:
+
+| Modelo | Llamadas | Costo por llamada (medido en 3.6) | Costo total | % del costo |
+|---|---|---|---|---|
+| Haiku 5.5 | 18 | 0,00086 USD | 0,0155 USD | 1,6 % |
+| Sonnet 5.5 | 18 | 0,01691 USD | 0,3044 USD | 31,7 % |
+| Opus 5.5 | 18 | 0,03555 USD | 0,6399 USD | 66,7 % |
+| **Total** | 54 | | **~0,96 USD** | 100 % |
+
+En palabras simples: Opus y Sonnet son el 98 % de lo que cuesta experimentar, aunque Haiku haga un tercio de las llamadas. Es un cálculo con costos medidos y un número de muestras supuesto; el gasto real se mide al construirlo.
+
+**Tokens ahorrados en dólares** (sobre esa batería, **estimado**):
+
+| Concepto | Tokens antes | Tokens después | Tokens ahorrados | USD ahorrados | Estado del dato |
+|---|---|---|---|---|---|
+| Opus con 6 muestras (cierre) en lugar de 18 | ~85.000 por 12 llamadas | 0 | ~85.000 | ~0,43 (de ~0,96 a ~0,53; −44 %) | **Estimado** |
+| Catálogo de interés en Sonnet y Opus | 36 llamadas × 6.618 de entrada | 36 llamadas × ~1.953 | ~168.000 | ~0,50 | **Estimado** (con el promedio de 1.953 tokens medido en 3.4) |
+
+> **CONCLUSIONES**
+> _Desde el punto de vista de un AI Engineer: cuatro consejos para obtener esta evidencia sin gastar de más._
+> 1. **Experimentar con Haiku y cerrar con los modelos grandes.** Haiku es el 1,6 % del costo y Opus el 66,7 %; llevar Opus de 18 a 6 muestras ahorra ~0,43 USD (**estimado**). Se aplica al construir el laboratorio (3.12 a 3.26).
+> 2. **Usar el catálogo de interés en el laboratorio.** Baja la entrada de Sonnet y Opus de unos 6.600 a unos 2.000 tokens: ~0,50 USD menos en la batería (**estimado**) y respuestas más enfocadas (3.25 y 3.26).
+> 3. **Fijar las preguntas y guardar todo.** Un conjunto fijo de preguntas, muestras y configuraciones permite comparar y repetir sin volver a pagar, como se hizo con las 388 llamadas del piloto (**medido**). Es lo que hace que la evidencia valga ante otra persona.
+> 4. **Poner un tope de gasto por corrida.** Como el `--tope-usd` del simulador: una corrida del laboratorio no debería pasar de 1 USD sin confirmar (la batería completa estimada es ~0,96 USD).
 
 #### Lo que vamos logrando
 
