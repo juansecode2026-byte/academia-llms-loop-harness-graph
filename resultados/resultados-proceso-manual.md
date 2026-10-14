@@ -339,6 +339,16 @@ El conocimiento se transfiere después a **Minus** para implementarlo en sus pro
 - [x] Commit con mensaje descriptivo y registrar el hash en la sección 7
 - [x] Ejercicio E.1: definir qué se va a medir del asesor de viajes y con qué objetivo ([ver paso E.1](../Documentaci%C3%B3n%20para%20la%20construcci%C3%B3n%20del%20proyecto/ejercicio-simulado-chat-consola.html#s10))
 
+**Aplicación local de Streamlit que prueba configuraciones de un asesor con modelo de lenguaje (LLM)**
+
+Una app que se ejecuta en el computador y prueba distintas configuraciones del asesor de viajes (asistente de ventas de Turismo Colombia), mide el costo y la calidad de cada una, y recomienda cuál usar según el tipo de tarea.
+
+- **Qué configura:** el modelo (Haiku, Sonnet u Opus), el esfuerzo de razonamiento (`effort`), la memoria (cuántos turnos recuerda y si usa una ficha del cliente), las reglas del mensaje de sistema y el catálogo que recibe.
+- **Qué mide:** costo, tokens, tiempo, razonamiento, respuestas cortadas, invento de datos y recuerdo del dato clave del cliente.
+- **Qué decide:** qué configuración conviene para cada tipo de tarea, por ejemplo consultar precios, cotizar con condiciones o atender un reclamo.
+- **Qué entrega:** cinco vistas (Playground, Comparador, Batería de alucinaciones, Métricas y Decisiones) y cada experimento guardado en la base única del piloto.
+- **Dónde corre:** en local, con `streamlit run` en `http://localhost:8501`, con datos simulados y sin publicarse en internet.
+
 > **Notas del proceso**
 > Este apartado de la guía es de diseño: no trae código ni gasta tokens, así que las casillas de construir y ejecutar se cumplen con la definición que sigue. Es el paso del ejercicio E.1.
 >
@@ -1105,6 +1115,7 @@ Qué partes del proceso fueron repetitivas, cuáles exigieron criterio humano y 
 | 2026-10-13 | Tema 3.12 completo (paso E.1): objetivo del laboratorio, preguntas que debe contestar, criterios de éxito y límites; entrada breve del análisis. Abre la Parte 2. |
 | 2026-10-13 | La entrada del tema 3.12 se reescribe como planeación estructurada: objetivo, alcance, preguntas, etapas, criterios, riesgos, costo estimado y evidencia esperada. Se corrige la nota que mencionaba la maqueta como parte del resultado. |
 | 2026-10-13 | El tema 3.12 pasa a llamarse «Planeación: app para comparar configuraciones del asesor (asistente de ventas de Turismo Colombia)». Desde ahora, la primera mención de «asesor» en cada tema y en cada entrada del análisis lleva entre paréntesis «asistente de ventas de Turismo Colombia». |
+| 2026-10-13 | El tema 3.12 suma, al comienzo de sus notas y de su entrada del análisis, el bloque «Aplicación local de Streamlit que prueba configuraciones de un asesor con modelo de lenguaje (LLM)» con su definición: qué configura, mide, decide, entrega y dónde corre. |
 
 ## Análisis de resultados {id=analisis}
 
@@ -1998,6 +2009,16 @@ En palabras simples: el nivel termina con un asesor 23 % más barato y con una l
 
 > **PLANEACIÓN**
 > _Este tema no trae mediciones: es el plan del laboratorio de la Parte 2. Define qué se va a construir, cómo se juzgará y qué puede salir mal. Los resultados llegan desde el tema 3.13 y se cierran en el 3.26._
+
+**Aplicación local de Streamlit que prueba configuraciones de un asesor con modelo de lenguaje (LLM)**
+
+Una app que se ejecuta en el computador y prueba distintas configuraciones del asesor de viajes (asistente de ventas de Turismo Colombia), mide el costo y la calidad de cada una, y recomienda cuál usar según el tipo de tarea.
+
+- **Qué configura:** el modelo (Haiku, Sonnet u Opus), el esfuerzo de razonamiento (`effort`), la memoria (cuántos turnos recuerda y si usa una ficha del cliente), las reglas del mensaje de sistema y el catálogo que recibe.
+- **Qué mide:** costo, tokens, tiempo, razonamiento, respuestas cortadas, invento de datos y recuerdo del dato clave del cliente.
+- **Qué decide:** qué configuración conviene para cada tipo de tarea, por ejemplo consultar precios, cotizar con condiciones o atender un reclamo.
+- **Qué entrega:** cinco vistas (Playground, Comparador, Batería de alucinaciones, Métricas y Decisiones) y cada experimento guardado en la base única del piloto.
+- **Dónde corre:** en local, con `streamlit run` en `http://localhost:8501`, con datos simulados y sin publicarse en internet.
 
 **1. Qué se hizo**
 
